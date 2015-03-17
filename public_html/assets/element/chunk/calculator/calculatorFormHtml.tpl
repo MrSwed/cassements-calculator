@@ -3,7 +3,9 @@
 <form action="[~[*id*]~]?review=1" method="post">
  <input type="hidden" name="formid" value="calculatorForm" />
  <label style="display:none"><input type="text" name="veridata" eform="&nbsp;:date:0::#REGEX /^$/" value=""/></label>
-
+ <script type="text/javascript">
+  var CalcData = {{ditto_calculator_json_recursive}};
+ </script>
  <div class="tabs">
   <div class="headers"><a href="[~[*id*]~]#windows">пластиковые окна</a><a href="[~[*id*]~]#gallery">остекление балконов</a></div>
   <div class="contents">
