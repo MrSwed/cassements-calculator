@@ -4,7 +4,27 @@
  <input type="hidden" name="formid" value="calculatorForm" />
  <label style="display:none"><input type="text" name="veridata" eform="&nbsp;:date:0::#REGEX /^$/" value=""/></label>
  <script type="text/javascript">
-  var CalcData = {{ditto_calculator_json_recursive}};
+  var CalcWData = {[!Ditto?
+    &parents=`38`
+    &tpl=`item_calculator_json_recursive`
+    &tplLast=`item_calculator_json_recursive_last`
+    &paginate=`0`
+    &display=`all`
+    &orderBy=`menuindex asc`
+    &noResults=``
+   !]
+  };
+  var CalcBData = {[!Ditto?
+    &parents=`39`
+    &tpl=`item_calculator_json_recursive`
+    &tplLast=`item_calculator_json_recursive_last`
+    &paginate=`0`
+    &display=`all`
+    &orderBy=`menuindex asc`
+    &noResults=``
+   !]
+  };
+
  </script>
  <div class="tabs">
   <div class="headers"><a href="[~[*id*]~]#windows">пластиковые окна</a><a href="[~[*id*]~]#gallery">остекление балконов</a></div>

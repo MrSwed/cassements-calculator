@@ -20,4 +20,4 @@
               &docId=`[+id+]`
               &outputFormat=`JSON`
              ]] `+]
-     }`*],
+     }`*]
