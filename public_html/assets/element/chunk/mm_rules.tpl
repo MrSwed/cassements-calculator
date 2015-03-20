@@ -47,9 +47,9 @@ if ($cid==37 or in_array(37,$pidAr)) {
  }
  if ($cid==37) {
   mm_hideFields("image,photos");
-  mm_renameField('calculator', 'Стоимость монтажных работ');
-  mm_changeFieldHelp('calculator', 'Базовая: Sм&sup2; * Pруб., Периметр: Lм * Pруб. ');
-  mm_ddMultipleFields('calculator', '', '', 'number,number', 'Базовая (руб./м&sup2;),Периметр для панели (руб.м)',70,'||', '::', '', '', 0, 1);
+  mm_renameField('calculator', 'Общие параметры');
+  mm_changeFieldHelp('calculator', 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Периметр: Lм * Pруб. ');
+  mm_ddMultipleFields('calculator', '', '', 'number,number,richtext', 'Базовая (руб./м&sup2;),Периметр для панели (руб.м),Предупреждение',"70,70,300",'||', '::', '', '', 0, 1);
  } else {
   mm_renameField('image', 'Превью');
   mm_changeFieldHelp('image', 'Изображение для выбора');
