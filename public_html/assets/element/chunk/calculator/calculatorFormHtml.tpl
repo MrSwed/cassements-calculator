@@ -3,8 +3,12 @@
 <form action="[~[*id*]~]?review=1" method="post">
  <input type="hidden" name="formid" value="calculatorForm" />
  <label style="display:none"><input type="text" name="veridata" eform="&nbsp;:date:0::#REGEX /^$/" value=""/></label>
+ <script type="text/javascript" src="js/calculator.js"></script>
  <script type="text/javascript">
-  var CalcWData = {[!Ditto?
+ var CalcData = [
+  {"alias":"#windows", 
+   "name":"пластиковые окна",
+   "data": {[!Ditto?
     &parents=`38`
     &tpl=`item_calculator_json_recursive`
     &tplLast=`item_calculator_json_recursive_last`
@@ -12,9 +16,12 @@
     &display=`all`
     &orderBy=`menuindex asc`
     &noResults=``
-   !]
-  };
-  var CalcBData = {[!Ditto?
+    !]
+   }
+  },
+  {"alias":"#balcony",
+   "name":"остекление балконов",
+   "data": {[!Ditto?
     &parents=`39`
     &tpl=`item_calculator_json_recursive`
     &tplLast=`item_calculator_json_recursive_last`
@@ -23,46 +30,51 @@
     &orderBy=`menuindex asc`
     &noResults=``
    !]
-  };
+   }
+  }
+ ];
   $(function(){
-   
+    $(".form.calculator .workarea").calculator({"data":CalcData,"debug":true});
   });
  </script>
- <div class="tabs">
-  <div class="headers"><a href="[~[*id*]~]#windows">пластиковые окна</a><a href="[~[*id*]~]#balcony">остекление балконов</a></div>
-  <div class="contents">
-   <div class="text"></div>
-   <div class="text"></div>
+ <div class="workarea">
+  <div class="tabs">
+   <div class="headers"><a href="[~[*id*]~]#windows">пластиковые окна</a><a href="[~[*id*]~]#balcony">остекление
+     балконов</a></div>
+   <div class="contents">
+    <div class="text"></div>
+    <div class="text"></div>
+   </div>
   </div>
- </div>
- <div class="template">
-  <div class="type">
-   <div class="caption">Выберите тип окна</div>
-   тут картинки типов остеклений
-   <input type="hidden" name="type"/>
+  <div class="template" style="display: none;">
+   <div class="type">
+    <div class="caption">Выберите тип окна</div>
+
+    <input type="hidden" name="type"/ eform="Ошибка выбора типа окна::1">
+   </div>
   </div>
- </div>
- <div class="parameters">
-  <div class="sizes">
-   <img src="#" alt=""/>
-   <label class="height"><input type="text" name="height"/></label>
-   <label class="width"><input type="text" name="width"/></label>
+  <div class="parameters">
+   <div class="sizes">
+    <img src="#" alt=""/>
+    <label class="height"><input type="text" name="height"/></label>
+    <label class="width"><input type="text" name="width"/></label>
+   </div>
+   <div class="radio"><span>Оконная система</span>
+    <label><input type="radio" name="system" value="Rehau"/> Rehau</label>
+    <label><input type="radio" name="system" value="KBE"/> KBE</label>
+   </div>
+   <div class="radio"><span>Комплектующие</span>
+    <label><input type="radio" name="kit" value="для панельного дома"/> для панельного дома</label>
+    <label><input type="radio" name="kit" value="для кирпичного дома"/> для кирпичного дома</label>
+    <label><input type="radio" name="kit" value="не нужны"/> не нужны</label>
+   </div>
+   <div class="radio"><span>Монтажные работы</span>
+    <label><input type="radio" name="montage" value="Да"/> Да</label>
+    <label><input type="radio" name="montage" value="Нет"/> Нет</label>
+   </div>
+   <div class="price"><span>00000</span> руб</div>
+   <input type="button" value="Заказать"/>
   </div>
-  <div class="radio"><span>Оконная система</span>
-   <label><input type="radio" name="system" value="Rehau"/> Rehau</label>
-   <label><input type="radio" name="system" value="KBE"/> KBE</label>
-  </div>
-  <div class="radio"><span>Комплектующие</span>
-   <label><input type="radio" name="kit" value="для панельного дома"/> для панельного дома</label>
-   <label><input type="radio" name="kit" value="для кирпичного дома"/> для кирпичного дома</label>
-   <label><input type="radio" name="kit" value="не нужны"/> не нужны</label>
-  </div>
-  <div class="radio"><span>Монтажные работы</span>
-   <label><input type="radio" name="montage" value="Да"/> Да</label>
-   <label><input type="radio" name="montage" value="Нет"/> Нет</label>
-  </div>
-  <div class="price"><span>00000</span> руб</div>
-  <input type="button" value="Заказать"/> 
  </div>
  <div class="modal">
   <label for="email" class="">E-mail <span class="required-s">*</span>:<br/><input type="text" id="email" value="[+email+]" name="email" placeholder="email"  eform="email::0" /></label>
