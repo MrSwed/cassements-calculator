@@ -1,5 +1,5 @@
 /*!
- * jQuery plastic window caclulator
+ * jQuery casement calculator plugin
  * 
  * Required
  *  tabs extender like https://gist.github.com/MrSwed/4246691aa788058a9934
@@ -23,7 +23,7 @@ $.fn.extend ({
      switch (true) {
       case typeof _t._p[k] == "string": _t._p[k] = $(_t._p[k], _t);
        if (!_t._p[k].size()) {
-        _t._p[k] = $('<div/>').addClass(_t._p[k].selector.replace("."," ")).prependTo(_t);
+        _t._p[k] = $('<div/>').addClass(_t._p[k].class()).prependTo(_t);
         _t._p.debug && console.log("inited new "+k,_t._p[k]);
        }
        break;
@@ -37,15 +37,23 @@ $.fn.extend ({
     var $t = $(_t._p.tabs);
     switch (true) {
      case p=="init":
+      var $tH = $(".headers",$t);
+      var $tC = $(".contents",$t);
+      if (!$tH.size()) $tH = $("<div>").addClass($tH.class()).appendTo($t);
+      if (!$tC.size()) $tC = $("<div>").addClass($tC.class()).appendTo($t);
       (_t._p.data && $.each(_t._p.data, function(i,k){
        _t._p.debug && console.log(i,k);
        if ($.isNumeric(i)){
         // check or add header tabs and it contents
+        var $tHi=$("[href=]"+ k.alias,$tH);
+        if (!$tHi.size()) $tHi = $("<a>").attr({"href": location.pathname+k.alias}).text(k.name).appendTo($tH)
+        var $tCi=$(">*",$tC).eq(i);
+        if (!$tCi.size()) $tCi = $("<div>").appendTo($tC)
        }
       })) || _t._err("data error");
       break;
     }
-    return $t;
+    return $t.tabs();
    };
 
 
