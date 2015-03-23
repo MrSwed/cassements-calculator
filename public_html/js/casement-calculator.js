@@ -12,7 +12,17 @@ $.fn.extend ({
    p=$.extend({},{
     "tabs":".tabs",
     "params":".parameters",
-    "data":false // need data
+    "data":false, // need data
+    "control":[
+     function(o){ //#windows
+      _t._p.debug && console.log("init windows control at", o);
+      return o;
+     },
+     function(o){ // #balcony
+      _t._p.debug && console.log("init balcons control at", o);
+      return o;
+     }
+    ]
    },p);
    _t._p = p;
    _t.init = function(p){
@@ -39,16 +49,20 @@ $.fn.extend ({
      case p=="init":
       var $tH = $(".headers",$t);
       var $tC = $(".contents",$t);
-      if (!$tH.size()) $tH = $("<div>").addClass($tH.class()).appendTo($t);
-      if (!$tC.size()) $tC = $("<div>").addClass($tC.class()).appendTo($t);
+      $tH.size() || ($tH = $("<div>").addClass($tH.class()).appendTo($t));
+      $tC.size() || ($tC = $("<div>").addClass($tC.class()).appendTo($t));
       (_t._p.data && $.each(_t._p.data, function(i,k){
        _t._p.debug && console.log(i,k);
        if ($.isNumeric(i)){
         // check or add header tabs and it contents
         var $tHi=$("[href=]"+ k.alias,$tH);
-        if (!$tHi.size()) $tHi = $("<a>").attr({"href": location.pathname+k.alias}).text(k.name).appendTo($tH)
+        $tHi.size() || ($tHi = $("<a>").attr({"href": location.pathname+k.alias}).text(k.name).appendTo($tH));
         var $tCi=$(">*",$tC).eq(i);
-        if (!$tCi.size()) $tCi = $("<div>").appendTo($tC)
+        $tCi.size() || ($tCi = $("<div>").appendTo($tC));
+        // init control function for tab content
+        (!k.function && typeof _t._p.control[i]=="function" && (k.function = _t._p.control[i])) || 
+         (typeof k.function == "string" && typeof _t._p.control[k.function]=="function" && (k.function = _t._p.control[k.function])); 
+        (typeof k.function == "function" && k.function($tCi)) || _t._err("Control function error for "+ k.alias);
        }
       })) || _t._err("data error");
       break;
