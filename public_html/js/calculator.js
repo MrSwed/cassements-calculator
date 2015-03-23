@@ -29,7 +29,23 @@ $.fn.extend ({
        break;
      }
     });
+    $(_t.tabs("init")).tabs();
     return _t;
+   };
+   _t._err = function(m) {console.log(m)||alert(m); };
+   _t.tabs = function(p){
+    var $t = $(_t._p.tabs);
+    switch (true) {
+     case p=="init":
+      (_t._p.data && $.each(_t._p.data, function(i,k){
+       _t._p.debug && console.log(i,k);
+       if ($.isNumeric(i)){
+        // check or add header tabs and it contents
+       }
+      })) || _t._err("data error");
+      break;
+    }
+    return $t;
    };
 
 
