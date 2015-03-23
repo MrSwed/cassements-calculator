@@ -1,9 +1,7 @@
 <div class="form calculator">
 <div class="message">[+validationmessage+]</div>
 <form action="[~[*id*]~]?review=1" method="post">
- <input type="hidden" name="formid" value="calculatorForm" />
- <label style="display:none"><input type="text" name="veridata" eform="&nbsp;:date:0::#REGEX /^$/" value=""/></label>
- <script type="text/javascript" src="js/calculator.js"></script>
+ <script type="text/javascript" src="/js/casement-calculator.js"></script>
  <script type="text/javascript">
  var CalcData = [
   {"alias":"#windows", 
@@ -34,11 +32,18 @@
   }
  ];
   $(function(){
-    $(".form.calculator .workarea").calculator({"data":CalcData,"debug":true});
+    $(".form.calculator .workarea").calculator({
+     "data": CalcData, 
+     
+     "debug": true
+    });
   });
  </script>
+ <input type="hidden" name="formid" value="calculatorForm" />
+ <input type="hidden" name="type" eform="Ошибка выбора типа окна::1" value=""/>
+ <label style="display:none"><input type="text" name="veridata" eform="&nbsp;:date:0::#REGEX /^$/" value=""/></label>
  <div class="workarea">
-  <div class="tabs">
+  <div class="template tabs-t">
    <div class="headers"><a href="[~[*id*]~]#windows">пластиковые окна</a><a href="[~[*id*]~]#balcony">остекление
      балконов</a></div>
    <div class="contents">
@@ -46,11 +51,10 @@
     <div class="text"></div>
    </div>
   </div>
-  <div class="template" style="display: none;">
+  <div class="template" >
    <div class="type">
     <div class="caption">Выберите тип окна</div>
 
-    <input type="hidden" name="type"/ eform="Ошибка выбора типа окна::1">
    </div>
   </div>
   <div class="parameters">
