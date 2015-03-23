@@ -14,16 +14,21 @@ $.fn.extend ({
     "params":".parameters",
     "data":false // need data
    },p);
-   $.each("tabs,params".split(","),function(i,k){
-    p.debug && console.log(i,k, p[k]);
-    switch (true) {
-     case typeof p[k] == "string": p[k] = $(p[k], _t); break;
-    }
-   });
-   _t.param = p;
+   _t._p = p;
    _t.init = function(p){
     p={}||p;
-    if (p.debug || _t.param.debug) console.log("_init");
+    if (p.debug || _t._p.debug) console.log("_init");
+    $.each("tabs,params".split(","),function(i,k){
+     _t._p.debug && console.log(i,k, _t._p[k]);
+     switch (true) {
+      case typeof _t._p[k] == "string": _t._p[k] = $(_t._p[k], _t);
+       if (!_t._p[k].size()) {
+        _t._p[k] = $('<div/>').addClass(_t._p[k].selector.replace("."," ")).prependTo(_t);
+        _t._p.debug && console.log("inited new "+k,_t._p[k]);
+       }
+       break;
+     }
+    });
     return _t;
    };
 
