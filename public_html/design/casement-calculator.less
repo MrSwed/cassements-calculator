@@ -1,0 +1,100 @@
+.calculator {
+  min-height: 550px;
+ .tabs {
+  .headers {
+    border: 0 none;
+    margin: 0;
+    > * {
+     z-index: 1;
+     border-radius: 10px 10px 0 0;
+     background: #d3a919;
+     background-image: -moz-linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
+     background-image: -o-linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
+     background-image: -webkit-linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
+     background-image: linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9e87d', endColorstr='#d3a919',GradientType=0 );
+     border-style: solid;
+     border-width: 1px 1px 0;
+     border-color: #e9e87d transparent transparent transparent;
+     margin-right: -0.7em;
+     &:not(.active):not(:first-child) {
+      padding-left: 2.3em;
+     }
+     &.active {
+      background: none repeat scroll 0 0 white;
+      border-color: #c1d1dc;
+      color: #797979;
+      z-index: 2;
+      &:before {
+       border-top-color:white;
+      }
+      &:after {
+       background: white;
+       border-color: transparent #c1d1dc transparent transparent;
+       border-radius: 0 1px 0 0;
+       top: 4px;
+      }
+     }
+     &:after {
+      background: #d3a919;
+      background-image: -moz-linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
+      background-image: -o-linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
+      background-image: -webkit-linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
+      background-image: linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9e87d', endColorstr='#d3a919',GradientType=0 );
+      border-color: #e9e87d transparent transparent transparent;
+      border-image: none;
+      border-radius: 0 10px 0 0;
+      border-style: solid;
+      border-width: 1px;
+      bottom: -2px;
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: -1px;
+      transform: skewX(25deg);
+      width: 13px;
+     }
+     &:before {
+       background: none repeat scroll 0 0 white;
+       right: 0;
+       bottom: -11px;
+       content: "";
+       display: block;
+       height: 10px;
+       left: -1px;
+       position: absolute;
+       border-top:1px solid #c1d1dc;
+     }
+     &:first-child {
+      &:not(.active) {
+       padding-right: 2.3em;
+      }
+      &:before {
+       border-left: 1px solid #c1d1dc;
+      }
+     }
+   }
+  }
+  .contents {
+   background: none repeat scroll 0 0 white;
+   border-radius: 10px;
+   border: 1px solid #c1d1dc;
+   min-height: 510px;
+   padding: 1em;
+  }
+ }
+ .template {
+  display: none;
+ }
+ .parameters {
+   position: absolute;
+   bottom: 0;
+   right: 0;
+ }
+ .type {
+   position: absolute;
+   right: 0;
+   width: 50%;
+ }
+}
