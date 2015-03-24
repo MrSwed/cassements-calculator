@@ -14,6 +14,7 @@ $.fn.extend ({
     "params": ".parameters",
     "type": ".template .type",
     "template": ".template",
+    "preview": ".preview",
     "data": false, // need data
     "control":[
      function(o){ //#windows
@@ -49,6 +50,7 @@ $.fn.extend ({
             _t._p.debug && console.log("Clicked", $a);
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
+            _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": $i.attr("title")});
            }
           })
         });
@@ -107,7 +109,15 @@ $.fn.extend ({
     }
     return $t.tabs();
    };
-
+   _t.preview = function(p){
+    p = $.extend({},{"alt":"","src":"","title":""},p);
+    var $t = $(_t._p.preview);
+    $t.size() || ($t = $("<div/>").addClass($t.class()).appendTo(_t));
+    var $i = $("img",$t);
+    $i.size() || ($i = $("<img/>").appendTo($t));
+    $i.attr(p);
+    return $t;
+   };
    _t.init();
   });
  }
