@@ -55,7 +55,7 @@ $.fn.extend ({
        _t._p.debug && console.log(i,k);
        if ($.isNumeric(i)){
         // check or add header tabs and it contents
-        var $tHi=$("[href=]"+ k.alias,$tH);
+        var $tHi=$("[href*='"+ k.alias+"']",$tH);
         $tHi.size() || ($tHi = $("<a>").attr({"href": location.pathname+k.alias}).text(k.name).appendTo($tH));
         var $tCi=$(">*",$tC).eq(i);
         $tCi.size() || ($tCi = $("<div>").appendTo($tC));
