@@ -1,5 +1,9 @@
 .calculator {
   min-height: 550px;
+ .caption {
+  color: #0173a2;
+  font-style: italic;
+ }
  .tabs {
   .headers {
     border: 0 none;
@@ -96,5 +100,60 @@
    position: absolute;
    right: 0;
    width: 50%;
+  .casement {
+    display: table;
+   margin: 1em;
+   .group {
+    display: table-cell;
+    text-align: center;
+    vertical-align: top;
+    background: no-repeat center top;
+    height: 130px;
+     &:hover {
+      .variants {
+       display: block;
+       background: none repeat scroll 0 0 rgba(255, 255, 255, 0.8);
+       border-color: #92cbf1;
+       >* {
+        display: inline-block;
+       }
+      }
+     }
+    .variants {
+     border: 1px solid transparent;     
+     border-radius: 0.5em;
+     left: -5px;
+     margin: -11px 0;
+     padding: 10px;
+     position: absolute;
+     right: -5px;
+     z-index: 1;
+     img { display: block;}
+     >* {
+      display: none;
+      margin: 0 auto;
+      cursor: pointer;
+      opacity: 0.8;
+      &:hover,&.active,&.selected {
+       opacity: 1;
+       display: inline-block;
+       position: relative;
+      }
+      &.active {
+       &:after {
+         border: 6px solid rgba(225, 225, 112,0.8);
+         bottom: 4px;
+         content: "";
+         display: block;
+         left: 0;
+         position: absolute;
+         right: 0;
+         top: 0;
+       }
+      }
+     }
+    }
+   }
+  }
  }
 }

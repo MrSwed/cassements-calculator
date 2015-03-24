@@ -10,16 +10,54 @@ $.fn.extend ({
   return this.each(function() {
    var _t=this;
    p=$.extend({},{
-    "tabs":".tabs",
-    "params":".parameters",
-    "data":false, // need data
+    "tabs": ".tabs",
+    "params": ".parameters",
+    "type": ".template .type",
+    "template": ".template",
+    "data": false, // need data
     "control":[
      function(o){ //#windows
-      _t._p.debug && console.log("init windows control at", o);
+      _t._p.debug && console.log("init windows control at ", o.index(), o);
+      var $type = $(_t._p.type,o);
+      if (!$type.size()) {
+       // use template or create new
+       (($(_t._p.type,_t).size() || $(_t._p.type,_t).closest(_t._p.template).size()) && ($type = $(_t._p.type,_t).clone().appendTo(o))) 
+        || ($type = $("<div/>").addClass($type.class()).appendTo(o));
+      }
+      var $tg = $(".casement",$type);
+      $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
+      $tg.html();
+      $.each(_t._p.data[o.index()].data, function (id, gr) {
+       var $gr = $("<div/>").addClass("group")
+            .attr("title",gr.title)
+            .appendTo($tg);
+       var $gv = $("<div/>").addClass("variants").appendTo($gr);
+        $.each(gr.group, function (id, item) {
+         $("<a>").prop({"href":item.image})
+          .append($("<img/>").attr({"src":item.preview,"alt":item.title,"title":item.title})
+          .load(function () {
+           _t._p.debug && console.log("loaded ", this, this.width, $gr.width());
+           if ($gr.width() < this.width) $gr.width(this.width + ($gv.outerWidth()-$gv.width()));
+          })).appendTo($gv)
+          .on("init click", function (e) {
+           e.preventDefault();
+           var $a = $(this);
+           var $i = $a.find("[src]");
+           _t._p.debug && console.log("Img", $i, " triggered", e);
+           $a.addClass("selected").siblings().removeClass("selected");
+           if (e.type == "click") {
+            _t._p.debug && console.log("Clicked", $a);
+            $tg.find(".variants >*").removeClass("active");
+            $a.addClass("active");
+           }
+          })
+        });
+       $("img:first",$gv).trigger("init");
+      });
       return o;
      },
      function(o){ // #balcony
-      _t._p.debug && console.log("init balcons control at", o);
+      _t._p.debug && console.log("init balcony control at", o.index(), o);
       return o;
      }
     ]
@@ -58,7 +96,7 @@ $.fn.extend ({
         var $tHi=$("[href*='"+ k.alias+"']",$tH);
         $tHi.size() || ($tHi = $("<a>").attr({"href": location.pathname+k.alias}).text(k.name).appendTo($tH));
         var $tCi=$(">*",$tC).eq(i);
-        $tCi.size() || ($tCi = $("<div>").appendTo($tC));
+        $tCi.size() || ($tCi = $("<div>").appendTo($tC)).addClass(k.alias.replace("#",""));
         // init control function for tab content
         (!k.function && typeof _t._p.control[i]=="function" && (k.function = _t._p.control[i])) || 
          (typeof k.function == "string" && typeof _t._p.control[k.function]=="function" && (k.function = _t._p.control[k.function])); 
@@ -69,11 +107,6 @@ $.fn.extend ({
     }
     return $t.tabs();
    };
-
-
-   //p=$.extend({
-   // "function":function(){var msg="need control function";console.log(msg)||alert(msg);}
-   //},p);
 
    _t.init();
   });
