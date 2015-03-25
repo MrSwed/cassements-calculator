@@ -157,13 +157,25 @@
   }
  }
  .preview {
-   bottom: 11%;
+  bottom: 6%;
+  display: table;
+  left: 8%;
+  position: absolute;
+  text-align: center;
+  top: 11%;
+  vertical-align: middle;
+  >*:not(img) {
    display: table-cell;
-   left: 7%;
-   position: absolute;
-   right: 50%;
+   height: 440px;
+   max-height: 440px;
+   max-width: 440px;
    text-align: center;
-   top: 20%;
    vertical-align: middle;
+   width: 440px;
+  }
+  img {
+    max-height: 100%;
+    max-width: 100%;
+  }
  }
 }

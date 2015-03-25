@@ -52,7 +52,7 @@
 
    </div>
   </div>
-  <div class="preview"></div>
+  <div class="preview"><a href="#"><img src="#" alt="" title=""/></a></div>
   <div class="parameters">
    <div class="sizes">
     <img src="#" alt=""/>

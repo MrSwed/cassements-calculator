@@ -56,6 +56,7 @@ $.fn.extend ({
         });
        $("img:first",$gv).trigger("init");
       });
+      $("img:first",o).trigger("click");
       return o;
      },
      function(o){ // #balcony
@@ -113,9 +114,14 @@ $.fn.extend ({
     p = $.extend({},{"alt":"","src":"","title":""},p);
     var $t = $(_t._p.preview);
     $t.size() || ($t = $("<div/>").addClass($t.class()).appendTo(_t));
-    var $i = $("img",$t);
-    $i.size() || ($i = $("<img/>").appendTo($t));
+    var $a = $("a",$t);
+    $a.size() || ($a = $("<a/>").appendTo($t));
+    $a.attr({"href": p.href || p.src, "title": p.title,"target":"_blank"});
+    if (typeof $.fancybox=="function") $a.fancybox();
+    var $i = $("img",$a);
+    $i.size() || ($i = $("<img/>").appendTo($a));
     $i.attr(p);
+    _t._p.debug && console.log("Preview inited: ",$t,$a,$i);
     return $t;
    };
    _t.init();
