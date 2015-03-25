@@ -46,6 +46,13 @@
      "texts":{"warning":CalcData_add[2]},
      "debug": true
     });
+   $(".calculator .parameters [type='button']").click(function(){
+     $(".modal").modal("open",{
+      "afterOpen":function(){
+       $("input:first",this).focus();
+      }
+     })
+   })
   });
  </script>
  <input type="hidden" name="formid" value="calculatorForm" />
