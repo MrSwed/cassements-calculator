@@ -16,6 +16,7 @@ $.fn.extend ({
     "template": ".template",
     "preview": ".preview",
     "data": false, // need data
+    "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
      function(o){ //#windows
       _t._p.debug && console.log("init windows control at ", o.index(), o);
@@ -66,21 +67,28 @@ $.fn.extend ({
     ]
    },p);
    _t._p = p;
-   _t.init = function(p){
-    p={}||p;
+   _t.init = function(p) {
+    p = {} || p;
     if (p.debug || _t._p.debug) console.log("_init");
-    $.each("tabs,params".split(","),function(i,k){
-     _t._p.debug && console.log(i,k, _t._p[k]);
+    $.each("tabs,params".split(","), function (i, k) {
+     _t._p.debug && console.log(i, k, _t._p[k]);
      switch (true) {
-      case typeof _t._p[k] == "string": _t._p[k] = $(_t._p[k], _t);
+      case typeof _t._p[k] == "string":
+       _t._p[k] = $(_t._p[k], _t);
        if (!_t._p[k].size()) {
         _t._p[k] = $('<div/>').addClass(_t._p[k].class()).prependTo(_t);
-        _t._p.debug && console.log("inited new "+k,_t._p[k]);
+        _t._p.debug && console.log("inited new " + k, _t._p[k]);
        }
        break;
      }
     });
     $(_t.tabs("init")).tabs();
+    if (_t._p.texts && _t._p.texts.warning) {
+     $(_t._p.warning=$(".warning", _t._p.params)).size() || 
+        (_t._p.warning = $("<div/>").addClass("warning")
+            .html(_t._p.texts.warning).appendTo(_t._p.params));
+     _t._p.debug || console.log("init warning: ",_t._p.texts.warning);
+    }
     return _t;
    };
    _t._err = function(m) {console.log(m)||alert(m); };

@@ -33,10 +33,17 @@
    }
   }
  ];
+  var CalcData_add = [[ddGetMultipleField?
+    &docField=`calculator`
+    &docId=`[+id+]`
+    &totalRows=`1`
+    &outputFormat=`JSON`
+   ]];
   $(function(){
     $(".form.calculator .workarea").calculator({
      "data": CalcData, 
-     
+     "reference":{"price":{"montage":CalcData_add[0],"panel":CalcData_add[1]}},
+     "texts":{"warning":CalcData_add[2]},
      "debug": true
     });
   });
@@ -55,22 +62,29 @@
   <div class="preview"><a href="#"><img src="#" alt="" title=""/></a></div>
   <div class="parameters">
    <div class="sizes">
-    <img src="#" alt=""/>
     <label class="height"><input type="text" name="height"/></label>
     <label class="width"><input type="text" name="width"/></label>
    </div>
-   <div class="radio"><span>Оконная система</span>
-    <label><input type="radio" name="system" value="Rehau"/> Rehau</label>
-    <label><input type="radio" name="system" value="KBE"/> KBE</label>
+   <div class="radio">
+    <div>Оконная система</div>
+    <div>
+     <label><input type="radio" name="system" value="Rehau"/> Rehau</label>
+     <label><input type="radio" name="system" value="KBE"/> KBE</label>
+    </div>
    </div>
-   <div class="radio"><span>Комплектующие</span>
-    <label><input type="radio" name="kit" value="для панельного дома"/> для панельного дома</label>
-    <label><input type="radio" name="kit" value="для кирпичного дома"/> для кирпичного дома</label>
-    <label><input type="radio" name="kit" value="не нужны"/> не нужны</label>
+   <div class="radio">
+    <div>Комплектующие</div>
+    <div><label><input type="radio" name="kit" value="для панельного дома"/> для панельного дома</label>
+     <label><input type="radio" name="kit" value="для кирпичного дома"/> для кирпичного дома</label>
+     <label><input type="radio" name="kit" value="не нужны"/> не нужны</label>
+    </div>
    </div>
-   <div class="radio"><span>Монтажные работы</span>
-    <label><input type="radio" name="montage" value="Да"/> Да</label>
-    <label><input type="radio" name="montage" value="Нет"/> Нет</label>
+   <div class="radio">
+    <div>Монтажные работы</div>
+    <div>
+     <label><input type="radio" name="montage" value="Да"/> Да</label>
+     <label><input type="radio" name="montage" value="Нет"/> Нет</label>
+    </div>
    </div>
    <div class="price"><span>00000</span> руб</div>
    <input type="button" value="Заказать"/>

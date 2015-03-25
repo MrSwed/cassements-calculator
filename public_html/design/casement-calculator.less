@@ -92,9 +92,70 @@
   display: none;
  }
  .parameters {
-   position: absolute;
-   bottom: 0;
-   right: 0;
+  bottom: 0;
+  font-size: 14px;
+  left: 0;
+  padding: 0 2% 1em 58%;
+  position: absolute;
+  right: 0;
+  >* {
+   vertical-align: middle;
+  }
+  .sizes {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+  }
+  .radio {
+   color: #0173a2;
+   display: table;
+   padding-bottom: 1.5em;
+   width: 100%;
+   >* {
+    display: table-cell;
+    &:first-child {
+      width: 130px;
+    }
+   }
+   label {
+    color: #919191;
+    display: inline-block;
+    font-size: inherit;
+    padding: 0 0.5em;
+    text-indent: 0;
+   }
+  }
+  .price {
+   color: #ff7800;
+   display: inline-block;
+   font-size: 15px;
+   padding-right: 1em;
+   text-align: right;
+   width: 52%;
+   span {
+    font-size: 33px;
+   }
+  }
+  .button,button,[type="button"] {
+   background: none repeat scroll 0 0 #0172a0;
+   border: medium none;
+   border-radius: 7px;
+   color: white;
+   cursor: pointer;
+   display: inline-block;
+   font-size: 18px;
+   font-weight: bold;
+   margin: 0 -1em;
+   padding: 0.2em 3em;
+   text-transform: uppercase;
+   transform: scale(0.77, 1.2);
+    &:hover {
+     box-shadow:0 1px 3px 0 #808080, -1px -1px 2px #303030 inset, 1px 1px 2px #b3b3b3 inset;
+    }
+    &:active {
+     box-shadow:1px 1px 2px #1a1a1a inset, -1px -1px 1px #f3f3f3 inset;
+    }
+  }
  }
  .type {
    position: absolute;
@@ -176,6 +237,18 @@
   img {
     max-height: 100%;
     max-width: 100%;
+  }
+ }
+ .warning {
+    background: none repeat scroll 0 0 #f0f0f0;
+    border: 1px solid #c6ced7;
+    border-radius: 10px;
+    color: #646464;
+    font-size: 13px;
+    margin-top: 1em;
+    padding: 1em;
+  * {
+   margin:0;
   }
  }
 }
