@@ -238,10 +238,10 @@
    display: table-cell;
    height: 440px;
    max-height: 440px;
-   max-width: 440px;
+   max-width: 400px;
    text-align: center;
    vertical-align: middle;
-   width: 440px;
+   width: 400px;
   }
   img {
     max-height: 100%;
@@ -275,6 +275,7 @@
    max-width: 5em;
    padding: 0.5em 1em;
    width: 100%;
+   text-align: center;
   }
   label {
    color: inherit;
@@ -310,13 +311,20 @@
     }
     .slider {
      left: 6.5em;
-     right: 5em;
+     right: 2em;
     }
    }
   }
  }
  .ui-slider {
   background: none repeat scroll 0 0 #929292;
+  &:before {
+   content:"";
+   position: absolute;
+   display: block;
+   left: 0; top: 0; right: 0; bottom: 0;
+   background-position:center center;
+  }
   &, div {
    border-radius:10px;
   }
@@ -335,6 +343,11 @@
   box-shadow: 1px 0 1px 0 rgba(115, 115, 115,0.8) inset, 7px 0 12px -4px rgba(255,255,255,0.8) inset;
   height: auto;
   width: 1em;
+  &:before {
+   background-image: url("images/scale-v.png");
+   background-repeat: repeat-y;
+   margin: 0 -20px;
+  }
   .ui-widget-header {
    box-shadow: 1px 0 1px 0 #ce6a00 inset, 7px 0 12px -4px rgba(255,255,255,0.8) inset;
   }
@@ -348,6 +361,11 @@
   width: auto;
   top: 50%;
   height: 1em;
+  &:before {
+   background-image: url("images/scale-h.png");
+   background-repeat: repeat-x;
+   margin: -20px 0 ;
+  }
   .ui-widget-header {
    box-shadow: 0 1px 1px 0 #ce6a00 inset, 0 7px 12px -4px rgba(255,255,255,0.8) inset;
   }
