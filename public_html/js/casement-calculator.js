@@ -148,7 +148,20 @@ $.fn.extend ({
     $.each($s,function(i,v){
      $s[i] = $("[name='"+v+"']",$t);
      $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
-     $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>'); 
+     $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>');
+     $( "<div class='slider'></div>" ).insertAfter( $s[i] ).slider({
+      min: 1,
+      max: 6,
+      range: "min",
+      value: $s[i].val(),
+      slide: function( event, ui ) {
+       $s[i].val(ui.value);
+      }
+     });
+     $s[i].change(function(e) {
+      _t._log(llevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
+      $(this).siblings(".slider").slider( "value", $(this).val() );
+     });
     });
     _t._log(llevel,"Sizes inited",$t,"Inputs: ",$s);
     return _t;
