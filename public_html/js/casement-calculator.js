@@ -53,6 +53,7 @@ $.fn.extend ({
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
             _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": $i.attr("title")});
+            _t._sizes();
            }
           })
         });
@@ -136,6 +137,19 @@ $.fn.extend ({
     $i.attr(p);
     _t._log("Preview inited: ",$t,$a,$i);
     return $t;
+   };
+   _t._sizes = function() {
+    var $t = $(_t._p.sizes);
+    $t.size() || ($t = $("<div/>").addClass($t.class()).appendTo(_t));
+    //var $h = $("[name='height']",$t);
+    //$h.size() || ($h = $("<input/>").attr({"name":$h.name()}).appendTo($t));
+    var $s={"h":"height","w":"width"};
+    $.each($s,function(i,v){
+     $s[i] = $("[name='"+v+"']",$t);
+     $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
+    });
+    _t._log("Init sizes",$t,$s);
+    return _t;
    };
    _t.init();
   });
