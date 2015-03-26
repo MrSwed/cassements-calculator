@@ -149,6 +149,7 @@ $.fn.extend ({
      $s[i] = $("[name='"+v+"']",$t);
      $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
      $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>');
+     $s[i].attr("type","slider");
      $( "<div class='slider'></div>" ).insertAfter( $s[i] ).slider({
       orientation: i=="h"?"vertical":"horizontal",
       min: 1,

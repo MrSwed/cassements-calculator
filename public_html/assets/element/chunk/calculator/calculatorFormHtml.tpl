@@ -70,8 +70,8 @@
   </div>
   <div class="preview"><a href="#"><img src="#" alt="" title=""/></a></div>
    <div class="sizes">
-    <label class="height"><input type="text" name="height" eform="Высота::1" /></label>
-    <label class="width"><input type="text" name="width" eform="Ширина::1" /></label>
+    <label class="height"><span>Высота, мм</span> <input type="text" name="height" eform="Высота::1" /></label>
+    <label class="width"><span>Ширина, мм</span> <input type="text" name="width" eform="Ширина::1" /></label>
    </div>
   <div class="parameters">
    <div class="radio">
