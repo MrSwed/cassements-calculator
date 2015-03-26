@@ -143,13 +143,14 @@ $.fn.extend ({
    _t._sizes = function() {
     var llevel=1;
     var $t = $(_t._p.sizes);
-    $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t._p.params)) || _t._log(llevel,"Create Sizes",$t));
+    $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(llevel,"Create Sizes",$t));
     var $s={"h":"height","w":"width"};
     $.each($s,function(i,v){
      $s[i] = $("[name='"+v+"']",$t);
      $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
      $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>');
      $( "<div class='slider'></div>" ).insertAfter( $s[i] ).slider({
+      orientation: i=="h"?"vertical":"horizontal",
       min: 1,
       max: 6,
       range: "min",

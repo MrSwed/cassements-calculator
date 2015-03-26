@@ -4,6 +4,21 @@
   color: #0173a2;
   font-style: italic;
  }
+ .workarea {
+  min-height: 510px;
+  &:before {
+   background: none repeat scroll 0 0 white;
+   border: 1px solid #c1d1dc;
+   border-radius: 10px;
+   bottom: 0;
+   content: "";
+   left: 0;
+   position: absolute;
+   right: 0;
+   top: 0;
+   z-index: 0;
+  }
+ }
  .tabs {
   .headers {
     border: 0 none;
@@ -81,10 +96,7 @@
    }
   }
   .contents {
-   background: none repeat scroll 0 0 white;
    border-radius: 10px;
-   border: 1px solid #c1d1dc;
-   min-height: 510px;
    padding: 1em;
   }
  }
