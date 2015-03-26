@@ -69,28 +69,28 @@
   <div class="preview"><a href="#"><img src="#" alt="" title=""/></a></div>
   <div class="parameters">
    <div class="sizes">
-    <label class="height"><input type="text" name="height"/></label>
-    <label class="width"><input type="text" name="width"/></label>
+    <label class="height"><input type="text" name="height" eform="Высота::1" /></label>
+    <label class="width"><input type="text" name="width" eform="Ширина::1" /></label>
    </div>
    <div class="radio">
     <div>Оконная система</div>
     <div>
-     <label><input type="radio" name="system" value="Rehau"/> Rehau</label>
-     <label><input type="radio" name="system" value="KBE"/> KBE</label>
+     <label><input type="radio" name="system" value="Rehau" eform="Оконная система::1"/> Rehau</label>
+     <label><input type="radio" name="system" value="KBE" eform="Оконная система::1"/> KBE</label>
     </div>
    </div>
    <div class="radio">
     <div>Комплектующие</div>
-    <div><label><input type="radio" name="kit" value="для панельного дома"/> для панельного дома</label>
-     <label><input type="radio" name="kit" value="для кирпичного дома"/> для кирпичного дома</label>
-     <label><input type="radio" name="kit" value="не нужны"/> не нужны</label>
+    <div><label><input type="radio" name="kit" eform="Комплектующие::1" value="для панельного дома"/> для панельного дома</label>
+     <label><input type="radio" name="kit" eform="Комплектующие::1" value="для кирпичного дома"/> для кирпичного дома</label>
+     <label><input type="radio" name="kit" eform="Комплектующие::1" value="не нужны"/> не нужны</label>
     </div>
    </div>
    <div class="radio">
     <div>Монтажные работы</div>
     <div>
-     <label><input type="radio" name="montage" value="Да"/> Да</label>
-     <label><input type="radio" name="montage" value="Нет"/> Нет</label>
+     <label><input type="radio" name="montage" value="Да" eform="Монтажные работы::1"/> Да</label>
+     <label><input type="radio" name="montage" value="Нет" eform="Монтажные работы::1"/> Нет</label>
     </div>
    </div>
    <div class="price"><span>00000</span> руб</div>
