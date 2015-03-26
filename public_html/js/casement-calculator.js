@@ -15,6 +15,7 @@ $.fn.extend ({
     "type": ".template .type",
     "template": ".template",
     "preview": ".preview",
+    "sizes":".sizes",
     "data": false, // need data
     "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
@@ -45,10 +46,10 @@ $.fn.extend ({
            e.preventDefault();
            var $a = $(this);
            var $i = $a.find("[src]");
-           _t._log(["Img", $i, " triggered", e]);
+           _t._log("Img", $i, " triggered", e);
            $a.addClass("selected").siblings().removeClass("selected");
            if (e.type == "click") {
-            _t._log(["Clicked", $a]);
+            _t._log("Clicked", $a);
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
             _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": $i.attr("title")});
@@ -67,20 +68,21 @@ $.fn.extend ({
     ]
    },p);
    _t._p = p;
-   _t._log = function(l){
-    _t._p.debug && console.log(l);
+   _t._log = function(){
+    _t._p.debug && console.log(arguments);
+    return _t;
    };
    _t.init = function(p) {
     p = {} || p;
     if (p.debug || _t._p.debug) console.log("_init");
     $.each("tabs,params".split(","), function (i, k) {
-     _t._log([i, k, _t._p[k]]);
+     _t._log(i, k, _t._p[k]);
      switch (true) {
       case typeof _t._p[k] == "string":
        _t._p[k] = $(_t._p[k], _t);
        if (!_t._p[k].size()) {
         _t._p[k] = $('<div/>').addClass(_t._p[k].class()).prependTo(_t);
-        _t._log(["inited new " + k, _t._p[k]]);
+        _t._log("inited new " + k, _t._p[k]);
        }
        break;
      }
@@ -104,7 +106,7 @@ $.fn.extend ({
       $tH.size() || ($tH = $("<div>").addClass($tH.class()).appendTo($t));
       $tC.size() || ($tC = $("<div>").addClass($tC.class()).appendTo($t));
       (_t._p.data && $.each(_t._p.data, function(i,k){
-       _t._log([i,k]);
+       _t._log(i,k);
        if ($.isNumeric(i)){
         // check or add header tabs and it contents
         var $tHi=$("[href*='"+ k.alias+"']",$tH);
@@ -132,7 +134,7 @@ $.fn.extend ({
     var $i = $("img",$a);
     $i.size() || ($i = $("<img/>").appendTo($a));
     $i.attr(p);
-    _t._log(["Preview inited: ",$t,$a,$i]);
+    _t._log("Preview inited: ",$t,$a,$i);
     return $t;
    };
    _t.init();
