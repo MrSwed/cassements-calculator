@@ -140,32 +140,42 @@ $.fn.extend ({
     _t._log(1,"Preview inited: ",$t,$a,$i);
     return $t;
    };
-   _t._sizes = function() {
+   _t._sizes = function(p) {
     var llevel=1;
+    _t._log(llevel+1,"Sizes: call ",p);
     var $t = $(_t._p.sizes);
-    $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(llevel,"Create Sizes",$t));
-    var $s={"h":"height","w":"width"};
-    $.each($s,function(i,v){
-     $s[i] = $("[name='"+v+"']",$t);
-     $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
-     $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>');
-     $s[i].attr("type","slider");
-     $( "<div class='slider'></div>" ).insertAfter( $s[i] ).slider({
-      orientation: i=="h"?"vertical":"horizontal",
-      min: 1,
-      max: 6,
-      range: "min",
-      value: $s[i].val(),
-      slide: function( event, ui ) {
-       $s[i].val(ui.value);
-      }
-     });
-     $s[i].change(function(e) {
-      _t._log(llevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
-      $(this).siblings(".slider").slider( "value", $(this).val() );
-     });
-    });
-    _t._log(llevel,"Sizes inited",$t,"Inputs: ",$s);
+    if (!p && !_t._sizesInited) {
+     _t._log(llevel+1,"Sizes: First init");
+     return _t._sizes("init");
+    }
+    switch (p) {
+     case "init":
+      $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(llevel,"Create Sizes",$t));
+      var $s={"h":"height","w":"width"};
+      $.each($s,function(i,v){
+       $s[i] = $("[name='"+v+"']",$t);
+       $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
+       $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>');
+       $s[i].attr("type","slider");
+       $( "<div class='slider'></div>" ).insertAfter( $s[i] ).slider({
+        orientation: i=="h"?"vertical":"horizontal",
+        min: 1,
+        max: 6,
+        range: "min",
+        value: $s[i].val(),
+        slide: function( event, ui ) {
+         $s[i].val(ui.value);
+        }
+       });
+       $s[i].change(function(e) {
+        _t._log(llevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
+        $(this).siblings(".slider").slider( "value", $(this).val() );
+       });
+      });
+      _t._log(llevel,"Sizes inited",$t,"Inputs: ",$s);
+      _t._sizesInited = true;
+     break;
+    }
     return _t;
    };
    _t.init();
