@@ -20,7 +20,7 @@ $.fn.extend ({
     "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
      function(o){ //#windows
-      _t._p.debug && console.log("init windows control at ", o.index(), o);
+      _t._log(1,"init windows control at ", o.index(), o);
       var $type = $(_t._p.type,o);
       if (!$type.size()) {
        // use template or create new
@@ -39,17 +39,17 @@ $.fn.extend ({
          $("<a>").prop({"href":item.image})
           .append($("<img/>").attr({"src":item.preview,"alt":item.title,"title":item.title})
           .load(function () {
-           _t._p.debug && console.log("loaded ", this, this.width, $gr.width());
+           _t._log(1,"loaded ", this, this.width, $gr.width());
            if ($gr.width() < this.width) $gr.width(this.width + ($gv.outerWidth()-$gv.width()));
           })).appendTo($gv)
           .on("init click", function (e) {
            e.preventDefault();
            var $a = $(this);
            var $i = $a.find("[src]");
-           _t._log("Img", $i, " triggered", e);
+           _t._log(2,"Img triggered ",e.type, $i, e);
            $a.addClass("selected").siblings().removeClass("selected");
            if (e.type == "click") {
-            _t._log("Clicked", $a);
+            _t._log(2,"Clicked", $a);
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
             _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": $i.attr("title")});
@@ -63,28 +63,30 @@ $.fn.extend ({
       return o;
      },
      function(o){ // #balcony
-      _t._p.debug && console.log("init balcony control at", o.index(), o);
+      _t._log(2,"init balcony control at", o.index(), o);
       return o;
      }
     ]
    },p);
    _t._p = p;
-   _t._log = function(){
-    _t._p.debug && console.log(arguments);
+   _t._log = function(d){
+    if (arguments.length === 0) return;
+    var args = [];
+    Array.prototype.push.apply( args, arguments );
+    $.isNumeric(d) && args.shift() || ( d=false );
+    _t._p.debug && (!d || _t._p.debug <= d) && console.dir(args);
     return _t;
    };
    _t.init = function(p) {
     p = {} || p;
-    if (p.debug || _t._p.debug) console.log("_init");
+    _t._log(1,"_init");
     $.each("tabs,params".split(","), function (i, k) {
-     _t._log(i, k, _t._p[k]);
+     _t._log(1,"Params to $", i, k, _t._p[k]);
      switch (true) {
       case typeof _t._p[k] == "string":
        _t._p[k] = $(_t._p[k], _t);
-       if (!_t._p[k].size()) {
-        _t._p[k] = $('<div/>').addClass(_t._p[k].class()).prependTo(_t);
-        _t._log("inited new " + k, _t._p[k]);
-       }
+       _t._p[k].size() || (_t._p[k] = $('<div/>').addClass(_t._p[k].class()).prependTo(_t));
+       _t._log(2,"Param inited:", k, _t._p[k]);
        break;
      }
     });
@@ -93,7 +95,7 @@ $.fn.extend ({
      $(_t._p.warning=$(".warning", _t._p.params)).size() || 
         (_t._p.warning = $("<div/>").addClass("warning")
             .html(_t._p.texts.warning).appendTo(_t._p.params));
-     _t._p.debug || console.log("init warning: ",_t._p.texts.warning);
+     _t._log(1,"Init warning: ",_t._p.texts.warning);
     }
     return _t;
    };
@@ -107,7 +109,7 @@ $.fn.extend ({
       $tH.size() || ($tH = $("<div>").addClass($tH.class()).appendTo($t));
       $tC.size() || ($tC = $("<div>").addClass($tC.class()).appendTo($t));
       (_t._p.data && $.each(_t._p.data, function(i,k){
-       _t._log(i,k);
+       _t._log(1,"Tab init: ",i +" = ",k);
        if ($.isNumeric(i)){
         // check or add header tabs and it contents
         var $tHi=$("[href*='"+ k.alias+"']",$tH);
@@ -135,20 +137,21 @@ $.fn.extend ({
     var $i = $("img",$a);
     $i.size() || ($i = $("<img/>").appendTo($a));
     $i.attr(p);
-    _t._log("Preview inited: ",$t,$a,$i);
+    _t._log(1,"Preview inited: ",$t,$a,$i);
     return $t;
    };
    _t._sizes = function() {
     var $t = $(_t._p.sizes);
-    $t.size() || ($t = $("<div/>").addClass($t.class()).appendTo(_t));
+    $t.size() || ($t = $("<div/>").addClass($t.class()).appendTo(_t.params));
     //var $h = $("[name='height']",$t);
     //$h.size() || ($h = $("<input/>").attr({"name":$h.name()}).appendTo($t));
     var $s={"h":"height","w":"width"};
     $.each($s,function(i,v){
      $s[i] = $("[name='"+v+"']",$t);
      $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
+     $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>'); 
     });
-    _t._log("Init sizes",$t,$s);
+    _t._log(2,"Sizes inited",$t,"Inputs: ",$s);
     return _t;
    };
    _t.init();
