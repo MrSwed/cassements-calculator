@@ -141,17 +141,16 @@ $.fn.extend ({
     return $t;
    };
    _t._sizes = function() {
+    var llevel=1;
     var $t = $(_t._p.sizes);
-    $t.size() || ($t = $("<div/>").addClass($t.class()).appendTo(_t.params));
-    //var $h = $("[name='height']",$t);
-    //$h.size() || ($h = $("<input/>").attr({"name":$h.name()}).appendTo($t));
+    $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t._p.params)) || _t._log(llevel,"Create Sizes",$t));
     var $s={"h":"height","w":"width"};
     $.each($s,function(i,v){
      $s[i] = $("[name='"+v+"']",$t);
      $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
      $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>'); 
     });
-    _t._log(2,"Sizes inited",$t,"Inputs: ",$s);
+    _t._log(llevel,"Sizes inited",$t,"Inputs: ",$s);
     return _t;
    };
    _t.init();
