@@ -54,7 +54,7 @@ $.fn.extend ({
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
             _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": (_t._debug(3)?id+": ":'')+$i.attr("title")});
-            _t._id(id);
+            _t._var(_t._p.form.id,id);
             _t._sizes();
            }
           })
@@ -109,9 +109,11 @@ $.fn.extend ({
     });
     return _t;
    };
-   _t._id = function(id) {
-    (!id && (id = $(_t._p.form.id).val())) || $(_t._p.form.id).val(id);
-    return id ;
+   _t._var = function(n,v) {
+    _t._log(2,"_var",n,v);
+    var i = typeof n=="object"?n:(_t._p.form[n=n.toString()]?$(_t._p.form[n]):$("[name='"+n+"']",_t));
+    (!v && (v = i.val())) || i.val(v);
+    return v ;
    };
    _t._err = function(m) {console.log(m)||alert(m); };
    _t.tabs = function(p){
