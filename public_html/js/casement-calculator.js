@@ -230,7 +230,7 @@ $.fn.extend ({
      var dlevel=3;
      var f = $("[name]",_t);
     
-    _t._log(dlevel,"Calc: ",f, f.serializeArray());
+    _t._log(dlevel,"Calc: ",f, f.serializeObject());
    };
    _t.init();
   });
