@@ -16,6 +16,7 @@ $.fn.extend ({
     "template": ".template",
     "preview": ".preview",
     "sizes":".sizes",
+    "form":{"id":"id","w":"width","h":"height","price":"price"},
     "data": false, // need data
     "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
@@ -53,6 +54,7 @@ $.fn.extend ({
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
             _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": (_t._debug(3)?id+": ":'')+$i.attr("title")});
+            _t._id(id);
             _t._sizes();
            }
           })
@@ -75,7 +77,7 @@ $.fn.extend ({
     var args = [];
     Array.prototype.push.apply( args, arguments );
     $.isNumeric(d) && args.shift() || ( d=false );
-    _t._debug() && console.dir(args);
+    _t._debug(d) && console.dir(args);
     return _t;
    };
    _t.init = function(p) {
@@ -98,7 +100,18 @@ $.fn.extend ({
             .html(_t._p.texts.warning).appendTo(_t._p.params));
      _t._log(1,"Init warning: ",_t._p.texts.warning);
     }
+    $.each(_t._p.form,function(a,item){
+     var v = item.value || "";
+     var n = item.name || item.toString();
+     var i = $("[name='"+n+"']",_t);
+     i.size() || (i = $("<input/>").attr({"type":"hidden","name":n,"value":v}).appendTo(_t));
+     _t._p.form[a] = i;
+    });
     return _t;
+   };
+   _t._id = function(id) {
+    (!id && (id = $(_t._p.form.id).val())) || $(_t._p.form.id).val(id);
+    return id ;
    };
    _t._err = function(m) {console.log(m)||alert(m); };
    _t.tabs = function(p){
@@ -204,6 +217,12 @@ $.fn.extend ({
       break;
      }
     return result;
+   };
+   _t._calc = function() {
+     var dlevel=3;
+     var f = $("[name]",_t).serializeArray();
+    
+    _t._log(dlevel,"Calc: ",f, f.serializeArray());
    };
    _t.init();
   });

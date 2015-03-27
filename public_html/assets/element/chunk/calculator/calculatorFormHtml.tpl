@@ -46,7 +46,7 @@
      "data": CalcData, 
      "reference":{"price":{"montage":CalcData_add[0],"panel":CalcData_add[1]}},
      "texts":{"warning":CalcData_add[2]},
-     "debug": 2
+     "debug": 3
     });
    $(".calculator .parameters [type='button']").click(function(){
      $(".modal").modal("open",{
@@ -58,10 +58,10 @@
   });
  </script>
  <input type="hidden" name="formid" value="calculatorForm" />
- <input type="hidden" name="type" eform="Ошибка выбора типа окна::1" value=""/>
  <label style="display:none"><input type="text" name="veridata" eform="&nbsp;:date:0::#REGEX /^$/" value=""/></label>
  <div class="workarea">
-  
+  <input type="hidden" name="id" value="" eform="Ошибка получения идентификатора:integer:1" value=""/>
+  <input type="hidden" name="price" value="" eform="Ошибка расчета стоимости:float:1" value=""/>
   <div class="template" >
    <div class="type">
     <div class="caption">Выберите тип окна</div>
