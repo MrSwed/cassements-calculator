@@ -3,6 +3,7 @@
 <form action="[~[*id*]~]?review=1" method="post">
  <link rel="stylesheet" href="js/jquery-ui/jquery-ui.css" property="all"/>
  <script src="js/jquery-ui/jquery-ui.js"></script>
+ <script type="text/javascript" src="/js/jquery.serialize-object.js"></script>
  <script type="text/javascript" src="/js/casement-calculator.js"></script>
  <link href="/design/casement-calculator.css" rel="stylesheet" type="text/css" property="all"/>
  
@@ -46,7 +47,7 @@
      "data": CalcData, 
      "reference":{"price":{"montage":CalcData_add[0],"panel":CalcData_add[1]}},
      "texts":{"warning":CalcData_add[2]},
-     "debug": 3
+     "debug": 2
     });
    $(".calculator .parameters [type='button']").click(function(){
      $(".modal").modal("open",{
