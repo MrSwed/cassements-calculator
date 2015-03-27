@@ -192,7 +192,7 @@ $.fn.extend ({
            if (typeof item=="object") {
             for (k in grKey) {
              if (item[grKey[k]]) {
-             _t._log(2,"Get Data recursion at:  ",i,k,item[grKey[k]);
+             _t._log(2,"Get Data recursion at:  ",i,k,item[grKey[k]]);
               result = _t._data(p, item[grKey[k]]);
               return false;
              }
