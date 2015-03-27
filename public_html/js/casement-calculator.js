@@ -168,6 +168,7 @@ $.fn.extend ({
      case "init":
       $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
       var $s={"h":"height","w":"width"};
+      var _d=_t._data(_t._var(_t._p.form.id));
       $.each($s,function(i,v){
        $s[i] = $("[name='"+v+"']",$t);
        $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
@@ -181,10 +182,12 @@ $.fn.extend ({
         value: $s[i].val(),
         slide: function( event, ui ) {
          $s[i].val(ui.value);
+         _t._calc();
         }
        });
        $s[i].change(function(e) {
         _t._log(dlevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
+        _t._calc();
         $(this).siblings(".slider").slider( "value", $(this).val() );
        });
       });
@@ -194,35 +197,38 @@ $.fn.extend ({
     }
     return _t;
    };
-   _t._data = function(p,data,grKey) {
-    var dlevel=2; 
+   _t._data = function(p,data,grKey,deep) {
+    var dlevel=2;
     data = data  || _t._p.data;
+    data._index = data._index || {}; 
+    if (typeof data._index[p] !== "undefined") return data._index[p]; // cache
     grKey = grKey?grKey:"data,group";
     grKey = typeof grKey!="object"?grKey.split(","):grKey;
-    var result=false;
-   _t._log(dlevel,"Get Data",p,data);
+    data._index[p]=false;
+   _t._log(dlevel,"Get Data",p,data,deep);
      switch (true) {
       case $.isNumeric(p): // return last level data
           if (typeof data[p]!=="undefined") return data[p]; // end recursion
           $.each(data,function(i,item){
-           _t._log(dlevel,"Get Data: check item ",i,item);
+           _t._log(dlevel,"Get Data: check item ",i,item,deep);
            if (typeof item=="object") {
             for (k in grKey) {
              if (item[grKey[k]]) {
-             _t._log(dlevel,"Get Data: recursion in '"+grKey[k]+"':  ",i,item[grKey[k]]);
-              result = _t._data(p, item[grKey[k]]);
-              return false;
+             _t._log(dlevel,"Get Data: recursion in '"+grKey[k]+"':  ",i,item[grKey[k]],deep);
+              if (data._index[p] = _t._data(p, item[grKey[k]],grKey,deep?deep+1:1)) {
+               return false;
+              }
              }
             }
            }  
           });
       break;
      }
-    return result;
+    return data._index[p];
    };
    _t._calc = function() {
      var dlevel=3;
-     var f = $("[name]",_t).serializeArray();
+     var f = $("[name]",_t);
     
     _t._log(dlevel,"Calc: ",f, f.serializeArray());
    };
