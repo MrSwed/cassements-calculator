@@ -69,12 +69,13 @@ $.fn.extend ({
     ]
    },p);
    _t._p = p;
+   _t._debug = function(d) {return _t._p.debug && (!d || _t._p.debug <= d)};
    _t._log = function(d){
     if (arguments.length === 0) return;
     var args = [];
     Array.prototype.push.apply( args, arguments );
     $.isNumeric(d) && args.shift() || ( d=false );
-    _t._p.debug && (!d || _t._p.debug <= d) && console.dir(args);
+    _t._debug() && console.dir(args);
     return _t;
    };
    _t.init = function(p) {
