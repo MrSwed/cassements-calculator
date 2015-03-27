@@ -178,6 +178,31 @@ $.fn.extend ({
     }
     return _t;
    };
+   _t._data = function(p,data,grKey) {
+    data = data  || _t._p.data;
+    grKey = grKey?grKey:"data,group";
+    grKey = typeof grKey!="object"?grKey.split(","):grKey;
+    var result=false;
+   _t._log(2,"Get Data",p,data);
+     switch (true) {
+      case $.isNumeric(p): // return last level data
+          if (typeof data[p]!=="undefined") return data[p];
+          $.each(data,function(i,item){
+           _t._log(2,"Get Data for ",i,item);
+           if (typeof item=="object") {
+            for (k in grKey) {
+             if (item[grKey[k]]) {
+             _t._log(2,"Get Data recursion at:  ",i,k,item[grKey[k]);
+              result = _t._data(p, item[grKey[k]]);
+              return false;
+             }
+            }
+           }  
+          });
+      break;
+     }
+    return result;
+   };
    _t.init();
   });
  }
