@@ -39,31 +39,31 @@ if (! in_array(37,$pidAr) and $cid!=37 )  {
 }
 
 
-if ($cid==37 or in_array(37,$pidAr)) {
- if ($cid!=37 and $content["isfolder"]==1) mm_hideFields("calculator,image,photos");
- else {
-  mm_createTab('Калькулятор','calculator');
-  mm_moveFieldsToTab('image,photos,calculator','calculator');
- }
- if ($cid==37) {
-  mm_hideFields("image,photos");
-  mm_renameField('calculator', 'Общие параметры');
-  mm_changeFieldHelp('calculator', 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Периметр: Lм * Pруб. ');
-  mm_ddMultipleFields('calculator', '', '', 'number,number,richtext', 'Базовая (руб./м&sup2;),Периметр для панели (руб.м),Предупреждение',"70,70,300",'||', '::', '', '', 0, 1);
- } else {
-  mm_renameField('image', 'Превью');
-  mm_changeFieldHelp('image', 'Изображение для выбора');
-  mm_renameField('photos', 'Изображение');
-  if (in_array(38,$pidAr)) { 
+if ($tpl == 8) { // Калькулятор
+ mm_createTab('Калькулятор', 'calculator');
+ mm_moveFieldsToTab('image,photos,calculator', 'calculator');
+ switch (true) {
+  case ($cid == 37):
+   mm_hideFields("image,photos");
+   mm_renameField('calculator', 'Общие параметры');
+   mm_changeFieldHelp('calculator', 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Периметр: Lм * Pруб. ');
+   mm_ddMultipleFields('calculator', '', '', 'number,number,richtext', 'Базовая (руб./м&sup2;),Периметр для панели (руб.м),Предупреждение', "70,70,300", '||', '::', '', '', 0, 1);
+   break;
+  case (in_array(38, $pidAr)):
+   mm_renameField('image', 'Превью');
+   mm_changeFieldHelp('image', 'Изображение для выбора');
+   mm_renameField('photos', 'Изображение');
+//  break;
+  case ($tpl == 8):
    mm_renameField('calculator', 'Параметры секции');
    mm_changeFieldHelp('calculator', '');
-   mm_ddMultipleFields('calculator', '', '', 'number,number,number,number,number,number', 'Ширина (мм.),Высота (мм.),КВЕ (руб.),Rehau (руб.),Комп-я панели (руб.),Комп-я кирпича (руб.)',70);
-  }
-  if (in_array(39,$pidAr)) { 
+   mm_ddMultipleFields('calculator', '', '', 'number,number,number,number,number,number', 'Ширина (мм.),Высота (мм.),КВЕ (руб.),Rehau (руб.),Комп-я панели (руб.),Комп-я кирпича (руб.)', 70);
+   break;
+  case (in_array(39, $pidAr)):
    mm_renameField('calculator', 'Состав остекления');
    mm_changeFieldHelp('calculator', 'ID ресурсов с окнами через запятую или двойной клик в поле ввода для выбора из списка');
-   mm_ddSelectDocuments('calculator', '', '', 38,10,'isfolder=0',0,'[+title+] ([+id+])',true);
-  }
+   mm_ddSelectDocuments('calculator', '', '', 38, 10, 'isfolder=0', 0, '[+title+] ([+id+])', true);
+   break;
  }
 }
 
