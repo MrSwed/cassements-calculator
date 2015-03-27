@@ -32,12 +32,12 @@ $.fn.extend ({
       $tg.html();
       $.each(_t._p.data[o.index()].data, function (id, gr) {
        var $gr = $("<div/>").addClass("group")
-            .attr("title",gr.title)
+            .attr("title",(_t._debug(3)?id+": ":'')+gr.title)
             .appendTo($tg);
        var $gv = $("<div/>").addClass("variants").appendTo($gr);
         $.each(gr.group, function (id, item) {
          $("<a>").prop({"href":item.image})
-          .append($("<img/>").attr({"src":item.preview,"alt":item.title,"title":item.title})
+          .append($("<img/>").attr({"src":item.preview,"alt":item.title,"title":(_t._debug(3)?id+": ":'')+item.title})
           .load(function () {
            _t._log(1,"loaded ", this, this.width, $gr.width());
            if ($gr.width() < this.width) $gr.width(this.width + ($gv.outerWidth()-$gv.width()));
@@ -52,7 +52,7 @@ $.fn.extend ({
             _t._log(2,"Clicked", $a);
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
-            _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": $i.attr("title")});
+            _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": (_t._debug(3)?id+": ":'')+$i.attr("title")});
             _t._sizes();
            }
           })
@@ -142,16 +142,16 @@ $.fn.extend ({
     return $t;
    };
    _t._sizes = function(p) {
-    var llevel=1;
-    _t._log(llevel+1,"Sizes: call ",p);
+    var dlevel=1;
+    _t._log(dlevel+1,"Sizes: call ",p);
     var $t = $(_t._p.sizes);
     if (!p && !_t._sizesInited) {
-     _t._log(llevel+1,"Sizes: First init");
+     _t._log(dlevel+1,"Sizes: First init");
      return _t._sizes("init");
     }
     switch (p) {
      case "init":
-      $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(llevel,"Create Sizes",$t));
+      $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
       var $s={"h":"height","w":"width"};
       $.each($s,function(i,v){
        $s[i] = $("[name='"+v+"']",$t);
@@ -169,31 +169,32 @@ $.fn.extend ({
         }
        });
        $s[i].change(function(e) {
-        _t._log(llevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
+        _t._log(dlevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
         $(this).siblings(".slider").slider( "value", $(this).val() );
        });
       });
-      _t._log(llevel,"Sizes inited",$t,"Inputs: ",$s);
+      _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s);
       _t._sizesInited = true;
      break;
     }
     return _t;
    };
    _t._data = function(p,data,grKey) {
+    var dlevel=2; 
     data = data  || _t._p.data;
     grKey = grKey?grKey:"data,group";
     grKey = typeof grKey!="object"?grKey.split(","):grKey;
     var result=false;
-   _t._log(2,"Get Data",p,data);
+   _t._log(dlevel,"Get Data",p,data);
      switch (true) {
       case $.isNumeric(p): // return last level data
-          if (typeof data[p]!=="undefined") return data[p];
+          if (typeof data[p]!=="undefined") return data[p]; // end recursion
           $.each(data,function(i,item){
-           _t._log(2,"Get Data for ",i,item);
+           _t._log(dlevel,"Get Data: check item ",i,item);
            if (typeof item=="object") {
             for (k in grKey) {
              if (item[grKey[k]]) {
-             _t._log(2,"Get Data recursion at:  ",i,k,item[grKey[k]]);
+             _t._log(dlevel,"Get Data: recursion in '"+grKey[k]+"':  ",i,item[grKey[k]]);
               result = _t._data(p, item[grKey[k]]);
               return false;
              }
