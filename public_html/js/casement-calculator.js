@@ -93,7 +93,7 @@ $.fn.extend ({
        break;
      }
     });
-    $(_t.tabs("init")).tabs();
+    _t._tabs("init");
     if (_t._p.texts && _t._p.texts.warning) {
      $(_t._p.warning=$(".warning", _t._p.params)).size() || 
         (_t._p.warning = $("<div/>").addClass("warning")
@@ -117,7 +117,7 @@ $.fn.extend ({
     return v ;
    };
    _t._err = function(m) {console.log(m)||alert(m); };
-   _t.tabs = function(p){
+   _t._tabs = function(p){
     var $t = $(_t._p.tabs);
     switch (true) {
      case p=="init":
@@ -140,6 +140,10 @@ $.fn.extend ({
        }
       })) || _t._err("data error");
       break;
+     case p=="opened":
+      _t._log(2,"Tabs opened",$(".active",_t._p.tabs).index());
+      return $(".active",_t._p.tabs).index();
+      break;
     }
     return $t.tabs();
    };
@@ -161,40 +165,51 @@ $.fn.extend ({
     var dlevel=1;
     _t._log(dlevel+1,"Sizes: call ",p);
     var $t = $(_t._p.sizes);
-    if (!p && !_t._sizesInited) {
-     _t._log(dlevel+1,"Sizes: First init");
-     return _t._sizes("init");
-    }
-    switch (p) {
-     case "init":
+    switch (true) {
+     case !p || p=="init":
       $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
-      var $s={"h":"height","w":"width"};
+      $t.html("");
+      var $s={"w":"width","h":"height"};
       var _d=_t._data(_t._var(_t._p.form.id));
-      _t._log(2,"Sizes Data:",_t._p.form.id,_t._var(_t._p.form.id),_d);
+      var tabI = _t._tabs("opened");
+      //var colsT = ["alias","name","dimensions","input"];
+      var cols=_t._p.data[tabI].cols;
+      $.each(cols,function(i,item){
+        if (!parseInt(i)) return 1; //skip first - aliaces
+        $.each(item,function(k,v){
+         (cols[cols[0][k]] || (cols[cols[0][k]]=[])) && (cols[cols[0][k]][i-1]=v);
+         _t._log(2,"cols[]= ",tabI,i,k,cols[0][k], "value: "+v);
+        });
+       
+      });
+      _t._log(2,"Sizes Data:",_t._var(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],cols);
       $.each($s,function(i,v){
-       $s[i] = $("[name='"+v+"']",$t);
-       $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
-       $s[i].parent().is("label") || $s[i].wrap('<label class="'+v+'"/>');
-       $s[i].attr("type","slider");
-       $( "<div class='slider'></div>" ).insertAfter( $s[i] ).slider({
+       var _s = $("[name='"+v+"']",$t);
+       _s.size() || (_s = $("<input/>").attr({"name":_s.name()}).prependTo($t));
+       _s.parent().is("label") || _s.wrap('<label class="'+v+'"/>');
+       _s.prev().size() || $('<span>'+i+":"+cols[1][i]+', '+cols[2][i]+'</span>').insertBefore(_s);
+       //_s.prev().size() || $('<span>'+_t._p.data[_t._tab].cols[1][i]+', '+_t._p.data[_t._tab].cols[2][i]+'</span>').insertBefore(_s);
+       _s.attr("type","slider");
+       $( "<div class='slider'></div>" ).insertAfter( _s ).slider({
         orientation: i=="h"?"vertical":"horizontal",
         min: 1,
         max: 6,
         range: "min",
-        value: $s[i].val(),
+        value: _s.val(),
         slide: function( event, ui ) {
-         $s[i].val(ui.value);
+         _s.val(ui.value);
          _t._calc();
+         _t._log(2,"TEST",_t._var("tab"));
         }
        });
-       $s[i].change(function(e) {
+       _s.change(function(e) {
         _t._log(dlevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
         _t._calc();
         $(this).siblings(".slider").slider( "value", $(this).val() );
        });
+       $s[i] = _s;
       });
       _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s);
-      _t._sizesInited = true;
      break;
     }
     return _t;
