@@ -11,6 +11,11 @@
  var CalcData = [
   {"alias":"#windows", 
    "name":"пластиковые окна",
+   "cols":[[ddGetMultipleField?
+           &docField=`calculator`
+          &docId=`38`
+          &outputFormat=`JSON`
+          ]],
    "data": {[!Ditto?
     &parents=`38`
     &tpl=`item_calculator_json_recursive`
@@ -24,6 +29,11 @@
   },
   {"alias":"#balcony",
    "name":"остекление балконов",
+   "cols":[[ddGetMultipleField?
+           &docField=`calculator`
+           &docId=`39`
+           &outputFormat=`JSON`
+           ]],
    "data": {[!Ditto?
     &parents=`39`
     &tpl=`item_calculator_json_recursive`
