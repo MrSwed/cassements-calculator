@@ -110,8 +110,9 @@ $.fn.extend ({
     return _t;
    };
    _t._var = function(n,v) {
-    _t._log(2,"_var",n,v);
-    var i = typeof n=="object"?n:(_t._p.form[n=n.toString()]?$(_t._p.form[n]):$("[name='"+n+"']",_t));
+    var i;
+    i = typeof n=="object"?n:((i=$("[name='"+_t._p.form[n.toString()]+"']")).size()?i:$("[name='"+n+"']",_t));
+    _t._log(2,"_var ",n,i,v);
     (!v && (v = i.val())) || i.val(v);
     return v ;
    };
@@ -169,6 +170,7 @@ $.fn.extend ({
       $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
       var $s={"h":"height","w":"width"};
       var _d=_t._data(_t._var(_t._p.form.id));
+      _t._log(2,"Sizes Data:",_t._p.form.id,_t._var(_t._p.form.id),_d);
       $.each($s,function(i,v){
        $s[i] = $("[name='"+v+"']",$t);
        $s[i].size() || ($s[i] = $("<input/>").attr({"name":$s[i].name()}).appendTo($t));
