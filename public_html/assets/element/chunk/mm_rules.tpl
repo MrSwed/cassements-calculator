@@ -58,9 +58,13 @@ if ($tpl == 8) { // Калькулятор
    mm_ddMultipleFields('calculator', '', '', 'textarea,textarea,textarea,textarea,textarea,textarea', 'Колонка 1,Колонка 2,Колонка 3,Колонка 4,Колонка 5,Колонка 6', '70%');
    break;
   case (in_array(38, $pidAr) and !$content["isfolder"]):
+   $titles = $modx->runSnippet("getInheritField",array("id"=>$pid,"field"=>"calculator"));
+   $titles = $modx->runSnippet("ddGetMultipleField",array("string"=>$titles,"outputFormat"=>"array"));
+   $lt = count($titles);
+   foreach ($titles[1] as $i => $v) $titles[$lt][$i] = $v." (".$titles[2][$i].")"; 
    mm_renameField('calculator', 'Параметры секции');
    mm_changeFieldHelp('calculator', '');
-   mm_ddMultipleFields('calculator', '', '', 'number,number,number,number,number,number', '', '80%');
+   mm_ddMultipleFields('calculator', '', '', 'number,number,number,number,number,number', implode(",",$titles[$lt]), '80%');
    break;
   case (in_array(39, $pidAr)  and !$content["isfolder"]):
    mm_renameField('calculator', 'Состав остекления');
