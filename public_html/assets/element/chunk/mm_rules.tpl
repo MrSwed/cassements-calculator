@@ -50,7 +50,7 @@ if ($tpl == 8) { // Калькулятор
    mm_hideFields("image,photos");
    mm_renameField('calculator', 'Общие параметры');
    mm_changeFieldHelp('calculator', 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Периметр: Lм * Pруб. ');
-   mm_ddMultipleFields('calculator', '', '', 'number,number,richtext', 'Базовая (руб./м&sup2;),Периметр для панели (руб.м),Предупреждение', "70,70,300", '||', '::', '', '', 0, 1);
+   mm_ddMultipleFields('calculator', '', '', 'number,number,number,richtext', 'Базовая (руб./м&sup2;),Периметр для панели (руб.м),Шаг (мм),Предупреждение', "70,70,50,200", '||', '::', '', '', 0, 1);
    break;
   case ($cid == 38):  // Окна Формат : Ширина (мм.),Высота (мм.),КВЕ (руб.),Rehau (руб.),Комп-я панели (руб.),Комп-я кирпича (руб.)
    mm_renameField('calculator', 'Заголовки секции');
