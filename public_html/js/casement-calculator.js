@@ -55,7 +55,7 @@ $.fn.extend ({
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
             _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": (_t._debug(3)?id+": ":'')+$i.attr("title")});
-            _t._var(_t._p.form.id,id);
+            _t._val(_t._p.form.id,id);
             _t._sizes();
            }
           })
@@ -112,10 +112,10 @@ $.fn.extend ({
     });
     return _t;
    };
-   _t._var = function(n,v) {
+   _t._val = function(n,v) {
     var i;
-    i = typeof n=="object"?n:((i=$("[name='"+_t._p.form[n.toString()]+"']")).size()?i:$("[name='"+n+"']",_t));
-    _t._log(2,"_var ",n,i,v);
+    i = typeof n=="object"?n:((i=$("[name='"+_t._p.form[n.toString()]+"']")).size()?i:$("[name='"+n.toString()+"']",_t));
+    _t._log(2,"_val ",n,i,v);
     (!v && (v = i.val())) || i.val(v);
     return v ;
    };
@@ -173,7 +173,7 @@ $.fn.extend ({
       $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
       $t.html("");
       var $s={"w":"width","h":"height"};
-      var _d=_t._data(_t._var(_t._p.form.id));
+      var _d=_t._data(_t._val(_t._p.form.id));
       var tabI = _t._tabs("opened");
       var _data = _t._p.data[tabI].data;
       //var colsT = ["alias","name","dimensions","input"];
@@ -188,7 +188,7 @@ $.fn.extend ({
          }
         });
       });
-      _t._log(dlevel+1,"Sizes Data:",_t._var(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],_data,cols);
+      _t._log(dlevel+1,"Sizes Data:",_t._val(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],_data,cols);
       $.each($s,function(i,v){
        var _dCol = _t._getDataCol(_d.data,cols._index[i]);
        var _mnx = _t._minmax(_dCol);
@@ -211,7 +211,7 @@ $.fn.extend ({
          slide: function( event, ui ) {
           _s.val(ui.value);
           _t._calc();
-          _t._log(2,"Slided",_t._var("tab"));
+          _t._log(2,"Slided",_t._val("tab"));
          }
         });
        _s.change(function(e) {
@@ -228,12 +228,12 @@ $.fn.extend ({
    };
    _t._data = function(p,data,grKey,deep) {
     var dlevel=2;
+    var _result;
     data = data  || _t._p.data;
-    data._index = data._index || {}; 
-    if (typeof data._index[p] !== "undefined") return data._index[p]; // cache
+    if (data._index && data._index[p]) return data._index[p]; // cache
     grKey = grKey?grKey:"data,group";
     grKey = typeof grKey!="object"?grKey.split(","):grKey;
-    data._index[p]=false;
+    _result=false;
    _t._log(dlevel,"Get Data",p,data,deep);
      switch (true) {
       case $.isNumeric(p): // return last level data
@@ -244,7 +244,7 @@ $.fn.extend ({
             for (k in grKey) {
              if (item[grKey[k]]) {
              _t._log(dlevel,"Get Data: recursion in '"+grKey[k]+"':  ",i,item[grKey[k]],deep);
-              if (data._index[p] = _t._data(p, item[grKey[k]],grKey,deep?deep+1:1)) {
+              if (_result = _t._data(p, item[grKey[k]],grKey,deep?deep+1:1)) {
                return false;
               }
              }
@@ -253,17 +253,35 @@ $.fn.extend ({
           });
       break;
      }
-    return data._index[p];
+    if (!deep) {
+     data._index || (data._index={});
+     data._index[p]=_result;
+    }
+    return _result;
    };
    _t._calc = function() {
+    //_t.$counts || (_t.$counts = {});
+    //_t.$counts._calc = 1 + parseInt(_t.$counts._calc || 0);
+    _t._counts("_calc",1 + _t._counts("_calc"));
     var dlevel = 3;
     var f = $("[name]", _t);
-    _t.$counts || (_t.$counts = {});
-    _t.$counts._calc = 1 + (_t.$counts || _t.$counts._calc || 0);
-
-    _t._log(dlevel,"Calc ("+_t.$counts._calc+"): ",f, f.serializeObject());
+    var _d=_t._data(_t._val(_t._p.form.id));
+    var S = _t._val("w") * _t._val("H");
+    var _Srange = {};
+    //while ()
+    var _result = _t._val("w") * _t._val("h");
+    
+    _t._log(dlevel,"Calc ("+_t._counts("_calc").toString()+"): ",f.serializeObject());
+    _t._val("price",_result);
+    $(_t._p.form.price).trigger("change");
+    return _result;
    };
-
+   _t._counts = function(n,v) {
+    _t.$counts || (_t.$counts = {});
+    v = typeof v!="undefined"? v : parseInt(_t.$counts[n]) || 0 ;
+    _t.$counts[n] = parseInt(v) || 0;
+    return v;
+   };
    _t._getDataCol = function(data,c) {
     c!==null || (c=0); 
     var ar=[];
