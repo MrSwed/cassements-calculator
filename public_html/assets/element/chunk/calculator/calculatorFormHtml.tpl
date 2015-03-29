@@ -55,7 +55,7 @@
   $(function(){
     $(".form.calculator .workarea").calculator({
      "data": CalcData, 
-     "reference":{"price":{"montage":CalcData_add[0],"panel":CalcData_add[1],"step":CalcData_add[2]}},
+     "reference":{"price":{"montage":CalcData_add[0],"panel":CalcData_add[1]},"step":CalcData_add[2]},
      "texts":{"warning":CalcData_add[3]},
      "debug": 2
     });

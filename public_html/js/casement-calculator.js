@@ -16,6 +16,7 @@ $.fn.extend ({
     "template": ".template",
     "preview": ".preview",
     "sizes":".sizes",
+    "reference":{}, // prices for service, step of slider, important message, etc 
     "form":{"id":"id","w":"width","h":"height","price":"price"},
     "data": false, // need data
     "texts" : {warning:""}, // set warning for understanding approximate calculation
@@ -70,6 +71,8 @@ $.fn.extend ({
      }
     ]
    },p);
+   // short aliaces
+   p._ref = p.reference;
    _t._p = p;
    _t._debug = function(d) {return _t._p.debug && (!d || _t._p.debug <= d)};
    _t._log = function(d){
@@ -172,36 +175,45 @@ $.fn.extend ({
       var $s={"w":"width","h":"height"};
       var _d=_t._data(_t._var(_t._p.form.id));
       var tabI = _t._tabs("opened");
+      var _data = _t._p.data[tabI].data;
       //var colsT = ["alias","name","dimensions","input"];
       var cols=_t._p.data[tabI].cols;
       $.each(cols,function(i,item){
-        if (!parseInt(i)) return 1; //skip first - aliaces
         $.each(item,function(k,v){
+         if (!parseInt(i)) { // first - aliaces
+          (cols._index || (cols._index={})) && (cols._index[v]=k);
+         } else {
          (cols[cols[0][k]] || (cols[cols[0][k]]=[])) && (cols[cols[0][k]][i-1]=v);
-         _t._log(2,"cols[]= ",tabI,i,k,cols[0][k], "value: "+v);
+         _t._log(dlevel,"cols[]= ",tabI,i,k,cols[0][k], "value: "+v);
+         }
         });
-       
       });
-      _t._log(2,"Sizes Data:",_t._var(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],cols);
+      _t._log(dlevel+1,"Sizes Data:",_t._var(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],_data,cols);
       $.each($s,function(i,v){
+       var _dCol = _t._getDataCol(_d.data,cols._index[i]);
+       var _mnx = _t._minmax(_dCol);
        var _s = $("[name='"+v+"']",$t);
        _s.size() || (_s = $("<input/>").attr({"name":_s.name()}).prependTo($t));
+       _s.val() || _s.val(_dCol[Math.round(_dCol.length/2)]);
        _s.parent().is("label") || _s.wrap('<label class="'+v+'"/>');
-       _s.prev().size() || $('<span>'+i+":"+cols[1][i]+', '+cols[2][i]+'</span>').insertBefore(_s);
-       //_s.prev().size() || $('<span>'+_t._p.data[_t._tab].cols[1][i]+', '+_t._p.data[_t._tab].cols[2][i]+'</span>').insertBefore(_s);
+       _s.prev().size() || $('<span>'+cols[i][0]+', '+cols[i][1]+'</span>').insertBefore(_s);
        _s.attr("type","slider");
-       $( "<div class='slider'></div>" ).insertAfter( _s ).slider({
-        orientation: i=="h"?"vertical":"horizontal",
-        min: 1,
-        max: 6,
-        range: "min",
-        value: _s.val(),
-        slide: function( event, ui ) {
-         _s.val(ui.value);
-         _t._calc();
-         _t._log(2,"TEST",_t._var("tab"));
-        }
-       });
+       // check and set defaults for slider
+       _t._log(2,"test tootls (i,v,cols,cols.index,_dCol,_mnx):",i,v,cols,cols._index[i],_dCol,_mnx);
+       $( "<div class='slider'></div>" ).insertAfter( _s )
+        .slider({
+         orientation: i=="h"?"vertical":"horizontal",
+         min: _mnx.min,
+         max: _mnx.max,
+         range: "min",
+         step: parseInt(_t._p._ref.step),
+         value: _s.val(),
+         slide: function( event, ui ) {
+          _s.val(ui.value);
+          _t._calc();
+          _t._log(2,"Slided",_t._var("tab"));
+         }
+        });
        _s.change(function(e) {
         _t._log(dlevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
         _t._calc();
@@ -244,11 +256,26 @@ $.fn.extend ({
     return data._index[p];
    };
    _t._calc = function() {
-     var dlevel=3;
-     var f = $("[name]",_t);
-    
-    _t._log(dlevel,"Calc: ",f, f.serializeObject());
+    var dlevel = 3;
+    var f = $("[name]", _t);
+    _t.$counts || (_t.$counts = {});
+    _t.$counts._calc = 1 + (_t.$counts || _t.$counts._calc || 0);
+
+    _t._log(dlevel,"Calc ("+_t.$counts._calc+"): ",f, f.serializeObject());
    };
+
+   _t._getDataCol = function(data,c) {
+    c!==null || (c=0); 
+    var ar=[];
+    for (var i in data) ar.push(data[i][c]);
+    _t._log(1,"_getDataCol (data,c,ar): ",data,c,ar);
+    return ar;
+   };
+
+   _t._minmax = function(ar,c) {
+     return {"max":Math.max.apply(null, ar),"min":Math.min.apply(null, ar)};
+   };
+
    _t.init();
   });
  }
