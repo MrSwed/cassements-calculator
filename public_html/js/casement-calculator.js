@@ -260,9 +260,6 @@ $.fn.extend ({
     return _result;
    };
    _t._calc = function() {
-    //_t.$counts || (_t.$counts = {});
-    //_t.$counts._calc = 1 + parseInt(_t.$counts._calc || 0);
-    _t._counts("_calc",1 + _t._counts("_calc"));
     var dlevel = 3;
     var f = $("[name]", _t);
     var _d=_t._data(_t._val(_t._p.form.id));
@@ -271,7 +268,7 @@ $.fn.extend ({
     //while ()
     var _result = _t._val("w") * _t._val("h");
     
-    _t._log(dlevel,"Calc ("+_t._counts("_calc").toString()+"): ",f.serializeObject());
+    _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",f.serializeObject());
     _t._val("price",_result);
     $(_t._p.form.price).trigger("change");
     return _result;
@@ -283,10 +280,10 @@ $.fn.extend ({
     return v;
    };
    _t._getDataCol = function(data,c) {
-    c!==null || (c=0); 
+    c!=null || (c=0);
     var ar=[];
     for (var i in data) ar.push(data[i][c]);
-    _t._log(1,"_getDataCol (data,c,ar): ",data,c,ar);
+    _t._log(2,"_getDataCol ("+_t._counts("_getDataCol",1 + _t._counts("_getDataCol")).toString()+") (data,c,ar): ",data,c,ar);
     return ar;
    };
 
