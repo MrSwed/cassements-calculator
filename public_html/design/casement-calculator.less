@@ -36,6 +36,7 @@
      border-width: 1px 1px 0;
      border-color: #e9e87d transparent transparent transparent;
      margin-right: -0.7em;
+     height: 1.88em;
      &:not(.active):not(:first-child) {
       padding-left: 2.3em;
      }
@@ -49,8 +50,8 @@
       }
       &:after {
        background: white;
-       border-color: transparent #c1d1dc transparent transparent;
        border-radius: 0 1px 0 0;
+       border-right: 1px solid #c1d1dc;
        top: 4px;
       }
      }
@@ -61,23 +62,21 @@
       background-image: -webkit-linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
       background-image: linear-gradient(bottom, #d3a919 0%, #e9e87d 100%);
       filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9e87d', endColorstr='#d3a919',GradientType=0 );
-      border-color: #e9e87d transparent transparent transparent;
-      border-image: none;
       border-radius: 0 10px 0 0;
-      border-style: solid;
-      border-width: 1px;
-      bottom: -1px;
+      border-width: 0;
+      bottom: 0.1px;
       content: "";
       position: absolute;
-      right: -6px;
-      top: -1px;
+      right: -0.3em;
+      top: 0;
       transform: skewX(25deg);
-      width: 13px;
+      width: 0.75em;
+      z-index: -1;
      }
      &:before {
        background: none repeat scroll 0 0 white;
-       right: 0;
-       bottom: -11px;
+       right: -0.68em;
+       bottom: -0.68em;
        content: "";
        display: block;
        height: 10px;
@@ -190,13 +189,12 @@
       }
      }
     .variants {
-     border: 1px solid transparent;     
-     border-radius: 0.5em;
-     left: -5px;
+     border: 1px solid rgba(0, 0, 0, 0);
+     border-radius: 0.5em 0.5em 0.5em 0.5em;
      margin: -11px 0;
      padding: 10px;
      position: absolute;
-     right: -5px;
+     width: inherit;
      z-index: 1;
      img { display: block;}
      >* {
@@ -296,7 +294,8 @@
     }
     .slider {
      bottom: 1.2em;
-     left: ~"calc(50% - 1.3em)";
+     left: 50%;
+     margin-left: -1.3em;
      top: 5.7em;
     }
    }
@@ -352,7 +351,8 @@
    box-shadow: 1px 0 1px 0 #ce6a00 inset, 7px 0 12px -4px rgba(255,255,255,0.8) inset;
   }
   .ui-slider-handle {
-   left: ~"calc( 50% - 1.3em )";
+   left: 50%;
+   margin-left: -1.3em;
    margin-bottom: -1.6em;
   }
  }
@@ -370,7 +370,8 @@
    box-shadow: 0 1px 1px 0 #ce6a00 inset, 0 7px 12px -4px rgba(255,255,255,0.8) inset;
   }
   .ui-slider-handle {
-   top: ~"calc( 50% - 1.1em )";
+   top: 50%;
+   margin-top: -1.2em;
    margin-left: -1.3em;
   }
  }
