@@ -262,12 +262,21 @@ $.fn.extend ({
    _t._calc = function() {
     var dlevel = 3;
     var f = $("[name]", _t);
-    var _d=_t._data(_t._val(_t._p.form.id));
-    var S = _t._val("w") * _t._val("H");
-    var _Srange = {};
-    //while ()
-    var _result = _t._val("w") * _t._val("h");
-    
+    var _d = _t._data(_t._val(_t._p.form.id));
+    var _result = 0;
+    switch (true) {
+     case _d.data:
+      var _prCol;
+      var S = _t._val("w") * _t._val("h");
+      
+      var _Srange = {};
+      //while ()
+
+      break;
+     case _d.group:
+      break;
+    }
+
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",f.serializeObject());
     _t._val("price",_result);
     $(_t._p.form.price).trigger("change");

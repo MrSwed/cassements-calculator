@@ -55,7 +55,7 @@ if ($tpl == 8) { // Калькулятор
   case ($cid == 38):  // Окна Формат : Ширина (мм.),Высота (мм.),КВЕ (руб.),Rehau (руб.),Комп-я панели (руб.),Комп-я кирпича (руб.)
    mm_renameField('calculator', 'Заголовки секции');
    mm_changeFieldHelp('calculator', "Названия данных расчета.  строка 1 - алиасы (служеб),  2 - Отображаемые названия, 3 - едницы измерения");
-   mm_ddMultipleFields('calculator', '', '', 'textarea,textarea,textarea,textarea,textarea,textarea', 'Колонка 1,Колонка 2,Колонка 3,Колонка 4,Колонка 5,Колонка 6', '70%', '||', '::', '', '', 0, 4);
+   mm_ddMultipleFields('calculator', '', '', 'textarea,textarea,textarea,textarea,textarea,textarea,textarea', 'Колонка 1,Колонка 2,Колонка 3,Колонка 4,Колонка 5,Колонка 6,Колонка 7', '70%', '||', '::', '', '', 0, 4,'',array("sortable"=>false));
    break;
   case (in_array(38, $pidAr) and !$content["isfolder"]):
    $titles = $modx->runSnippet("getInheritField",array("id"=>$pid,"field"=>"calculator"));
@@ -64,7 +64,7 @@ if ($tpl == 8) { // Калькулятор
    foreach ($titles[1] as $i => $v) $titles[$lt][$i] = $v." (".$titles[2][$i].")"; 
    mm_renameField('calculator', 'Параметры секции');
    mm_changeFieldHelp('calculator', '');
-   mm_ddMultipleFields('calculator', '', '', 'number,number,number,number,number,number', implode(",",$titles[$lt]), '80%');
+   mm_ddMultipleFields('calculator', '', '', 'number,number,number,number,number,number,number', implode(",",$titles[$lt]), '80%');
    break;
   case (in_array(39, $pidAr)  and !$content["isfolder"]):
    mm_renameField('calculator', 'Состав остекления');

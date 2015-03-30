@@ -4,6 +4,7 @@
  <link rel="stylesheet" href="js/jquery-ui/jquery-ui.css" property="all"/>
  <script src="js/jquery-ui/jquery-ui.js"></script>
  <script type="text/javascript" src="/js/jquery.serialize-object.js"></script>
+ <script type="text/javascript" src="/js/common.js"></script>
  <script type="text/javascript" src="/js/casement-calculator.js"></script>
  <link href="/design/casement-calculator.css" rel="stylesheet" type="text/css" property="all"/>
  
@@ -53,19 +54,23 @@
     &outputFormat=`JSON`
    ]];
   $(function(){
-    $(".form.calculator .workarea").calculator({
+   var _c = $(".form.calculator .workarea");
+   _c.calculator({
      "data": CalcData, 
      "reference":{"price":{"montage":CalcData_add[0],"panel":CalcData_add[1]},"step":CalcData_add[2]},
      "texts":{"warning":CalcData_add[3]},
      "debug": 2
     });
-   $(".calculator .parameters [type='button']").click(function(){
+   $(".parameters [type='button']",_c).click(function(){
      $(".modal").modal("open",{
       "afterOpen":function(){
        $("input:first",this).focus();
       }
      })
-   })
+   });
+   $('[name="price"]').on("change",function(){
+    $(".price span").html(number_format($(this).val()));
+   });
   });
  </script>
  <input type="hidden" name="formid" value="calculatorForm" />
