@@ -18,6 +18,7 @@ $.fn.extend ({
     "sizes":".sizes",
     "reference":{}, // prices for service, step of slider, important message, etc 
     "form":{"id":"id","w":"width","h":"height","price":"price"},
+    "price":$(".price",_t), // price output     
     "data": false, // need data
     "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
@@ -209,14 +210,12 @@ $.fn.extend ({
          step: parseInt(_t._p._ref.step),
          value: _s.val(),
          slide: function( event, ui ) {
-          _s.val(ui.value);
-          _t._calc();
-          _t._log(2,"Slided",_t._val("tab"));
+          _s.val(ui.value).trigger("change");
+          _t._log(2,"Slided",tabI);
          }
         });
        _s.change(function(e) {
         _t._log(dlevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
-        _t._calc();
         $(this).siblings(".slider").slider( "value", $(this).val() );
        });
        $s[i] = _s;
@@ -265,21 +264,20 @@ $.fn.extend ({
     var _d = _t._data(_t._val(_t._p.form.id));
     var _result = 0;
     switch (true) {
-     case _d.data:
+     case !!_d.data:
       var _prCol;
-      var S = _t._val("w") * _t._val("h");
+      var S = (_t._val(_t._p.form.w)/1000) *(_t._val(_t._p.form.h)/1000);
       
       var _Srange = {};
       //while ()
-
+      _result = S;
       break;
      case _d.group:
       break;
     }
 
-    _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",f.serializeObject());
-    _t._val("price",_result);
-    $(_t._p.form.price).trigger("change");
+    _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
+        "from data:",f.serializeObject(),"data",_d.data);
     return _result;
    };
    _t._counts = function(n,v) {
@@ -301,6 +299,12 @@ $.fn.extend ({
    };
 
    _t.init();
+   $("[name]",_t).on("change",function(e){
+    var _r = _t._calc();
+    _t._val("price",_r);
+    _t._p.price && $(_t._p.price).html(number_format(_r));
+    _t._log(2,"Change triggered at :",e,"result "+_r,"Target: ",_t._p.price);
+   });
   });
  }
 });

@@ -59,6 +59,7 @@
      "data": CalcData, 
      "reference":{"price":{"montage":CalcData_add[0],"panel":CalcData_add[1]},"step":CalcData_add[2]},
      "texts":{"warning":CalcData_add[3]},
+     "price":$(".workarea .price span"),
      "debug": 2
     });
    $(".parameters [type='button']",_c).click(function(){
@@ -67,9 +68,6 @@
        $("input:first",this).focus();
       }
      })
-   });
-   $('[name="price"]').on("change",function(){
-    $(".price span").html(number_format($(this).val()));
    });
   });
  </script>
