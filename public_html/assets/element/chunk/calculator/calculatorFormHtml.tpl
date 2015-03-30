@@ -57,7 +57,7 @@
    var _c = $(".form.calculator .workarea");
    _c.calculator({
      "data": CalcData, 
-     "reference":{"price":{"montage":CalcData_add[0],"panel":CalcData_add[1]},"step":CalcData_add[2]},
+     "reference":{"price":{"montage":{"base":CalcData_add[0],"kit":{"panel":CalcData_add[1]}}},"step":CalcData_add[2]},
      "texts":{"warning":CalcData_add[3]},
      "price":$(".workarea .price span"),
      "debug": 2
@@ -97,9 +97,9 @@
    </div>
    <div class="radio">
     <div>Комплектующие</div>
-    <div><label><input type="radio" name="kit" eform="Комплектующие::1" value="для панельного дома"/> для панельного дома</label>
-     <label><input type="radio" name="kit" eform="Комплектующие::1" value="для кирпичного дома"/> для кирпичного дома</label>
-     <label><input type="radio" name="kit" eform="Комплектующие::1" value="не нужны"/> не нужны</label>
+    <div><label><input type="radio" name="kit" eform="Комплектующие::1" value="panel"/> для панельного дома</label>
+     <label><input type="radio" name="kit" eform="Комплектующие::1" value="kirpich"/> для кирпичного дома</label>
+     <label><input type="radio" name="kit" eform="Комплектующие::1" value="none"/> не нужны</label>
     </div>
    </div>
    <div class="radio">

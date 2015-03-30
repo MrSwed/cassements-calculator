@@ -239,21 +239,21 @@ $.fn.extend ({
    _t._log(dlevel,"Get Data",p,data,deep);
      switch (true) {
       case $.isNumeric(p): // return last level data
-          if (typeof data[p]!=="undefined") return data[p]; // end recursion
-          $.each(data,function(i,item){
-           _t._log(dlevel,"Get Data: check item ",i,item,deep);
-           if (typeof item=="object") {
-            for (k in grKey) {
-             if (item[grKey[k]]) {
-             _t._log(dlevel,"Get Data: recursion in '"+grKey[k]+"':  ",i,item[grKey[k]],deep);
-              if (_result = _t._data(p, item[grKey[k]],grKey,deep?deep+1:1)) {
-               return false;
-              }
-             }
-            }
-           }  
-          });
-      break;
+       if (typeof data[p] !== "undefined") return data[p]; // end recursion
+       $.each(data, function (i, item) {
+        _t._log(dlevel, "Get Data: check item ", i, item, deep);
+        if (typeof item == "object") {
+         for (var k in grKey) {
+          if (item[grKey[k]]) {
+           _t._log(dlevel, "Get Data: recursion in '" + grKey[k] + "':  ", i, item[grKey[k]], deep);
+           if (_result = _t._data(p, item[grKey[k]], grKey, deep ? deep + 1 : 1)) {
+            return false;
+           }
+          }
+         }
+        }
+       });
+       break;
      }
     if (!deep) {
      data._index || (data._index={});
@@ -261,28 +261,33 @@ $.fn.extend ({
     }
     return _result;
    };
-   _t._getRange = function(v,ar) {
-     for (var i = 1;i<ar.length;i++) 
-      if (ar[i-1] < v && v < ar[i]) return [i-1,i];
-   };
+   _t._getRange = function(v,ar) { for (var i = 1;i<ar.length;i++) if (ar[i-1] < v && v < ar[i]) return [i-1,i];};
    _t._calc = function() {
     var dlevel = 3;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._p.form.id));
-    if (!_d.atad.area) {
-     _d.atad.area=[];
-     for (var k in _d.atad.w) _d.atad.area[k] = (_d.atad.w[k] / 1000 ) * (_d.atad.w[k] / 1000 );
-    }
     var _result = 0;
     switch (true) {
      case !!_d.data:
-      _t._log(2," Calc by data");
-      var _prCol;
+      if (!_d.atad.area) {
+       _d.atad.area = [];
+       for (var k in _d.atad.w) _d.atad.area[k] = (_d.atad.w[k] / 1000 ) * (_d.atad.h[k] / 1000 );
+      }
+      var _c = {
+       //"baseprice": $("[name='system']") 
+      };
       var S = (_t._val(_t._p.form.w)/1000) *(_t._val(_t._p.form.h)/1000);
-      
+      if ($.inArray(S,_d.atad.area)) {
+       // get predefined values
+      } else {
+       // calculate shifts
+      }
+      var _range = _t._getRange(S,_d.atad.area);
       var _Srange = {};
       //while ()
+         // Price = _c.baseprice + (kit?_c[kit[<selected}]]:0) + (montage? _ref[montage]*S + (kit[panel]?_ref[montage][panel]*L:0) :0)
       _result = S;
+      _t._log(2," Calc by data (S,range)",S,_range);
       break;
      case _d.group:
       _t._log(2," Calc by group");
