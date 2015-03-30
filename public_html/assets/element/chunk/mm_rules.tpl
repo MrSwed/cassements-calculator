@@ -1,3 +1,4 @@
+<?
 // more example rules are in assets/plugins/managermanager/example_mm_rules.inc.php
 
 // example of how PHP is allowed - check that a TV named documentTags exists before creating rule
