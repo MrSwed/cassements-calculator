@@ -167,16 +167,15 @@ $.fn.extend ({
    };
    _t._sizes = function(p) {
     var dlevel=1;
-    _t._log(dlevel+1,"Sizes: call ",p);
     var $t = $(_t._p.sizes);
+    var _d=_t._data(_t._val(_t._p.form.id));
+    _t._log(dlevel+1,"Sizes: call ",p,"Data",_d);
     switch (true) {
-     case !p || p=="init":
+     case !!_d.data:
       $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
       $t.html("");
       var $s={"w":"width","h":"height"};
-      var _d=_t._data(_t._val(_t._p.form.id));
       var tabI = _t._tabs("opened");
-      var _data = _t._p.data[tabI].data;
       //var colsT = ["alias","name","dimensions","input"];
       var cols=_t._p.data[tabI].cols;
       $.each(cols,function(i,item){
@@ -189,9 +188,11 @@ $.fn.extend ({
          }
         });
       });
-      _t._log(dlevel+1,"Sizes Data:",_t._val(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],_data,cols);
+      _t._log(dlevel+1,"Sizes Data:",_t._val(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],cols);
       $.each($s,function(i,v){
-       var _dCol = _t._getDataCol(_d.data,cols._index[i]);
+       _d.atad || (_d.atad={});
+       if (!_d.atad[i]) _d.atad[i] = _t._getDataCol(_d.data,cols._index[i]);
+       var _dCol = _d.atad[i];
        var _mnx = _t._minmax(_dCol);
        var _s = $("[name='"+v+"']",$t);
        _s.size() || (_s = $("<input/>").attr({"name":_s.name()}).prependTo($t));
@@ -214,13 +215,15 @@ $.fn.extend ({
           _t._log(2,"Slided",tabI);
          }
         });
-       _s.change(function(e) {
+       _s.on("change",function(e) {
         _t._log(dlevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
         $(this).siblings(".slider").slider( "value", $(this).val() );
        });
        $s[i] = _s;
       });
-      _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s);
+      _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s,"data",_d);
+     break;
+     case !!_d.group:
      break;
     }
     return _t;
@@ -258,13 +261,22 @@ $.fn.extend ({
     }
     return _result;
    };
+   _t._getRange = function(v,ar) {
+     for (var i = 1;i<ar.length;i++) 
+      if (ar[i-1] < v && v < ar[i]) return [i-1,i];
+   };
    _t._calc = function() {
     var dlevel = 3;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._p.form.id));
+    if (!_d.atad.area) {
+     _d.atad.area=[];
+     for (var k in _d.atad.w) _d.atad.area[k] = (_d.atad.w[k] / 1000 ) * (_d.atad.w[k] / 1000 );
+    }
     var _result = 0;
     switch (true) {
      case !!_d.data:
+      _t._log(2," Calc by data");
       var _prCol;
       var S = (_t._val(_t._p.form.w)/1000) *(_t._val(_t._p.form.h)/1000);
       
@@ -273,6 +285,7 @@ $.fn.extend ({
       _result = S;
       break;
      case _d.group:
+      _t._log(2," Calc by group");
       break;
     }
 
