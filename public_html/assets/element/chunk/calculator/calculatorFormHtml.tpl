@@ -60,7 +60,7 @@
      "reference":{"price":{"montage":{"base":CalcData_add[0],"kit":{"panel":CalcData_add[1]}}},"step":CalcData_add[2]},
      "texts":{"warning":CalcData_add[3]},
      "price":$(".workarea .price span"),
-     "debug": 2
+     "debug": 3
     });
    $(".parameters [type='button']",_c).click(function(){
      $(".modal").modal("open",{
@@ -105,8 +105,8 @@
    <div class="radio">
     <div>Монтажные работы</div>
     <div>
-     <label><input type="radio" name="montage" value="Да" eform="Монтажные работы::1"/> Да</label>
-     <label><input type="radio" name="montage" value="Нет" eform="Монтажные работы::1"/> Нет</label>
+     <label><input type="radio" name="montage" value="1" eform="Монтажные работы::1"/> Да</label>
+     <label><input type="radio" name="montage" value="0" eform="Монтажные работы::1"/> Нет</label>
     </div>
    </div>
    <div class="price"><span>00000</span> руб</div>

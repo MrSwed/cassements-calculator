@@ -169,12 +169,12 @@ $.fn.extend ({
     var $t = $(_t._p.sizes);
     var _d=_t._data(_t._val(_t._p.form.id));
     _t._log(dlevel+1,"Sizes: call ",p,"Data",_d);
+    $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
+    $t.html("");
+    var $s={"w":"width","h":"height"};
+    var tabI = _t._tabs("opened");
     switch (true) {
      case !!_d.data:
-      $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
-      $t.html("");
-      var $s={"w":"width","h":"height"};
-      var tabI = _t._tabs("opened");
       //var colsT = ["alias","name","dimensions","input"];
       var cols=_t._p.data[tabI].cols;
       $.each(cols,function(i,item){
@@ -200,7 +200,7 @@ $.fn.extend ({
        _s.prev().size() || $('<span>'+cols[i][0]+', '+cols[i][1]+'</span>').insertBefore(_s);
        _s.attr("type","slider");
        // check and set defaults for slider
-       _t._log(2,"test tootls (i,v,cols,cols.index,_dCol,_mnx):",i,v,cols,cols._index[i],_dCol,_mnx);
+       _t._log(2,"test tools (i,v,cols,cols.index,_dCol,_mnx):",i,v,cols,cols._index[i],_dCol,_mnx);
        $( "<div class='slider'></div>" ).insertAfter( _s )
         .slider({
          orientation: i=="h"?"vertical":"horizontal",
@@ -215,7 +215,7 @@ $.fn.extend ({
          }
         });
        _s.on("change",function(e) {
-        _t._log(dlevel+2, e.type+" trggered",$(this),"for slider:",$(this).siblings(".slider"));
+        _t._log(dlevel+2, e.type+" triggered",$(this),"for slider:",$(this).siblings(".slider"));
         $(this).siblings(".slider").slider( "value", $(this).val() );
        });
        $s[i] = _s;
@@ -225,6 +225,7 @@ $.fn.extend ({
      case !!_d.group:
      break;
     }
+    $("input:first",$t).trigger("change");
     return _t;
    };
    _t._data = function(p,data,grKey,deep) {
@@ -261,21 +262,21 @@ $.fn.extend ({
     return _result;
    };
    _t._getRange = function(v,ar) { for (var i = 1;i<ar.length;i++) if (ar[i-1] <= v && v < ar[i]) return [i-1,i];};
-   _t.flFix = function(v,d) {
+   _t._flFix = function(v,d) {
     d = d || 10;
     _t._log(2,"flFix",v,d);
     v = parseFloat(v);
-    if (!isNaN(v)) return parseFloat(v.toFixed(d));
+    return !isNaN(v)?parseFloat(v.toFixed(d)):0;
    };
    _t._calcToMatch = function(Bval,BScope,SScope){
     var _scope = _t._getRange(Bval,BScope);
-    var _range = _t.flFix(BScope[_scope[1]] - BScope[_scope[0]]);
+    var _range = _t._flFix(BScope[_scope[1]] - BScope[_scope[0]]);
     var _c = {
-     "BDelta" : _t.flFix(Bval - BScope[_scope[0]]),
-     "first":  _t.flFix (SScope[_scope[0]]),
-     "last":  _t.flFix (SScope[_scope[1]]),
+     "BDelta" : _t._flFix(Bval - BScope[_scope[0]]),
+     "first":  _t._flFix (SScope[_scope[0]]),
+     "last":  _t._flFix (SScope[_scope[1]]),
      "IDelta" :  SScope[_scope[1]] - SScope[_scope[0]] ,
-     "IDelta_range" : _t.flFix(( SScope[_scope[1]] - SScope[_scope[0]] ) / _range)
+     "IDelta_range" : _t._flFix(( SScope[_scope[1]] - SScope[_scope[0]] ) / _range)
     };
     _c.result = _c.first + (_c.BDelta * _c.IDelta_range);
     _t._log(2,"_calcToMatch (Bval,BScope,SScope,_scope,_range,_c)",Bval,BScope,SScope,_scope,_range,_c);
@@ -285,20 +286,23 @@ $.fn.extend ({
     var dlevel = 3;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._p.form.id));
+    var _ref = _t._p._ref.price;
     var _result = 0;
     var fData = f.serializeObject();
     var tabI = _t._tabs("opened");
+    var L = _t._flFix((1*fData.width + 1*fData.height) * 0.002);
+    
     switch (true) {
      case !!_d.data:
-      var S = _t.flFix((fData.width/1000) *(fData.height/1000));
+      var S = _t._flFix((fData.width/1000) *(fData.height/1000));
       if (!_d.atad.area) {
        _d.atad.area = [];
-       for (var k in _d.atad.w) _d.atad.area[k] = _t.flFix((_d.atad.w[k] / 1000 ) * (_d.atad.h[k] / 1000 ));
+       for (var k in _d.atad.w) _d.atad.area[k] = _t._flFix((_d.atad.w[k] / 1000 ) * (_d.atad.h[k] / 1000 ));
       }
       _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
       _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
       var _scope = _t._getRange(S,_d.atad.area);
-      var _range = _t.flFix(_d.atad.area[_scope[1]] - _d.atad.area[_scope[0]]);
+      var _range = _t._flFix(_d.atad.area[_scope[1]] - _d.atad.area[_scope[0]]);
       var _cAr = {
        "baseprice" : _d.atad['price['+fData.system+']'],
        "kitprice"  : _d.atad['kit['+fData.kit+']']
@@ -312,11 +316,14 @@ $.fn.extend ({
       //} else {
       // // calculate shifts
       //}
-      _result = S;
-      _t._log(2," Calc by data (S,_scope,_range,_cAr,_c)",S,_scope,_range,_cAr,_c);
+ // Price = _c.baseprice + (kit?_c[kit[<selected}]]:0) + (montage? _ref[montage]*S + (kit[panel]?_ref[montage][panel]*L:0) :0)
+      _result = _c.baseprice + _c.kitprice + (fData.montage==1?(
+       _t._flFix(S * _ref["montage"].base ) + _t._flFix(L * _ref["montage"].kit[fData.kit] )  
+       ):0);
+      _t._log(dlevel," Calc by data (S,L,_scope,_range,_cAr,_c)",S,L,_scope,_range,_cAr,_c);
       break;
      case _d.group:
-      _t._log(2," Calc by group");
+      _t._log(dlevel," Calc by group");
       break;
     }
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
@@ -339,15 +346,18 @@ $.fn.extend ({
    _t._minmax = function(ar,c) {
      return {"max":Math.max.apply(null, ar),"min":Math.min.apply(null, ar)};
    };
-   _t.init();
-   $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
-     $("[type='radio']:first",this).attr("checked",true);
-   });
-   $("[name]",_t).on("change",function(e){
+   
+   $(_t).on("change","[name]",function(e){
     var _r = _t._calc();
     _t._val("price",_r);
     _t._p.price && $(_t._p.price).html(number_format(_r));
     _t._log(2,"Change triggered at :",e,"result "+_r,"Target: ",_t._p.price);
+   });
+
+   _t.init();
+
+   $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
+     $("[type='radio']:first",this).attr("checked",true);
    });
   });
  }
