@@ -91,8 +91,8 @@
    <div class="radio">
     <div>Оконная система</div>
     <div>
-     <label><input type="radio" name="system" value="Rehau" eform="Оконная система::1"/> Rehau</label>
-     <label><input type="radio" name="system" value="KBE" eform="Оконная система::1"/> KBE</label>
+     <label><input type="radio" name="system" value="rehau" eform="Оконная система::1"/> Rehau</label>
+     <label><input type="radio" name="system" value="kbe" eform="Оконная система::1"/> KBE</label>
     </div>
    </div>
    <div class="radio">

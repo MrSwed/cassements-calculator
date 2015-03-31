@@ -1,10 +1,9 @@
 /*!
  * jQuery casement calculator plugin
- * 
+ *
  * Required
  *  tabs extender like https://gist.github.com/MrSwed/4246691aa788058a9934
  */
-
 $.fn.extend ({
  "calculator" : function(p){
   return this.each(function() {
@@ -16,9 +15,9 @@ $.fn.extend ({
     "template": ".template",
     "preview": ".preview",
     "sizes":".sizes",
-    "reference":{}, // prices for service, step of slider, important message, etc 
+    "reference":{}, // prices for service, step of slider, important message, etc
     "form":{"id":"id","w":"width","h":"height","price":"price"},
-    "price":$(".price",_t), // price output     
+    "price":$(".price",_t), // price output
     "data": false, // need data
     "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
@@ -27,7 +26,7 @@ $.fn.extend ({
       var $type = $(_t._p.type,o);
       if (!$type.size()) {
        // use template or create new
-       (($(_t._p.type,_t).size() || $(_t._p.type,_t).closest(_t._p.template).size()) && ($type = $(_t._p.type,_t).clone().appendTo(o))) 
+       (($(_t._p.type,_t).size() || $(_t._p.type,_t).closest(_t._p.template).size()) && ($type = $(_t._p.type,_t).clone().appendTo(o)))
         || ($type = $("<div/>").addClass($type.class()).appendTo(o));
       }
       var $tg = $(".casement",$type);
@@ -99,7 +98,7 @@ $.fn.extend ({
     });
     _t._tabs("init");
     if (_t._p.texts && _t._p.texts.warning) {
-     $(_t._p.warning=$(".warning", _t._p.params)).size() || 
+     $(_t._p.warning=$(".warning", _t._p.params)).size() ||
         (_t._p.warning = $("<div/>").addClass("warning")
             .html(_t._p.texts.warning).appendTo(_t._p.params));
      _t._log(1,"Init warning: ",_t._p.texts.warning);
@@ -138,14 +137,14 @@ $.fn.extend ({
         var $tCi=$(">*",$tC).eq(i);
         $tCi.size() || ($tCi = $("<div>").appendTo($tC)).addClass(k.alias.replace("#",""));
         // init control function for tab content
-        (!k.function && typeof _t._p.control[i]=="function" && (k.function = _t._p.control[i])) || 
-         (typeof k.function == "string" && typeof _t._p.control[k.function]=="function" && (k.function = _t._p.control[k.function])); 
+        (!k.function && typeof _t._p.control[i]=="function" && (k.function = _t._p.control[i])) ||
+         (typeof k.function == "string" && typeof _t._p.control[k.function]=="function" && (k.function = _t._p.control[k.function]));
         (typeof k.function == "function" && k.function($tCi)) || _t._err("Control function error for "+ k.alias);
        }
       })) || _t._err("data error");
       break;
      case p=="opened":
-      _t._log(2,"Tabs opened",$(".active",_t._p.tabs).index());
+      _t._log(1,"Tabs opened",$(".active",_t._p.tabs).index());
       return $(".active",_t._p.tabs).index();
       break;
     }
@@ -261,41 +260,67 @@ $.fn.extend ({
     }
     return _result;
    };
-   _t._getRange = function(v,ar) { for (var i = 1;i<ar.length;i++) if (ar[i-1] < v && v < ar[i]) return [i-1,i];};
+   _t._getRange = function(v,ar) { for (var i = 1;i<ar.length;i++) if (ar[i-1] <= v && v < ar[i]) return [i-1,i];};
+   _t.flFix = function(v,d) {
+    d = d || 10;
+    _t._log(2,"flFix",v,d);
+    v = parseFloat(v);
+    if (!isNaN(v)) return parseFloat(v.toFixed(d));
+   };
+   _t._calcToMatch = function(Bval,BScope,SScope){
+    var _scope = _t._getRange(Bval,BScope);
+    var _range = _t.flFix(BScope[_scope[1]] - BScope[_scope[0]]);
+    var _c = {
+     "BDelta" : _t.flFix(Bval - BScope[_scope[0]]),
+     "first":  _t.flFix (SScope[_scope[0]]),
+     "last":  _t.flFix (SScope[_scope[1]]),
+     "IDelta" :  SScope[_scope[1]] - SScope[_scope[0]] ,
+     "IDelta_range" : _t.flFix(( SScope[_scope[1]] - SScope[_scope[0]] ) / _range)
+    };
+    _c.result = _c.first + (_c.BDelta * _c.IDelta_range);
+    _t._log(2,"_calcToMatch (Bval,BScope,SScope,_scope,_range,_c)",Bval,BScope,SScope,_scope,_range,_c);
+    return _c.result;
+   };
    _t._calc = function() {
     var dlevel = 3;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._p.form.id));
     var _result = 0;
+    var fData = f.serializeObject();
+    var tabI = _t._tabs("opened");
     switch (true) {
      case !!_d.data:
+      var S = _t.flFix((fData.width/1000) *(fData.height/1000));
       if (!_d.atad.area) {
        _d.atad.area = [];
-       for (var k in _d.atad.w) _d.atad.area[k] = (_d.atad.w[k] / 1000 ) * (_d.atad.h[k] / 1000 );
+       for (var k in _d.atad.w) _d.atad.area[k] = _t.flFix((_d.atad.w[k] / 1000 ) * (_d.atad.h[k] / 1000 ));
       }
-      var _c = {
-       //"baseprice": $("[name='system']") 
+      _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
+      _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
+      var _scope = _t._getRange(S,_d.atad.area);
+      var _range = _t.flFix(_d.atad.area[_scope[1]] - _d.atad.area[_scope[0]]);
+      var _cAr = {
+       "baseprice" : _d.atad['price['+fData.system+']'],
+       "kitprice"  : _d.atad['kit['+fData.kit+']']
       };
-      var S = (_t._val(_t._p.form.w)/1000) *(_t._val(_t._p.form.h)/1000);
-      if ($.inArray(S,_d.atad.area)) {
-       // get predefined values
-      } else {
-       // calculate shifts
+      var _c = {};
+      for (var k in _cAr) {
+       _c[k]= _t._calcToMatch(S,_d.atad.area,_cAr[k]);
       }
-      var _range = _t._getRange(S,_d.atad.area);
-      var _Srange = {};
-      //while ()
-         // Price = _c.baseprice + (kit?_c[kit[<selected}]]:0) + (montage? _ref[montage]*S + (kit[panel]?_ref[montage][panel]*L:0) :0)
+      //if ($.inArray(S,_d.atad.area)) {
+      // // get predefined values
+      //} else {
+      // // calculate shifts
+      //}
       _result = S;
-      _t._log(2," Calc by data (S,range)",S,_range);
+      _t._log(2," Calc by data (S,_scope,_range,_cAr,_c)",S,_scope,_range,_cAr,_c);
       break;
      case _d.group:
       _t._log(2," Calc by group");
       break;
     }
-
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
-        "from data:",f.serializeObject(),"data",_d.data);
+        "form data:",fData,"data",_d.data);
     return _result;
    };
    _t._counts = function(n,v) {
@@ -311,11 +336,9 @@ $.fn.extend ({
     _t._log(2,"_getDataCol ("+_t._counts("_getDataCol",1 + _t._counts("_getDataCol")).toString()+") (data,c,ar): ",data,c,ar);
     return ar;
    };
-
    _t._minmax = function(ar,c) {
      return {"max":Math.max.apply(null, ar),"min":Math.min.apply(null, ar)};
    };
-
    _t.init();
    $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
      $("[type='radio']:first",this).attr("checked",true);
@@ -329,4 +352,3 @@ $.fn.extend ({
   });
  }
 });
-
