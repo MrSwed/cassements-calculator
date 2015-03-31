@@ -22,7 +22,7 @@ $.fn.extend ({
     "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
      function(o){ //#windows
-      _t._log(1,"init windows control at ", o.index(), o);
+      _t._log(3,"init windows control at ", o.index(), o);
       var $type = $(_t._p.type,o);
       if (!$type.size()) {
        // use template or create new
@@ -54,7 +54,7 @@ $.fn.extend ({
             _t._log(2,"Clicked", $a);
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
-            _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": (_t._debug(3)?id+": ":'')+$i.attr("title")});
+            _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": $i.attr("title")});
             _t._val(_t._p.form.id,id);
             _t._sizes();
            }
