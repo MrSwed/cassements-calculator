@@ -317,6 +317,9 @@ $.fn.extend ({
    };
 
    _t.init();
+   $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
+     $("[type='radio']:first",this).attr("checked",true);
+   });
    $("[name]",_t).on("change",function(e){
     var _r = _t._calc();
     _t._val("price",_r);
