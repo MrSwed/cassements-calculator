@@ -3,6 +3,7 @@
  *
  * Required
  *  tabs extender like https://gist.github.com/MrSwed/4246691aa788058a9934
+ *  jQuery class extender https://gist.github.com/MrSwed/0a837b3acbfbf8cfb19e 
  */
 $.fn.extend ({
  "calculator" : function(p){
