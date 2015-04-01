@@ -100,7 +100,7 @@ $.fn.extend ({
     $(_t).on("change","[name]",function(e){
      var _r = _t._calc();
      _t._val("price",_r);
-     _t._p.price && $(_t._p.price).html(number_format(_r));
+     _t._p.price && $(_t._p.price).html(number_format(_r,0));
      _t._log(2,"Change triggered at :",e,"result "+_r,"Target: ",_t._p.price);
     });
     $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
@@ -183,8 +183,8 @@ $.fn.extend ({
     $t.html("");
     var $s={"w":"width","h":"height"};
     var tabI = _t._tabs("opened");
-    switch (true) {
-     case !!_d.data:
+    switch (typeof _d.data) {
+     case "object":
       //var colsT = ["alias","name","dimensions","input"];
       var cols=_t._p.data[tabI].cols;
       $.each(cols,function(i,item){
@@ -232,7 +232,7 @@ $.fn.extend ({
       });
       _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s,"data",_d);
      break;
-     case !!_d.group:
+     case "string":
      break;
     }
     $("input:first",$t).trigger("change");
@@ -302,8 +302,8 @@ $.fn.extend ({
     var tabI = _t._tabs("opened");
     var L = _t._flFix((1*fData.width + 1*fData.height) * 0.002);
     
-    switch (true) {
-     case !!_d.data:
+    switch (typeof _d.data) {
+     case "object":
       var S = _t._flFix((fData.width/1000) *(fData.height/1000));
       if (!_d.atad.area) {
        _d.atad.area = [];
@@ -332,7 +332,7 @@ $.fn.extend ({
       _result = _c.baseprice + _c.kitprice + _c.montage + _c.montage_kit;
       _t._log(dlevel," Calc by data (S,L,_cI,_cAr,_c)",S,L,_cI,_cAr,_c);
       break;
-     case _d.group:
+     case "string":
       _t._log(dlevel," Calc by group");
       break;
     }
