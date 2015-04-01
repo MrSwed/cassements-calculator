@@ -168,8 +168,32 @@
   margin-bottom: -190px;
   margin-left: 50%;
   width: 50%;
+  z-index: 1;
+  a {
+   margin: 0.2em auto;
+   cursor: pointer;
+   opacity: 0.8;
+   display: inline-block;
+   vertical-align: middle;
+   &:hover,&.active,&.selected {
+    opacity: 1;
+    position: relative;
+   }
+   &.active {
+    &:after {
+      border: 6px solid rgba(225, 225, 112,0.8);
+      bottom: 4px;
+      content: "";
+      display: block;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+   }
+  }
   .casement {
-    display: table;
+   display: table;
    margin: 1em;
    .group {
     display: table-cell;
@@ -198,30 +222,20 @@
      img { display: block;}
      >* {
       display: none;
-      margin: 0 auto;
-      cursor: pointer;
-      opacity: 0.8;
       &:hover,&.active,&.selected {
-       opacity: 1;
        display: inline-block;
-       position: relative;
-      }
-      &.active {
-       &:after {
-         border: 6px solid rgba(225, 225, 112,0.8);
-         bottom: 4px;
-         content: "";
-         display: block;
-         left: 0;
-         position: absolute;
-         right: 0;
-         top: 0;
-       }
       }
      }
     }
    }
   }
+  .casesets {
+   text-align: center;
+   a {
+    margin: 0.2em;
+   }
+  }
+  
  }
  .preview {
   bottom: 6%;
@@ -231,6 +245,7 @@
   text-align: center;
   top: 11%;
   vertical-align: middle;
+  z-index: 1;
   >*:not(img) {
    display: table-cell;
    height: 440px;
