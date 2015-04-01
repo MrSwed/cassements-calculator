@@ -56,11 +56,20 @@
   $(function(){
    var _c = $(".form.calculator .workarea");
    _c.calculator({
-     "data": CalcData, 
-     "reference":{"price":{"montage":{"base":CalcData_add[0],"kit":{"panel":CalcData_add[1]}}},"step":CalcData_add[2]},
-     "texts":{"warning":CalcData_add[3]},
-     "price":$(".workarea .price span"),
-     "debug": 3
+    "data": CalcData,
+    "reference": {
+     "price": {
+      "montage": {
+       "base": CalcData_add[0],
+       "kit": {
+        "panel": CalcData_add[1],
+        "kirpich": CalcData_add[2]
+       }
+      }
+     }, "step": CalcData_add[3]
+    },
+    "price": $(".workarea .price span"),
+    "debug": 3
     });
    $(".parameters [type='button']",_c).click(function(){
      $(".modal").modal("open",{
@@ -111,6 +120,7 @@
    </div>
    <div class="price"><span>00000</span> руб</div>
    <input type="button" value="Заказать"/>
+   <div class="warning">[*photos*]</div>[[ в данном случае TV параметр photos используется для текста предупреждения]]
   </div>
  </div>
  <div class="modal">
