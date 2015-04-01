@@ -24,12 +24,7 @@ $.fn.extend ({
     "control":[
      function(o){ //#windows
       _t._log(3,"init windows control at ", o.index(), o);
-      var $type = $(_t._p.type,o);
-      if (!$type.size()) {
-       // use template or create new
-       (($(_t._p.type,_t).size() || $(_t._p.type,_t).closest(_t._p.template).size()) && ($type = $(_t._p.type,_t).clone().appendTo(o)))
-        || ($type = $("<div/>").addClass($type.class()).appendTo(o));
-      }
+      var $type = _t._type(o);
       var $tg = $(".casement",$type);
       $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
       $tg.html();
@@ -68,6 +63,30 @@ $.fn.extend ({
      },
      function(o){ // #balcony
       _t._log(2,"init balcony control at", o.index(), o);
+      var $type = _t._type(o);
+      var $tg = $(".casesets",$type);
+      $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
+      $tg.html();
+      $.each(_t._p.data[o.index()].data, function (id, item) {
+       $("<a>").prop({"href":item.image})
+        .append($("<img/>").attr({"src":item.preview,"alt":item.title,"title":(_t._debug(3)?id+": ":'')+item.title}))
+         .appendTo($tg)
+         .on("init click", function (e) {
+          e.preventDefault();
+          var $a = $(this);
+          var $i = $a.find("[src]");
+          _t._log(2, "Img triggered ", e.type, $i, e);
+          if (e.type == "click") {
+           _t._log(2, "Clicked", $a);
+           $a.addClass("active").siblings().removeClass("active");
+           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
+           _t._val(_t._p.form.id, id);
+           _t._sizes();
+          }
+         });
+
+      });
+      
       return o;
      }
     ]
@@ -130,6 +149,15 @@ $.fn.extend ({
     return v ;
    };
    _t._err = function(m) {console.log(m)||alert(m); };
+   _t._type = function(o) {
+    var $type = $(_t._p.type,o);
+    if (!$type.size()) {
+     // use template or create new
+     (($(_t._p.type,_t).size() || $(_t._p.type,_t).closest(_t._p.template).size()) && ($type = $(_t._p.type,_t).clone().appendTo(o)))
+      || ($type = $("<div/>").addClass($type.class()).appendTo(o));
+    }
+    return $type;
+   };
    _t._tabs = function(p){
     var $t = $(_t._p.tabs);
     switch (true) {
