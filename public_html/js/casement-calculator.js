@@ -96,6 +96,15 @@ $.fn.extend ({
        break;
      }
     });
+    $(_t).on("change","[name]",function(e){
+     var _r = _t._calc();
+     _t._val("price",_r);
+     _t._p.price && $(_t._p.price).html(number_format(_r));
+     _t._log(2,"Change triggered at :",e,"result "+_r,"Target: ",_t._p.price);
+    });
+    $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
+      $("[type='radio']:first",this).attr("checked",true);
+    });
     _t._tabs("init");
     if (_t._p.texts && _t._p.texts.warning) {
      $(_t._p.warning=$(".warning", _t._p.params)).size() ||
@@ -301,26 +310,26 @@ $.fn.extend ({
       }
       _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
       _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
-      var _scope = _t._getRange(S,_d.atad.area);
-      var _range = _t._flFix(_d.atad.area[_scope[1]] - _d.atad.area[_scope[0]]);
       var _cAr = {
        "baseprice" : _d.atad['price['+fData.system+']'],
        "kitprice"  : _d.atad['kit['+fData.kit+']']
       };
       var _c = {};
-      for (var k in _cAr) {
-       _c[k]= _t._calcToMatch(S,_d.atad.area,_cAr[k]);
-      }
-      //if ($.inArray(S,_d.atad.area)) {
-      // // get predefined values
-      //} else {
-      // // calculate shifts
-      //}
+      var _cI;
+      for (var k in _cAr) 
+       if ((_cI=$.inArray(S,_d.atad.area)) > 0) {
+       // get predefined values
+        _c[k] = _t._flFix(_cAr[k][_cI]);
+       } else {
+       // calculate shifts
+        _c[k]= _t._calcToMatch(S,_d.atad.area,_cAr[k]);
+       }
+      _c.montage = fData.montage==1?_t._flFix(S * _ref["montage"].base ):0;
+      _c.montage_kit = fData.montage==1?_t._flFix(L * _ref["montage"].kit[fData.kit] ):0;
+      
  // Price = _c.baseprice + (kit?_c[kit[<selected}]]:0) + (montage? _ref[montage]*S + (kit[panel]?_ref[montage][panel]*L:0) :0)
-      _result = _c.baseprice + _c.kitprice + (fData.montage==1?(
-       _t._flFix(S * _ref["montage"].base ) + _t._flFix(L * _ref["montage"].kit[fData.kit] )  
-       ):0);
-      _t._log(dlevel," Calc by data (S,L,_scope,_range,_cAr,_c)",S,L,_scope,_range,_cAr,_c);
+      _result = _c.baseprice + _c.kitprice + _c.montage + _c.montage_kit;
+      _t._log(dlevel," Calc by data (S,L,_cI,_cAr,_c)",S,L,_cI,_cAr,_c);
       break;
      case _d.group:
       _t._log(dlevel," Calc by group");
@@ -347,18 +356,8 @@ $.fn.extend ({
      return {"max":Math.max.apply(null, ar),"min":Math.min.apply(null, ar)};
    };
    
-   $(_t).on("change","[name]",function(e){
-    var _r = _t._calc();
-    _t._val("price",_r);
-    _t._p.price && $(_t._p.price).html(number_format(_r));
-    _t._log(2,"Change triggered at :",e,"result "+_r,"Target: ",_t._p.price);
-   });
-
    _t.init();
 
-   $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
-     $("[type='radio']:first",this).attr("checked",true);
-   });
   });
  }
 });
