@@ -12,7 +12,7 @@ $.fn.extend ({
    p=$.extend({},{
     "tabs": ".tabs",
     "params": ".parameters",
-    "type": ".template .type",
+    "type": ".type",
     "template": ".template",
     "preview": ".preview",
     "sizes":".sizes",
@@ -103,7 +103,7 @@ $.fn.extend ({
    };
    _t.init = function(p) {
     p = {} || p;
-    _t._log(1,"_init");
+    _t._log(1,"init");
     $.each("tabs,params".split(","), function (i, k) {
      _t._log(1,"Params to $", i, k, _t._p[k]);
      switch (true) {
@@ -151,7 +151,7 @@ $.fn.extend ({
     var $type = $(_t._p.type,o);
     if (!$type.size()) {
      // use template or create new
-     (($(_t._p.type,_t).size() || $(_t._p.type,_t).closest(_t._p.template).size()) && ($type = $(_t._p.type,_t).clone().appendTo(o)))
+     ($(_t._p.template,_t).find(_t._p.type).size() && ($type = $(_t._p.template,_t).find(_t._p.type).clone().appendTo(o)))
       || ($type = $("<div/>").addClass($type.class()).appendTo(o));
     }
     return $type;
@@ -178,13 +178,21 @@ $.fn.extend ({
         (typeof k.function == "function" && k.function($tCi)) || _t._err("Control function error for "+ k.alias);
        }
       })) || _t._err("data error");
+      return $t.on("change",function(e,p){
+       var $active = $(".headers .active",this).index();
+       var $type = _t._type($(".contents >* ",this).eq($active));
+       var $a = $("a.active",$type);
+       $a.size() || ($a = $("a:first",$type));
+       $a.trigger("click");
+       _t._log(3,"Tabs changed (this, e,p,$type,$a)",this,e,p,$type,$a);
+      }).tabs({"headers":$tH,"contents":$tC});
       break;
      case p=="opened":
       _t._log(1,"Tabs opened",$(".active",_t._p.tabs).index());
       return $(".active",_t._p.tabs).index();
       break;
     }
-    return $t.tabs();
+    return $t;
    };
    _t.preview = function(p){
     p = $.extend({},{"alt":"","src":"","title":""},p);
@@ -240,7 +248,7 @@ $.fn.extend ({
        _s.prev().size() || $('<span>'+cols[i][0]+', '+cols[i][1]+'</span>').insertBefore(_s);
        _s.attr("type","slider");
        // check and set defaults for slider
-       _t._log(2,"test tools (i,v,cols,cols.index,_dCol,_mnx):",i,v,cols,cols._index[i],_dCol,_mnx);
+       _t._log(dlevel+1,"test tools (i,v,cols,cols.index,_dCol,_mnx):",i,v,cols,cols._index[i],_dCol,_mnx);
        $( "<div class='slider'></div>" ).insertAfter( _s )
         .slider({
          orientation: i=="h"?"vertical":"horizontal",
