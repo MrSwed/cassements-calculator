@@ -3,7 +3,7 @@
  *
  * Required
  *  tabs extender like https://gist.github.com/MrSwed/4246691aa788058a9934
- *  jQuery class extender https://gist.github.com/MrSwed/0a837b3acbfbf8cfb19e 
+ *  jQuery class extender https://gist.github.com/MrSwed/0a837b3acbfbf8cfb19e
  */
 $.fn.extend ({
  "calculator" : function(p){
@@ -84,9 +84,7 @@ $.fn.extend ({
            _t._sizes();
           }
          });
-
       });
-      
       return o;
      }
     ]
@@ -203,6 +201,7 @@ $.fn.extend ({
     return $t;
    };
    _t._sizes = function(p) {
+    // инициализация выбора размеров
     var dlevel=1;
     var $t = $(_t._p.sizes);
     var _d=_t._data(_t._val(_t._p.form.id));
@@ -216,8 +215,10 @@ $.fn.extend ({
       //var colsT = ["alias","name","dimensions","input"];
       var cols=_t._p.data[tabI].cols;
       $.each(cols,function(i,item){
+       // определение колонок данных для ширины и высоты
         $.each(item,function(k,v){
-         if (!parseInt(i)) { // first - aliaces
+         if (!parseInt(i)) { // первая строка (i=0) содержит алиасы
+          // значения в соотв алиасу массив
           (cols._index || (cols._index={})) && (cols._index[v]=k);
          } else {
          (cols[cols[0][k]] || (cols[cols[0][k]]=[])) && (cols[cols[0][k]][i-1]=v);
@@ -227,6 +228,7 @@ $.fn.extend ({
       });
       _t._log(dlevel+1,"Sizes Data:",_t._val(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],cols);
       $.each($s,function(i,v){
+       // определяем поля ввода и слайдеры для каждого измерения 
        _d.atad || (_d.atad={});
        if (!_d.atad[i]) _d.atad[i] = _t._getDataCol(_d.data,cols._index[i]);
        var _dCol = _d.atad[i];
@@ -267,6 +269,7 @@ $.fn.extend ({
     return _t;
    };
    _t._data = function(p,data,grKey,deep) {
+    // получение и кеширование данных по идентификатору
     var dlevel=2;
     var _result;
     data = data  || _t._p.data;
@@ -274,7 +277,7 @@ $.fn.extend ({
     grKey = grKey?grKey:"data,group";
     grKey = typeof grKey!="object"?grKey.split(","):grKey;
     _result=false;
-   _t._log(dlevel,"Get Data",p,data,deep);
+    _t._log(dlevel, "Get Data", p, data, deep);
      switch (true) {
       case $.isNumeric(p): // return last level data
        if (typeof data[p] !== "undefined") return data[p]; // end recursion
@@ -307,16 +310,18 @@ $.fn.extend ({
     return !isNaN(v)?parseFloat(v.toFixed(d)):0;
    };
    _t._calcToMatch = function(Bval,BScope,SScope){
-    var _scope = _t._getRange(Bval,BScope);
-    var _range = _t._flFix(BScope[_scope[1]] - BScope[_scope[0]]);
+    // получение соответствующего значения из искомого диапазона SScope  (цены)
+    // на основе известной точки Bvsl заданного диапазона BScope (площадь)
+    var _scope = _t._getRange(Bval,BScope);                                          // определение точек, между которыми находится определяющее значение
+    var _range = _t._flFix(BScope[_scope[1]] - BScope[_scope[0]]);                   // определение диапазона между заданными точками
     var _c = {
-     "BDelta" : _t._flFix(Bval - BScope[_scope[0]]),
-     "first":  _t._flFix (SScope[_scope[0]]),
-     "last":  _t._flFix (SScope[_scope[1]]),
-     "IDelta" :  SScope[_scope[1]] - SScope[_scope[0]] ,
-     "IDelta_range" : _t._flFix(( SScope[_scope[1]] - SScope[_scope[0]] ) / _range)
+     "BDelta"       : _t._flFix(Bval - BScope[_scope[0]]),                           // разница между минимальной точкой и текущим значением
+     "first"        : _t._flFix(SScope[_scope[0]]),                                  // Значения точек, соотв первое и последнее в найденом диапазоне
+     "last"         : _t._flFix(SScope[_scope[1]]),
+     "IDelta"       : SScope[_scope[1]] - SScope[_scope[0]],                         // Длина диапазона в котором ищем значение (для отладки)
+     "IDelta_range" : _t._flFix(( SScope[_scope[1]] - SScope[_scope[0]] ) / _range)  // шаг соответственно известному диапазону 
     };
-    _c.result = _c.first + (_c.BDelta * _c.IDelta_range);
+    _c.result = _c.first + (_c.BDelta * _c.IDelta_range);                            // искомое значение в нужном диапазоне
     _t._log(2,"_calcToMatch (Bval,BScope,SScope,_scope,_range,_c)",Bval,BScope,SScope,_scope,_range,_c);
     return _c.result;
    };
@@ -329,7 +334,6 @@ $.fn.extend ({
     var fData = f.serializeObject();
     var tabI = _t._tabs("opened");
     var L = _t._flFix((1*fData.width + 1*fData.height) * 0.002);
-    
     switch (typeof _d.data) {
      case "object":
       var S = _t._flFix((fData.width/1000) *(fData.height/1000));
@@ -345,7 +349,7 @@ $.fn.extend ({
       };
       var _c = {};
       var _cI;
-      for (var k in _cAr) 
+      for (var k in _cAr)
        if ((_cI=$.inArray(S,_d.atad.area)) > 0) {
        // get predefined values
         _c[k] = _t._flFix(_cAr[k][_cI]);
@@ -355,7 +359,6 @@ $.fn.extend ({
        }
       _c.montage = fData.montage==1?_t._flFix(S * _ref["montage"].base ):0;
       _c.montage_kit = fData.montage==1?_t._flFix(L * _ref["montage"].kit[fData.kit] ):0;
-      
  // Price = _c.baseprice + (kit?_c[kit[<selected}]]:0) + (montage? _ref[montage]*S + (kit[panel]?_ref[montage][panel]*L:0) :0)
       _result = _c.baseprice + _c.kitprice + _c.montage + _c.montage_kit;
       _t._log(dlevel," Calc by data (S,L,_cI,_cAr,_c)",S,L,_cI,_cAr,_c);
@@ -369,12 +372,14 @@ $.fn.extend ({
     return _result;
    };
    _t._counts = function(n,v) {
+    // для отладки. посчет вызова функции n, например _t._counts("_calc",1 + _t._counts("_calc")
     _t.$counts || (_t.$counts = {});
     v = typeof v!="undefined"? v : parseInt(_t.$counts[n]) || 0 ;
     _t.$counts[n] = parseInt(v) || 0;
     return v;
    };
    _t._getDataCol = function(data,c) {
+    // Получить колонку значений из матрицы
     c!=null || (c=0);
     var ar=[];
     for (var i in data) ar.push(data[i][c]);
@@ -384,9 +389,7 @@ $.fn.extend ({
    _t._minmax = function(ar,c) {
      return {"max":Math.max.apply(null, ar),"min":Math.min.apply(null, ar)};
    };
-   
    _t.init();
-
   });
  }
 });
