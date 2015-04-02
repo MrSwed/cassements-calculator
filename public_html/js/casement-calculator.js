@@ -17,7 +17,7 @@ $.fn.extend ({
     "preview": ".preview",
     "sizes":".sizes",
     "reference":{}, // prices for service, step of slider, important message, etc
-    "form":{"id":"id","w":"width","h":"height","price":"price"},
+    "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
     "data": false, // need data
     "texts" : {warning:""}, // set warning for understanding approximate calculation
@@ -255,7 +255,7 @@ $.fn.extend ({
     _t._log(dlevel+1,"Sizes: call ",p,"Data",_d);
     $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
     $t.html("");
-    var $s={"w":"width","h":"height"};
+    var $s=["width","height"];
     var tabI = _t._tabs("opened");
     switch (typeof _d.data) {
      case "object":
@@ -277,14 +277,14 @@ $.fn.extend ({
       $.each($s,function(i,v){
        // определяем поля ввода и слайдеры для каждого измерения 
        _d.atad || (_d.atad={});
-       if (!_d.atad[i]) _d.atad[i] = _t._getDataCol(_d.data,cols._index[i]);
-       var _dCol = _d.atad[i];
-       $s[i]=_t._initDimension({
+       if (!_d.atad[v]) _d.atad[v] = _t._getDataCol(_d.data,cols._index[v]);
+       var _dCol = _d.atad[v];
+       $s[v]=_t._initDimension({
             "obj":$t,
             "name":v,
             "minmax":_t._minmax(_dCol),
             "orientation":v=="height"?"vertical":"horizontal",
-            "caption":cols[i][0]+', '+cols[i][1],
+            "caption":cols[v][0]+', '+cols[v][1],
             "step":parseInt(_t._p._ref.step),
             "value":_dCol[Math.round(_dCol.length/2)]
            });
@@ -368,7 +368,7 @@ $.fn.extend ({
       var S = _t._flFix((fData.width/1000) *(fData.height/1000));
       if (!_d.atad.area) {
        _d.atad.area = [];
-       for (var k in _d.atad.w) _d.atad.area[k] = _t._flFix((_d.atad.w[k] / 1000 ) * (_d.atad.h[k] / 1000 ));
+       for (var k in _d.atad.width) _d.atad.area[k] = _t._flFix((_d.atad.width[k] / 1000 ) * (_d.atad.height[k] / 1000 ));
       }
       _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
       _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
