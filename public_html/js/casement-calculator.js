@@ -293,6 +293,10 @@ $.fn.extend ({
       _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s,"data",_d);
      break;
      case "string":
+      _d._complect = _d.data.split(",");
+      $.each(_d._complect,function(i,item){
+       //var 
+      });
      break;
     }
     $("input:first",$t).trigger("change");
@@ -302,6 +306,7 @@ $.fn.extend ({
     // получение и кеширование данных по идентификатору
     var dlevel=2;
     var _result;
+    var tabI;
     data = data  || _t._p.data;
     if (data._index && data._index[p]) return data._index[p]; // cache
     grKey = grKey?grKey:"data,group";
@@ -312,6 +317,7 @@ $.fn.extend ({
       case $.isNumeric(p): // return last level data
        if (typeof data[p] !== "undefined") return data[p]; // end recursion
        $.each(data, function (i, item) {
+       if (!deep) tabI = i; 
         _t._log(dlevel, "Get Data: check item ", i, item, deep);
         if (typeof item == "object") {
          for (var k in grKey) {
@@ -328,6 +334,7 @@ $.fn.extend ({
      }
     if (!deep) {
      data._index || (data._index={});
+     typeof tabI!=="undefined" && (_result.tabI = tabI); 
      data._index[p]=_result;
     }
     return _result;
