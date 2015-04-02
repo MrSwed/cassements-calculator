@@ -231,8 +231,9 @@ $.fn.extend ({
     _s.attr("type","slider");
     // check and set defaults for slider
     _t._log(dlevel+1,"_initDimension (p):",p);
-    $( "<div class='slider'></div>" ).insertAfter( _s )
-     .slider({
+    var _slider = _s.siblings(".slider");
+     _slider.size() || (_slider = $( "<div class='slider'></div>" ).insertAfter( _s ));
+    _slider.slider({
       orientation: p.orientation,
       min: p.minmax.min,
       max: p.minmax.max,
