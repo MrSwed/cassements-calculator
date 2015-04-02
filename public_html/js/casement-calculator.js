@@ -184,7 +184,7 @@ $.fn.extend ({
        var $a = $("a.active",$type);
        $a.size() || ($a = $("a:first",$type));
        $a.trigger("click");
-       _t._log(3,"Tabs changed (this, e,p,$type,$a)",this,e,p,$type,$a);
+       _t._log(2,"Tabs changed (this, e,p,$type,$a)",this,e,p,$type,$a);
       }).tabs({"headers":$tH,"contents":$tC});
       break;
      case p=="opened":
@@ -207,6 +207,46 @@ $.fn.extend ({
     $i.attr(p);
     _t._log(1,"Preview inited: ",$t,$a,$i);
     return $t;
+   };
+   _t._initDimension = function(p){
+    var dlevel = 2;
+    p = $.extend({},{
+     // обязательные параметры
+     "obj":false,
+     "name":"",
+     "minmax":[],
+     "orientation":"horizontal",
+     //"caption":"",
+     //"step":false
+     "value":false
+    },p);
+    if (!(p.obj && p.name && typeof p.minmax=="object")) {
+     _t._err("_initDimension: Parameters error ");
+     return;
+    }
+    var _s = $("[name='"+ p.name+"']", p.obj);
+    _s.size() || (_s = $("<input/>").attr({"name":_s.name()}).prependTo(p.obj));
+    _s.val() || (p.value && _s.val(p.value));
+    _s.parent().is("label") || _s.wrap('<label class="'+ p.name+'"/>');
+    _s.prev().size() || (p.caption && $('<span>'+p.caption+'</span>').insertBefore(_s));
+    _s.attr("type","slider");
+    // check and set defaults for slider
+    _t._log(dlevel+1,"_initDimension (p):",p);
+    $( "<div class='slider'></div>" ).insertAfter( _s )
+     .slider({
+      orientation: p.orientation,
+      min: p.minmax.min,
+      max: p.minmax.max,
+      range: "min",
+      step: parseInt(p.step),
+      value: _s.val(),
+      slide: function( event, ui ) {_s.val(ui.value).trigger("change");}
+     });
+    _s.on("change",function(e) {
+     _t._log(dlevel+2, e.type+" triggered",$(this),"for slider:",$(this).siblings(".slider"));
+     $(this).siblings(".slider").slider( "value", $(this).val() );
+    });
+    return _s;
    };
    _t._sizes = function(p) {
     // инициализация выбора размеров
@@ -240,33 +280,15 @@ $.fn.extend ({
        _d.atad || (_d.atad={});
        if (!_d.atad[i]) _d.atad[i] = _t._getDataCol(_d.data,cols._index[i]);
        var _dCol = _d.atad[i];
-       var _mnx = _t._minmax(_dCol);
-       var _s = $("[name='"+v+"']",$t);
-       _s.size() || (_s = $("<input/>").attr({"name":_s.name()}).prependTo($t));
-       _s.val() || _s.val(_dCol[Math.round(_dCol.length/2)]);
-       _s.parent().is("label") || _s.wrap('<label class="'+v+'"/>');
-       _s.prev().size() || $('<span>'+cols[i][0]+', '+cols[i][1]+'</span>').insertBefore(_s);
-       _s.attr("type","slider");
-       // check and set defaults for slider
-       _t._log(dlevel+1,"test tools (i,v,cols,cols.index,_dCol,_mnx):",i,v,cols,cols._index[i],_dCol,_mnx);
-       $( "<div class='slider'></div>" ).insertAfter( _s )
-        .slider({
-         orientation: i=="h"?"vertical":"horizontal",
-         min: _mnx.min,
-         max: _mnx.max,
-         range: "min",
-         step: parseInt(_t._p._ref.step),
-         value: _s.val(),
-         slide: function( event, ui ) {
-          _s.val(ui.value).trigger("change");
-          _t._log(2,"Slided",tabI);
-         }
-        });
-       _s.on("change",function(e) {
-        _t._log(dlevel+2, e.type+" triggered",$(this),"for slider:",$(this).siblings(".slider"));
-        $(this).siblings(".slider").slider( "value", $(this).val() );
-       });
-       $s[i] = _s;
+       $s[i]=_t._initDimension({
+            "obj":$t,
+            "name":v,
+            "minmax":_t._minmax(_dCol),
+            "orientation":v=="height"?"vertical":"horizontal",
+            "caption":cols[i][0]+', '+cols[i][1],
+            "step":parseInt(_t._p._ref.step),
+            "value":_dCol[Math.round(_dCol.length/2)]
+           });
       });
       _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s,"data",_d);
      break;
