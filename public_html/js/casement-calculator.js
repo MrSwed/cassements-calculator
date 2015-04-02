@@ -58,7 +58,6 @@ $.fn.extend ({
         });
        $("img:first",$gv).trigger("init");
       });
-      $("img:first",o).trigger("click");
       return o;
      },
      function(o){ // #balcony
