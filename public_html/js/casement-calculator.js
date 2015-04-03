@@ -284,7 +284,7 @@ $.fn.extend ({
       _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s,"data",_d);
      break;
      case "string":
-      _d._complect = _d.data.split(",");
+      _d._complect || (_d._complect = _d.data.split(","));
       var _wW = [];
       $.each(_d._complect,function(i,item){
        var _segment = _t._data(item);
@@ -410,6 +410,15 @@ $.fn.extend ({
     _t._log(2,"_calcToMatch (Bval,BScope,SScope,_scope,_range,_c)",Bval,BScope,SScope,_scope,_range,_c);
     return _c.result;
    };
+   _t._areas = function(_d) {
+    if (!_d.atad) { _t._err("_areas: No atad");  return false; }
+    if (!_d.atad.area) { 
+     if (!_d.atad.width || !_d.atad.height) { _t._err("_areas: No width or height"); return false;}
+     _d.atad.area = [];
+     for (var k in _d.atad.width) _d.atad.area[k] = _t._flFix((_d.atad.width[k] / 1000 ) * (_d.atad.height[k] / 1000 ));
+    }
+    return _d.atad.area;
+   };
    _t._calc = function() {
     var dlevel = 3;
     var f = $("[name]", _t);
@@ -422,10 +431,7 @@ $.fn.extend ({
     switch (typeof _d.data) {
      case "object":
       var S = _t._flFix((fData.width/1000) *(fData.height/1000));
-      if (!_d.atad.area) {
-       _d.atad.area = [];
-       for (var k in _d.atad.width) _d.atad.area[k] = _t._flFix((_d.atad.width[k] / 1000 ) * (_d.atad.height[k] / 1000 ));
-      }
+      var _areas = _t._areas(_d);
       _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
       _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
       var _cAr = {
@@ -435,12 +441,12 @@ $.fn.extend ({
       var _c = {};
       var _cI;
       for (var k in _cAr)
-       if ((_cI=$.inArray(S,_d.atad.area)) > 0) {
-       // get predefined values
+       if ((_cI=$.inArray(S,_areas)) > 0) {
+       // успользуем заданные для точек значения
         _c[k] = _t._flFix(_cAr[k][_cI]);
        } else {
-       // calculate shifts
-        _c[k]= _t._calcToMatch(S,_d.atad.area,_cAr[k]);
+       // определяем значения в диапазоне
+        _c[k]= _t._calcToMatch(S,_areas,_cAr[k]);
        }
       _c.montage = fData.montage==1?_t._flFix(S * _ref["montage"].base ):0;
       _c.montage_kit = fData.montage==1?_t._flFix(L * _ref["montage"].kit[fData.kit] ):0;
@@ -450,7 +456,11 @@ $.fn.extend ({
       break;
      case "string":
       _t._log(dlevel," Calc by group");
+      _d._complect || (_d._complect = _d.data.split(","));
       
+      //$.each(_d._complect,function(){
+      // 
+      //});
       break;
     }
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
