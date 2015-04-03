@@ -410,15 +410,19 @@ $.fn.extend ({
     _t._log(2,"_calcToMatch (Bval,BScope,SScope,_scope,_range,_c)",Bval,BScope,SScope,_scope,_range,_c);
     return _c.result;
    };
-   _t._calcSection = function(_d,fData) {
+   _t._calcSection = function(_d,fData,dim) {
     var dlevel=3;
-    var tabI = _d.tabI || _t._tabs("opened");
+    var tabI = typeof _d.tabI=="undefined"?_t._tabs("opened"):_d.tabI;
     var _ref = _t._p._ref.price;
+    dim || (dim={});
+    dim.width || (dim.width = fData.width);
+    dim.height || (dim.height = fData.height);
+    _t._log(dlevel," Calc section input (_d,fData,dim,tabI,)",_d,fData,dim,tabI);
     if (!_d.atad.area) {
      _d.atad.area = [];
      for (var k in _d.atad.width) _d.atad.area[k] = _t._flFix((_d.atad.width[k] / 1000 ) * (_d.atad.height[k] / 1000 ));
     }
-    var S = _t._flFix((fData.width/1000) *(fData.height/1000)); // площадь,м2
+    var S = _t._flFix((dim.width/1000) *(dim.height/1000)); // площадь,м2
     _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
     _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
     var _cAr = {// цены на комплект и монтаж по всем точкам
@@ -446,23 +450,28 @@ $.fn.extend ({
     var _ref = _t._p._ref.price;
     var _result = 0;
     var fData = f.serializeObject();
+    var L = 0;
     switch (typeof _d.data) {
      case "object": // секция
       // цена секции (цена + цена комплекта + цена монтажа) + цена монтажа комлекта за периметр)
-      _result = _t._calcSection(_d,fData) + (fData.montage==1?
-       _t._flFix(((1*fData.width + 1*fData.height) * 0.002) * _ref["montage"].kit[fData.kit] ):0);
+      _result = _t._calcSection(_d,fData) + ((fData.montage==1 && _ref["montage"].kit[fData.kit])?
+       ((L=(1*fData.width + 1*fData.height) * 0.002) * _ref["montage"].kit[fData.kit] ):0);
       break;
      case "string": // набор секций (ид через запятую)
       _d._complect || (_d._complect = _d.data.split(","));
-      var L=0;
       _result=0;
       $.each(_d._complect,function(i,item){
-       L += fData.width[i];
+       if (fData.montage==1) L += 1*fData.width[i];
+       _result += _t._calcSection(_t._data(item),fData,{"width":fData.width[i]});
       });
+      if (fData.montage==1 && _ref["montage"].kit[fData.kit]) {
+       _result += (L=(L + 1*fData.height) * 0.002) * _ref["montage"].kit[fData.kit];
+      }
       break;
     }
+    _result = _t._flFix(_result);
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
-        "form data:",fData,"data",_d.data,"L",L,"_result",_result);
+        "form data:",fData,"data",_d,"L",L,"_result",_result);
     return _result;
    };
    _t._counts = function(n,v) {
