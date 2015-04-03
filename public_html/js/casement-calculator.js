@@ -283,6 +283,7 @@ $.fn.extend ({
      break;
      case "string":
       _d._complect = _d.data.split(",");
+      var _wW = [];
       $.each(_d._complect,function(i,item){
        var _segment = _t._data(item);
        var cols=_t._cols(_segment.tabI);
@@ -314,8 +315,15 @@ $.fn.extend ({
          //_dimP.name = v+"["+i+"]";
          if (i) _dimP.caption = false;
          _t._initDimension(_dimP);
+         _wW.push(_dimP.minmax.max - _dimP.minmax.min);
         }
        });
+      });
+      $("label.width",$t).each(function(){
+       var _s = $(".slider",this);
+       var _sMnx = _s.slider("option","max") - _s.slider("option","min");
+       var _maxW = Math.max.apply(null,_wW);
+       if (_sMnx < _maxW) _s.css("margin-right", _t._flFix((100 - (_sMnx * 100 / _maxW)))+"%");
       });
      break;
     }
