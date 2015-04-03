@@ -410,14 +410,34 @@ $.fn.extend ({
     _t._log(2,"_calcToMatch (Bval,BScope,SScope,_scope,_range,_c)",Bval,BScope,SScope,_scope,_range,_c);
     return _c.result;
    };
-   _t._areas = function(_d) {
-    if (!_d.atad) { _t._err("_areas: No atad");  return false; }
-    if (!_d.atad.area) { 
-     if (!_d.atad.width || !_d.atad.height) { _t._err("_areas: No width or height"); return false;}
+   _t._calcSection = function(_d,fData) {
+    var dlevel=3;
+    var tabI = _t._tabs("opened");
+    var _ref = _t._p._ref.price;
+    if (!_d.atad.area) {
      _d.atad.area = [];
      for (var k in _d.atad.width) _d.atad.area[k] = _t._flFix((_d.atad.width[k] / 1000 ) * (_d.atad.height[k] / 1000 ));
     }
-    return _d.atad.area;
+    var S = _t._flFix((fData.width/1000) *(fData.height/1000)); // площадь,м2
+    _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
+    _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
+    var _cAr = {
+     "baseprice" : _d.atad['price['+fData.system+']'],
+     "kitprice"  : _d.atad['kit['+fData.kit+']']
+    };
+    var _c = {};
+    var _cI;
+    for (var k in _cAr)
+     if ((_cI=$.inArray(S,_d.atad.area)) > 0) {
+      // успользуем заданные для точек значения
+      _c[k] = _t._flFix(_cAr[k][_cI]);
+     } else {
+      // определяем значения в диапазоне
+      _c[k]= _t._calcToMatch(S,_d.atad.area,_cAr[k]);
+     }
+    _c.montage = fData.montage==1?_t._flFix(S * _ref["montage"].base ):0;
+    _t._log(dlevel," Calc section (S,_cI,_cAr,_c)",S,_cI,_cAr,_c);
+    return _c; 
    };
    _t._calc = function() {
     var dlevel = 3;
@@ -426,33 +446,14 @@ $.fn.extend ({
     var _ref = _t._p._ref.price;
     var _result = 0;
     var fData = f.serializeObject();
-    var tabI = _t._tabs("opened");
-    var L = _t._flFix((1*fData.width + 1*fData.height) * 0.002);
+    //var tabI = _t._tabs("opened");
     switch (typeof _d.data) {
      case "object":
-      var S = _t._flFix((fData.width/1000) *(fData.height/1000));
-      var _areas = _t._areas(_d);
-      _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
-      _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
-      var _cAr = {
-       "baseprice" : _d.atad['price['+fData.system+']'],
-       "kitprice"  : _d.atad['kit['+fData.kit+']']
-      };
-      var _c = {};
-      var _cI;
-      for (var k in _cAr)
-       if ((_cI=$.inArray(S,_areas)) > 0) {
-       // успользуем заданные для точек значения
-        _c[k] = _t._flFix(_cAr[k][_cI]);
-       } else {
-       // определяем значения в диапазоне
-        _c[k]= _t._calcToMatch(S,_areas,_cAr[k]);
-       }
-      _c.montage = fData.montage==1?_t._flFix(S * _ref["montage"].base ):0;
+      var L = _t._flFix((1*fData.width + 1*fData.height) * 0.002); // периметр, м
+      var _c = _t._calcSection(_d,fData);
       _c.montage_kit = fData.montage==1?_t._flFix(L * _ref["montage"].kit[fData.kit] ):0;
- // Price = _c.baseprice + (kit?_c[kit[<selected}]]:0) + (montage? _ref[montage]*S + (kit[panel]?_ref[montage][panel]*L:0) :0)
       _result = _c.baseprice + _c.kitprice + _c.montage + _c.montage_kit;
-      _t._log(dlevel," Calc by data (S,L,_cI,_cAr,_c)",S,L,_cI,_cAr,_c);
+      _t._log(dlevel," Calc by data (L,_c)",L,_c);
       break;
      case "string":
       _t._log(dlevel," Calc by group");
