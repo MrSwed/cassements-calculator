@@ -318,15 +318,15 @@ $.fn.extend ({
          if (i) _dimP.caption = false;
          _dimP.index = i+1;
          _t._initDimension(_dimP);
-         _wW.push(_dimP.minmax.max - _dimP.minmax.min);
+         _wW.push(_dimP.minmax.max);
         }
        });
       });
       $("label.width",$t).each(function(){
        var _s = $(".slider",this);
-       var _sMnx = _s.slider("option","max") - _s.slider("option","min");
+       var _sMnx = _s.slider("option","max");
        var _maxW = Math.max.apply(null,_wW);
-       if (_sMnx < _maxW) _s.css("margin-right", _t._flFix((100 - (_sMnx * 100 / _maxW)))+"%");
+       if (_sMnx < _maxW) _s.width( _t._flFix(_s.width() * ((_sMnx / _maxW))));
       });
      break;
     }
