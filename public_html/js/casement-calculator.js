@@ -306,7 +306,7 @@ $.fn.extend ({
          if (_vS.size()) {
           // проверка вертикального слайдера, установка минимальных макс-мин 
           if (_dimP.minmax.max > _vS.slider("option","max")) _dimP.minmax.max = _vS.slider("option","max");
-          if (_dimP.minmax.min > _vS.slider("option","min")) _dimP.minmax.min = _vS.slider("option","min");
+          if (_dimP.minmax.min < _vS.slider("option","min")) _dimP.minmax.min = _vS.slider("option","min");
          } else {
           _t._initDimension(_dimP);
          }
