@@ -122,7 +122,6 @@ $.fn.extend ({
     $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
       $("[type='radio']:first",this).attr("checked",true);
     });
-    _t._tabs("init");
     if (_t._p.texts && _t._p.texts.warning) {
      $(_t._p.warning=$(".warning", _t._p.params)).size() ||
         (_t._p.warning = $("<div/>").addClass("warning")
@@ -132,10 +131,11 @@ $.fn.extend ({
     $.each(_t._p.form,function(a,item){
      var v = item.value || "";
      var n = item.name || item.toString();
-     var i = $("[name='"+n+"']",_t);
+     var i = $("[name*='"+n+"']",_t);
      i.size() || (i = $("<input/>").attr({"type":"hidden","name":n,"value":v}).appendTo(_t));
      _t._p.form[a] = i;
     });
+    _t._tabs("init");
     return _t;
    };
    _t._val = function(n,v) {
@@ -314,7 +314,7 @@ $.fn.extend ({
           _t._initDimension(_dimP);
          }
         } else {
-         //_dimP.name = v+"["+i+"]";
+         _dimP.name = v+"["+i+"]";
          if (i) _dimP.caption = false;
          _dimP.index = i+1;
          _t._initDimension(_dimP);
@@ -450,6 +450,7 @@ $.fn.extend ({
       break;
      case "string":
       _t._log(dlevel," Calc by group");
+      
       break;
     }
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
