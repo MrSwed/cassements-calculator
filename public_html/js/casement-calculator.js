@@ -412,7 +412,7 @@ $.fn.extend ({
    };
    _t._calcSection = function(_d,fData) {
     var dlevel=3;
-    var tabI = _t._tabs("opened");
+    var tabI = _d.tabI || _t._tabs("opened");
     var _ref = _t._p._ref.price;
     if (!_d.atad.area) {
      _d.atad.area = [];
@@ -421,7 +421,7 @@ $.fn.extend ({
     var S = _t._flFix((fData.width/1000) *(fData.height/1000)); // площадь,м2
     _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
     _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
-    var _cAr = {
+    var _cAr = {// цены на комплект и монтаж по всем точкам
      "baseprice" : _d.atad['price['+fData.system+']'],
      "kitprice"  : _d.atad['kit['+fData.kit+']']
     };
@@ -437,7 +437,7 @@ $.fn.extend ({
      }
     _c.montage = fData.montage==1?_t._flFix(S * _ref["montage"].base ):0;
     _t._log(dlevel," Calc section (S,_cI,_cAr,_c)",S,_cI,_cAr,_c);
-    return _c; 
+    return _c.baseprice + _c.kitprice + _c.montage; 
    };
    _t._calc = function() {
     var dlevel = 3;
@@ -446,26 +446,23 @@ $.fn.extend ({
     var _ref = _t._p._ref.price;
     var _result = 0;
     var fData = f.serializeObject();
-    //var tabI = _t._tabs("opened");
     switch (typeof _d.data) {
-     case "object":
-      var L = _t._flFix((1*fData.width + 1*fData.height) * 0.002); // периметр, м
-      var _c = _t._calcSection(_d,fData);
-      _c.montage_kit = fData.montage==1?_t._flFix(L * _ref["montage"].kit[fData.kit] ):0;
-      _result = _c.baseprice + _c.kitprice + _c.montage + _c.montage_kit;
-      _t._log(dlevel," Calc by data (L,_c)",L,_c);
+     case "object": // секция
+      // цена секции (цена + цена комплекта + цена монтажа) + цена монтажа комлекта за периметр)
+      _result = _t._calcSection(_d,fData) + (fData.montage==1?
+       _t._flFix(((1*fData.width + 1*fData.height) * 0.002) * _ref["montage"].kit[fData.kit] ):0);
       break;
-     case "string":
-      _t._log(dlevel," Calc by group");
+     case "string": // набор секций (ид через запятую)
       _d._complect || (_d._complect = _d.data.split(","));
-      
-      //$.each(_d._complect,function(){
-      // 
-      //});
+      var L=0;
+      _result=0;
+      $.each(_d._complect,function(i,item){
+       L += fData.width[i];
+      });
       break;
     }
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
-        "form data:",fData,"data",_d.data);
+        "form data:",fData,"data",_d.data,"L",L,"_result",_result);
     return _result;
    };
    _t._counts = function(n,v) {
