@@ -217,6 +217,7 @@ $.fn.extend ({
      "orientation":"horizontal",
      //"caption":"",
      //"step":false,
+     //index: false,
      "label":"",
      "value":""
     },p);
@@ -227,6 +228,7 @@ $.fn.extend ({
     p.label || (p.label = p.name);
     var _l = _l = $("<label/>").addClass(p.label).appendTo(p.obj);
     var _s = $("<input/>").attr({"name":p.name}).appendTo(_l);
+    if (p.index) $("<span/>").addClass("index").html(p.index).appendTo(_l);
     p.caption && $('<span>'+p.caption+'</span>').insertBefore(_s);
     _s.val() || (p.value && _s.val(p.value));
     _s.attr("type","slider");
@@ -314,6 +316,7 @@ $.fn.extend ({
         } else {
          //_dimP.name = v+"["+i+"]";
          if (i) _dimP.caption = false;
+         _dimP.index = i+1;
          _t._initDimension(_dimP);
          _wW.push(_dimP.minmax.max - _dimP.minmax.min);
         }
