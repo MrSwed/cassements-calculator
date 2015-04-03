@@ -216,22 +216,23 @@ $.fn.extend ({
      "minmax":[],
      "orientation":"horizontal",
      //"caption":"",
-     //"step":false
-     "value":false
+     //"step":false,
+     "label":"",
+     "value":""
     },p);
     if (!(p.obj && p.name && typeof p.minmax=="object")) {
      _t._err("_initDimension: Parameters error ");
      return;
     }
-    var _s = $("[name='"+ p.name+"']", p.obj);
-    _s.size() || (_s = $("<input/>").attr({"name":_s.name()}).prependTo(p.obj));
+    p.label || (p.label = p.name);
+    var _l = _l = $("<label/>").addClass(p.label).appendTo(p.obj);
+    var _s = $("<input/>").attr({"name":p.name}).appendTo(_l);
+    p.caption && $('<span>'+p.caption+'</span>').insertBefore(_s);
     _s.val() || (p.value && _s.val(p.value));
-    _s.parent().is("label") || _s.wrap('<label class="'+ p.name+'"/>');
-    _s.prev().size() || (p.caption && $('<span>'+p.caption+'</span>').insertBefore(_s));
     _s.attr("type","slider");
     // check and set defaults for slider
     _t._log(dlevel+1,"_initDimension (p):",p);
-    var _slider = _s.siblings(".slider");
+    var _slider = _s.next(".slider");
      _slider.size() || (_slider = $( "<div class='slider'></div>" ).insertAfter( _s ));
     _slider.slider({
       orientation: p.orientation,
@@ -250,30 +251,18 @@ $.fn.extend ({
    };
    _t._sizes = function(p) {
     // инициализация выбора размеров
-    var dlevel=1;
+    var dlevel=3;
     var $t = $(_t._p.sizes);
     var _d=_t._data(_t._val(_t._p.form.id));
-    _t._log(dlevel+1,"Sizes: call ",p,"Data",_d);
+    _t._log(dlevel+1,"Sizes: call (p,_d)",p,_d);
     $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
     $t.html("");
-    var $s=["width","height"];
+    var $s=["height","width"];
     var tabI = _t._tabs("opened");
     switch (typeof _d.data) {
      case "object":
       //var colsT = ["alias","name","dimensions","input"];
-      var cols=_t._p.data[tabI].cols;
-      $.each(cols,function(i,item){
-       // определение колонок данных для ширины и высоты
-        $.each(item,function(k,v){
-         if (!parseInt(i)) { // первая строка (i=0) содержит алиасы
-          // значения в соотв алиасу массив
-          (cols._index || (cols._index={})) && (cols._index[v]=k);
-         } else {
-         (cols[cols[0][k]] || (cols[cols[0][k]]=[])) && (cols[cols[0][k]][i-1]=v);
-         _t._log(dlevel,"cols[]= ",tabI,i,k,cols[0][k], "value: "+v);
-         }
-        });
-      });
+      var cols=_t._cols(tabI);
       _t._log(dlevel+1,"Sizes Data:",_t._val(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],cols);
       $.each($s,function(i,v){
        // определяем поля ввода и слайдеры для каждого измерения 
@@ -295,12 +284,60 @@ $.fn.extend ({
      case "string":
       _d._complect = _d.data.split(",");
       $.each(_d._complect,function(i,item){
-       //var 
+       var _segment = _t._data(item);
+       var cols=_t._cols(_segment.tabI);
+       $.each($s,function(n,v){
+        // определяем поля ввода и слайдеры для каждого измерения 
+        _segment.atad || (_segment.atad={});
+        if (!_segment.atad[v]) _segment.atad[v] = _t._getDataCol(_segment.data,cols._index[v]);
+        var _dCol = _segment.atad[v];
+        var _dimP = {
+         "obj":$t,
+         "name":v,
+         "label":v,
+         "minmax":_t._minmax(_dCol),
+         "orientation":v=="height"?"vertical":"horizontal",
+         "caption":cols[v][0]+', '+cols[v][1],
+         "step":parseInt(_t._p._ref.step),
+         "value":_dCol[Math.round(_dCol.length/2)]
+        };
+        if (v=="height") {
+         var _vS = $("[name='"+v+"']",$t).siblings(".slider");
+         if (_vS.size()) {
+          // проверка вертикального слайдера, установка минимальных макс-мин 
+          if (_dimP.minmax.max > _vS.slider("option","max")) _dimP.minmax.max = _vS.slider("option","max");
+          if (_dimP.minmax.min > _vS.slider("option","min")) _dimP.minmax.min = _vS.slider("option","min");
+         } else {
+          _t._initDimension(_dimP);
+         }
+        } else {
+         //_dimP.name = v+"["+i+"]";
+         if (i) _dimP.caption = false;
+         _t._initDimension(_dimP);
+        }
+       });
       });
      break;
     }
     $("input:first",$t).trigger("change");
     return _t;
+   };
+   _t._cols = function(tabI) {
+    var dlevel=2;
+    var cols=_t._p.data[tabI].cols;
+    if (!cols._index) $.each(cols,function(i,item){
+     // определение колонок данных для ширины и высоты
+     $.each(item,function(k,v){
+      if (!parseInt(i)) { // первая строка (i=0) содержит алиасы
+       // значения в соотв алиасу массив
+       (cols._index || (cols._index={})) && (cols._index[v]=k);
+      } else {
+       (cols[cols[0][k]] || (cols[cols[0][k]]=[])) && (cols[cols[0][k]][i-1]=v);
+       _t._log(dlevel,"cols[]= ",tabI,i,k,cols[0][k], "value: "+v);
+      }
+     });
+    });
+    return cols;
    };
    _t._data = function(p,data,grKey,deep) {
     // получение и кеширование данных по идентификатору
