@@ -48,6 +48,13 @@ if ($tpl == 8) { // Калькулятор
  mm_renameField($cTVnames['i'], 'Превью');
  mm_changeFieldHelp($cTVnames['i'], 'Изображение для выбора');
  mm_renameField($cTVnames['p'], 'Основное изображение');
+ $ctParams = explode('||',$modx->db->getValue("SELECT elements FROM " . $modx->getFullTableName('site_tmplvars') . " WHERE name='".$cTVnames['t']."'"));
+ foreach ($ctParams as $k=>$v) {
+  $row = explode("==",$v,2);
+  $ctParams[$row[1]] = $row[0]; 
+ } 
+ mm_renameField($cTVnames['t'], 'Тип данных');
+ mm_changeFieldHelp($cTVnames['t'], 'Если не выбрано - значение родителя <b class="tip" title="'.$calcType.'">'.$ctParams[$calcType].'</b>');
  if ($pid==0) { // Ресурс в корне - родительский для калькулятора - общие параметрые
   mm_hideFields($cTVnames['i']);
   mm_renameField($cTVnames['p'], 'Текст предупреждения');
