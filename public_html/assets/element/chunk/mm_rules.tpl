@@ -65,10 +65,16 @@ if ($tpl == 8) { // Калькулятор
    $titles = $modx->runSnippet("getInheritField",array("id"=>$pid,"field"=>"calculator"));
    $titles = $modx->runSnippet("ddGetMultipleField",array("string"=>$titles,"outputFormat"=>"array"));
    $lt = count($titles);
-   foreach ($titles as $i => $v) $titles[$lt][$i] = $v[1]." (".$v[2].")"; 
-   mm_renameField('calculator', 'Параметры секции');
-   mm_changeFieldHelp('calculator', '');
-   mm_ddMultipleFields('calculator', '', '', implode(",",array_fill(0,$lt,"number")), implode(",",$titles[$lt]), '80%');
+   if ($lt > 2 and is_array($titles[0]) and count($titles[0])>=3) { // в заголовках должно быть минимум 3 параметра (см выше)
+    foreach ((array) $titles as $i => $v) $titles[$lt][$i] = $v[1] . " (" . $v[2] . ")";
+    mm_renameField('calculator', 'Параметры секции');
+    mm_changeFieldHelp('calculator', '');
+    mm_ddMultipleFields('calculator', '', '', implode(",", array_fill(0, $lt, "number")), implode(",", $titles[$lt]), '80%');
+   } else {
+    mm_ddCreateSection('Параметры колонок родительского разделы заданы не верно', 'ErrorMessage','calculator');
+    mm_ddReadonly('calculator');
+    mm_ddMoveFieldsToSection('calculator','ErrorMessage');
+   }
   }
  } else 
   if ($calcType=="multiple") { // Параметры составных блоков
