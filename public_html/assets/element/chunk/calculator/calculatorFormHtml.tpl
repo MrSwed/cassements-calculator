@@ -64,7 +64,7 @@
      }, "step": CalcData_add[3]
     },
     "price": $(".workarea .price span"),
-    "debug": 3
+    "debug": 2
     });
    $(".parameters [type='button']",_c).click(function(){
      $(".modal").modal("open",{

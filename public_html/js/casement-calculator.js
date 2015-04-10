@@ -97,6 +97,7 @@ $.fn.extend ({
     var args = [];
     Array.prototype.push.apply( args, arguments );
     $.isNumeric(d) && args.shift() || ( d=false );
+    args[0] = "("+d+"): "+args[0].toString();
     _t._debug(d) && console.dir(args);
     return _t;
    };
@@ -208,6 +209,7 @@ $.fn.extend ({
     return $t;
    };
    _t._initDimension = function(p){
+    // размеры. слайдер(ы) для высоты и ширины секции(й)
     var dlevel = 2;
     p = $.extend({},{
      // обязательные параметры
@@ -266,17 +268,17 @@ $.fn.extend ({
       //var colsT = ["alias","name","dimensions","input"];
       var cols=_t._cols(tabI);
       _t._log(dlevel+1,"Sizes Data:",_t._val(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],cols);
-      $.each($s,function(i,v){
+      $.each($s,function(i,dim){
        // определяем поля ввода и слайдеры для каждого измерения 
        _d.atad || (_d.atad={});
-       if (!_d.atad[v]) _d.atad[v] = _t._getDataCol(_d.data,cols._index[v]);
-       var _dCol = _d.atad[v];
-       $s[v]=_t._initDimension({
+       if (!_d.atad[dim]) _d.atad[dim] = _t._getDataCol(_d.data,cols._index[dim]);
+       var _dCol = _d.atad[dim];
+       $s[dim]=_t._initDimension({
             "obj":$t,
-            "name":v,
+            "name":dim,
             "minmax":_t._minmax(_dCol),
-            "orientation":v=="height"?"vertical":"horizontal",
-            "caption":cols[v][0]+', '+cols[v][1],
+            "orientation":dim=="height"?"vertical":"horizontal",
+            "caption":cols[dim][0]+', '+cols[dim][1],
             "step":parseInt(_t._p._ref.step),
             "value":_dCol[Math.round(_dCol.length/2)]
            });
@@ -289,23 +291,23 @@ $.fn.extend ({
       $.each(_d._complect,function(i,item){
        var _segment = _t._data(item);
        var cols=_t._cols(_segment.tabI);
-       $.each($s,function(n,v){
+       $.each($s,function(n,dim){
         // определяем поля ввода и слайдеры для каждого измерения 
         _segment.atad || (_segment.atad={});
-        if (!_segment.atad[v]) _segment.atad[v] = _t._getDataCol(_segment.data,cols._index[v]);
-        var _dCol = _segment.atad[v];
+        if (!_segment.atad[dim]) _segment.atad[dim] = _t._getDataCol(_segment.data,cols._index[dim]);
+        var _dCol = _segment.atad[dim];
         var _dimP = {
          "obj":$t,
-         "name":v,
-         "label":v,
+         "name":dim,
+         "label":dim,
          "minmax":_t._minmax(_dCol),
-         "orientation":v=="height"?"vertical":"horizontal",
-         "caption":cols[v][0]+', '+cols[v][1],
+         "orientation":dim=="height"?"vertical":"horizontal",
+         "caption":cols[dim][0]+', '+cols[dim][1],
          "step":parseInt(_t._p._ref.step),
          "value":_dCol[Math.round(_dCol.length/2)]
         };
-        if (v=="height") {
-         var _vS = $("[name='"+v+"']",$t).siblings(".slider");
+        if (dim=="height") {
+         var _vS = $("[name='"+dim+"']",$t).siblings(".slider");
          if (_vS.size()) {
           // проверка вертикального слайдера, установка минимальных макс-мин 
           if (_dimP.minmax.max > _vS.slider("option","max")) _dimP.minmax.max = _vS.slider("option","max");
@@ -314,7 +316,7 @@ $.fn.extend ({
           _t._initDimension(_dimP);
          }
         } else {
-         _dimP.name = v+"["+i+"]";
+         _dimP.name = dim+"["+i+"]";
          if (i) _dimP.caption = false;
          _dimP.index = i+1;
          _t._initDimension(_dimP);
@@ -334,18 +336,19 @@ $.fn.extend ({
     return _t;
    };
    _t._cols = function(tabI) {
-    var dlevel=2;
+     // определение колонок данных секции, номер (строка), alias - 1ст, название - 2ст, ед изм - 3ст
+    var dlevel=5;
     var cols=_t._p.data[tabI].cols;
-    if (!cols._index) $.each(cols,function(i,item){
-     // определение колонок данных для ширины и высоты
-     $.each(item,function(k,v){
+    var _al = ["alias","name","unit"];
+    if (!cols._index) $.each(cols,function(k,item){
+     $.each(item,function(i,v){
       if (!parseInt(i)) { // первая строка (i=0) содержит алиасы
        // значения в соотв алиасу массив
        (cols._index || (cols._index={})) && (cols._index[v]=k);
       } else {
-       (cols[cols[0][k]] || (cols[cols[0][k]]=[])) && (cols[cols[0][k]][i-1]=v);
-       _t._log(dlevel,"cols[]= ",tabI,i,k,cols[0][k], "value: "+v);
+       (cols[cols[k][0]] || (cols[cols[k][0]]=[])) && (cols[cols[k][0]][i-1]=v);
       }
+      _t._log(dlevel,"_cols : [k="+k+"]= ","i = "+i, "value = "+v,"tabI = "+tabI);
      });
     });
     return cols;
@@ -486,7 +489,7 @@ $.fn.extend ({
     c!=null || (c=0);
     var ar=[];
     for (var i in data) ar.push(data[i][c]);
-    _t._log(2,"_getDataCol ("+_t._counts("_getDataCol",1 + _t._counts("_getDataCol")).toString()+") (data,c,ar): ",data,c,ar);
+    _t._log(4,"_getDataCol ("+_t._counts("_getDataCol",1 + _t._counts("_getDataCol")).toString()+") (data,c,ar): ",data,c,ar);
     return ar;
    };
    _t._minmax = function(ar,c) {
