@@ -65,10 +65,10 @@ if ($tpl == 8) { // Калькулятор
    $titles = $modx->runSnippet("getInheritField",array("id"=>$pid,"field"=>"calculator"));
    $titles = $modx->runSnippet("ddGetMultipleField",array("string"=>$titles,"outputFormat"=>"array"));
    $lt = count($titles);
-   foreach ($titles[1] as $i => $v) $titles[$lt][$i] = $v." (".$titles[2][$i].")"; 
+   foreach ($titles as $i => $v) $titles[$lt][$i] = $v[1]." (".$v[2].")"; 
    mm_renameField('calculator', 'Параметры секции');
    mm_changeFieldHelp('calculator', '');
-   mm_ddMultipleFields('calculator', '', '', implode(",",array_fill(0,count($titles[$lt]),"number")), implode(",",$titles[$lt]), '80%');
+   mm_ddMultipleFields('calculator', '', '', implode(",",array_fill(0,$lt,"number")), implode(",",$titles[$lt]), '80%');
    break;
   case (in_array(39, $pidAr)  and !$content["isfolder"]):
    mm_renameField('calculator', 'Состав остекления');
