@@ -22,13 +22,13 @@ mm_createTab('Магазин','shop','','6');
 mm_moveFieldsToTab('price,shop_models,shop_parameters','shop');
 
 mm_ddCreateSection('Параметры (наследуемые, пустое значение наследует родителя)', 'parameters','settings');
-mm_ddMoveFieldsToSection('hidePageTitle,hideBreadcrumbs,showParentTitle,showDateInContent,inheritAfterContent,hideRightCol,enableShare,enableComments,bodyclass','parameters');
+mm_ddMoveFieldsToSection('hidePageTitle,hideBreadcrumbs,showParentTitle,showDateInContent,hideRightCol,enableShare,enableComments,bodyclass','parameters');
 
 mm_ddCreateSection('Параметры дочерних (наследуемые, пустое значение наследует родителя)', 'parameters_child','settings');
 mm_ddMoveFieldsToSection('hideChilds,hideFolders,depth,ditto_display,ditto_orderBy,DisplayListStyle,intalias','parameters_child');
 
 mm_ddCreateSection('Дополнительные тексты', 'addTexts','settings');
-mm_ddMoveFieldsToSection('beforeContent,afterContent','addTexts');
+mm_ddMoveFieldsToSection('beforeContent,inheritBeforeContent,afterContent,inheritAfterContent','addTexts');
 
 mm_ddCreateSection('Отладка', 'debug','settings');
 mm_ddMoveFieldsToSection('image_maket','debug');
