@@ -58,8 +58,8 @@ if ($tpl == 8) { // Калькулятор
    break;
   case ($cid == 38):  // Окна Формат : Ширина (мм.),Высота (мм.),КВЕ (руб.),Rehau (руб.),Комп-я панели (руб.),Комп-я кирпича (руб.)
    mm_renameField('calculator', 'Колонки параметров секции');
-   mm_changeFieldHelp('calculator', "1 - алиасы (служеб. идентификаторы),  2 - Отображаемое название, 3 - едницы измерения");
-   mm_ddMultipleFields('calculator', '', '', 'textarea,textarea,textarea,textarea', 'alias,Название,Ед.Изм.', '70%');
+   mm_changeFieldHelp('calculator', "1 - алиасы (служеб. идентификаторы),  2 - Отображаемое название, 3 - единицы измерения");
+   mm_ddMultipleFields('calculator', '', '', 'textarea,textarea,textarea,textarea', 'alias::Служебные идентификаторы полей. Алиасы,Название::Отображаемое название колонок,Ед.Изм.::Единицы измерения', '70%');
    break;
   case (in_array(38, $pidAr) and !$content["isfolder"]):
    $titles = $modx->runSnippet("getInheritField",array("id"=>$pid,"field"=>"calculator"));
