@@ -10,7 +10,7 @@ mm_widget_showimagetvs(); // Always give a preview of Image TVs
 
 /* Переменные для использования */
 $cid = isset($content['id'])?$content['id']:false;
-$pid = $cid?$content['parent']:$_GET["pid"];
+$pid = !empty($content['parent'])?$content['parent']:$_GET["pid"];
 $tpl = $content['template'];
 $pidAr = array_merge(array($pid),$modx->getParentIds($pid)); // роительский путь
 /**/
@@ -33,7 +33,7 @@ mm_ddMoveFieldsToSection('beforeContent,inheritBeforeContent,afterContent,inheri
 mm_ddCreateSection('Отладка', 'debug','settings');
 mm_ddMoveFieldsToSection('image_maket','debug');
 
-if (! in_array(37,$pidAr) and $cid!=37 )  {
+if ($tpl != 8 )  {
  mm_createTab('Изображения','photos');
  mm_moveFieldsToTab('image,photos','photos');
  mm_ddMultipleFields('photos', '', '', 'image,text', 'Изображение,Название');
