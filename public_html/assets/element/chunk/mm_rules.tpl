@@ -41,47 +41,48 @@ if ($tpl != 8 )  {
 
 
 if ($tpl == 8) { // Калькулятор
- mm_createTab('Калькулятор', 'calculator');
- mm_moveFieldsToTab('image,photos,calculator_type,calculator', 'calculator');
- $calcType = $modx->runSnippet("getInheritField",array("id"=>$cid?$cid:$pid,"field"=>"calculator_type"));
- mm_renameField('image', 'Превью');
- mm_changeFieldHelp('image', 'Изображение для выбора');
- mm_renameField('photos', 'Изображение');
+ $cTVnames = array('i'=>'image','p'=>'photos','t'=>'calculator_type','c'=>'calculator');
+ mm_createTab('Калькулятор', $cTVnames['c']);
+ mm_moveFieldsToTab(implode(",",array_values($cTVnames)), $cTVnames['c']);
+ $calcType = $modx->runSnippet('getInheritField',array("id"=>$cid?$cid:$pid,"field"=>$cTVnames['t']));
+ mm_renameField($cTVnames['i'], 'Превью');
+ mm_changeFieldHelp($cTVnames['i'], 'Изображение для выбора');
+ mm_renameField($cTVnames['p'], 'Основное изображение');
  if ($pid==0) { // Ресурс в корне - родительский для калькулятора - общие параметрые
-  mm_hideFields("image");
-  mm_renameField('photos', 'Текст предупреждения');
-  mm_changeFieldHelp('photos', '');
-  mm_ddMultipleFields('photos', '', '', 'richtext', '', "auto", '||', '::', '', '', 0, 1);
-  mm_renameField('calculator', 'Общие параметры');
-  mm_changeFieldHelp('calculator', 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Стоимость монтажа комплектующих: Периметр: Lм * Pруб. ');
-  mm_ddMultipleFields('calculator', '', '', 'number,number,number,number', 'Базовая (руб./м&sup2;),Монтаж панель (руб.м),Монтаж кирпич (руб.м),Шаг (мм)', "70,70,70,50", '||', '::', '', '', 0, 1);
+  mm_hideFields($cTVnames['i']);
+  mm_renameField($cTVnames['p'], 'Текст предупреждения');
+  mm_changeFieldHelp($cTVnames['p'], '');
+  mm_ddMultipleFields($cTVnames['p'], '', '', 'richtext', '', "auto", '||', '::', '', '', 0, 1);
+  mm_renameField($cTVnames['c'], 'Общие параметры');
+  mm_changeFieldHelp($cTVnames['c'], 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Стоимость монтажа комплектующих: Периметр: Lм * Pруб. ');
+  mm_ddMultipleFields($cTVnames['c'], '', '', 'number,number,number,number', 'Базовая (руб./м&sup2;),Монтаж панель (руб.м),Монтаж кирпич (руб.м),Шаг (мм)', "70,70,70,50", '||', '::', '', '', 0, 1);
  } else 
  if ($calcType=="section") { // Параметры секций 
-  if (!empty($content["isfolder"])) {
-   mm_renameField('calculator', 'Колонки параметров секции');
-   mm_changeFieldHelp('calculator', "1 - алиасы (служеб. идентификаторы),  2 - Отображаемое название, 3 - единицы измерения");
-   mm_ddMultipleFields('calculator', '', '', 'textarea,textarea,textarea,textarea', 'alias::Служебные идентификаторы полей. Алиасы,Название::Отображаемое название колонок,Ед.Изм.::Единицы измерения', '70%');
+  if (!empty($content["isfolder"])) { //настройки - количество колонок (в строках данные о них)
+   mm_renameField($cTVnames['c'], 'Колонки параметров секции');
+   mm_changeFieldHelp($cTVnames['c'], "1 - алиасы (служеб. идентификаторы),  2 - Отображаемое название, 3 - единицы измерения");
+   mm_ddMultipleFields($cTVnames['c'], '', '', 'textarea,textarea,textarea,textarea', 'alias::Служебные идентификаторы полей. Алиасы,Название::Отображаемое название колонок,Ед.Изм.::Единицы измерения', '70%');
   } else {
-   $titles = $modx->runSnippet("getInheritField",array("id"=>$pid,"field"=>"calculator"));
+   $titles = $modx->runSnippet("getInheritField",array("id"=>$pid,"field"=>$cTVnames['c']));
    $titles = $modx->runSnippet("ddGetMultipleField",array("string"=>$titles,"outputFormat"=>"array"));
    $lt = count($titles);
    if ($lt > 2 and is_array($titles[0]) and count($titles[0])>=3) { // в заголовках должно быть минимум 3 параметра (см выше)
     foreach ((array) $titles as $i => $v) $titles[$lt][$i] = $v[1] . " (" . $v[2] . ")";
-    mm_renameField('calculator', 'Параметры секции');
-    mm_changeFieldHelp('calculator', '');
-    mm_ddMultipleFields('calculator', '', '', implode(",", array_fill(0, $lt, "number")), implode(",", $titles[$lt]), '80%');
+    mm_renameField($cTVnames['c'], 'Параметры секции');
+    mm_changeFieldHelp($cTVnames['c'], '');
+    mm_ddMultipleFields($cTVnames['c'], '', '', implode(",", array_fill(0, $lt, "number")), implode(",", $titles[$lt]), '80%');
    } else {
-    mm_ddCreateSection('Параметры колонок родительского разделы заданы не верно', 'ErrorMessage','calculator');
-    mm_ddReadonly('calculator');
-    mm_ddMoveFieldsToSection('calculator','ErrorMessage');
+    mm_ddCreateSection('Параметры колонок родительского разделы заданы не верно', 'ErrorMessage',$cTVnames['c']);
+    mm_ddReadonly($cTVnames['c']);
+    mm_ddMoveFieldsToSection($cTVnames['c'],'ErrorMessage');
    }
   }
  } else 
   if ($calcType=="multiple") { // Параметры составных блоков
    if (empty($content["isfolder"])) {
-    mm_renameField('calculator', 'Состав остекления');
-    mm_changeFieldHelp('calculator', 'ID ресурсов с окнами через запятую или двойной клик в поле ввода для выбора из списка');
-    mm_ddSelectDocuments('calculator', '', '', 38, 10, 'isfolder=0', 0, '[+title+] ([+id+])', true);
+    mm_renameField($cTVnames['c'], 'Состав остекления');
+    mm_changeFieldHelp($cTVnames['c'], 'ID ресурсов с окнами через запятую или двойной клик в поле ввода для выбора из списка');
+    mm_ddSelectDocuments($cTVnames['c'], '', '', 38, 10, 'isfolder=0', 0, '[+title+] ([+id+])', true);
    }
   }
 }
