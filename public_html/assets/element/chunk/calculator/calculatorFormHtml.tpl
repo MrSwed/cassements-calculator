@@ -44,7 +44,7 @@
  ];
   var CalcData_add = [[ddGetMultipleField?
     &docField=`calculator`
-    &docId=`[+id+]`
+    &docId=`37`
     &totalRows=`1`
     &outputFormat=`JSON`
    ]];
@@ -115,7 +115,10 @@
    </div>
    <div class="price"><span>00000</span> руб</div>
    <input type="button" value="Заказать"/>
-   <div class="warning">[*photos*]</div>[[ в данном случае TV параметр photos используется для текста предупреждения]]
+   <div class="warning">
+     [[getInheritField? &id=`[!if? &is=`[*isfolder*]:=:1` &then=`[*id*]` &else=`[*parent*]` !]` &field=`photos`]]
+    [[ в данном случае TV параметр photos используется для текста предупреждения ]]
+   </div>
   </div>
  </div>
  <div class="modal">
