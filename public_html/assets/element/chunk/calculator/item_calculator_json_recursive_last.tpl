@@ -15,7 +15,7 @@
       "title":"[+pagetitle+]",
       "preview":"[+image+]",
       "image":"[+photos+]",
-      "data":[+phx:input=`[+id+]`:parent=`id`:is=`39`:then=`"[+calculator+]"`:else=` [[ddGetMultipleField?
+      "data":[+phx:input=`[[getInheritField? &id=`[+id+]` &field=`calculator_type`]]`:is=`multiple`:then=`"[+calculator+]"`:else=` [[ddGetMultipleField?
               &docField=`calculator`
               &docId=`[+id+]`
               &outputFormat=`JSON`
