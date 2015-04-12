@@ -9,6 +9,7 @@
  <link href="/design/casement-calculator.css" rel="stylesheet" type="text/css" property="all"/>
  
  <script type="text/javascript">
+  var CalcTest = [[calculator? &id=`37`]] ; 
  var CalcData = [
   {"alias":"#windows", 
    "name":"пластиковые окна",

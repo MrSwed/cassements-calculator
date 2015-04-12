@@ -1,5 +1,6 @@
 [*phx:input=`[+isfolder+]`:is=`1`:then=`//
    "[+id+]":  {
+    "doclevel": [+id:doclevel+],
     "title": "[+pagetitle+]",
     "group": { [[Ditto?
                &parents=`[+id+]`
@@ -12,6 +13,7 @@
                ]] }
     }`:else=`
      "[+id+]": {
+     "doclevel": [+id:doclevel+],
       "title":"[+pagetitle+]",
       "preview":"[+image+]",
       "image":"[+photos+]",
