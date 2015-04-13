@@ -18,7 +18,7 @@ $id = (int)$id?(int)$id:$modx->documentObject['id'];
 function calcRecursive($id) {
  global $modx;
  $doc = $modx->getTemplateVarOutput(explode(",","alias,pagetitle,image,photos,calculator,isfolder"),$id);
-
+ $outAr = array();
 //return json_encode($doc);
 
  $pidAr = $modx->getParentIds($id);
@@ -27,42 +27,45 @@ function calcRecursive($id) {
  $outNames = array(
   "alias"=>  $doc['alias'],
   "name"=>  $doc['pagetitle'],
+  "debug" => "$id: $docLevel",
  );
  foreach ($modx->getChildIds($id,1) as $alias => $chId) 
   $childs[$chId] = calcRecursive($chId);
  
- echo "<pre> $id: $docLevel childs:"; print_r($childs);echo "</pre>";
+// echo "<pre> $id: $docLevel childs:"; print_r($childs);echo "</pre>";
 
  if ($docLevel == 0) {
   return array_values($childs);
  } else if ($docLevel == 1) {
-  $outAr = $outNames + array(
+  $outAr = array_merge($outNames, array(
    "doclevel"=>  $docLevel,
-//   "cols" => $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'json')),
-    "data" > $childs
-  );
-//  if ($getCols = $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'json'))
-//   and is_array($getCols) and)
-//   $outAr["cols"] = $getCols ; 
-// echo "<pre> $id: $docLevel \$outAr:"; print_r($outAr);echo "\$getCols $getCols".var_export($getCols,1)."</pre>";
-//  $outAr["data"] =  $childs;
+  ));
+  $getCols = $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')); 
+  if ($childs) $outAr["data"] = $childs;
+//  echo "<pre> $id: $docLevel \$outAr:"; print_r($outAr);echo "\$getCols (".gettype($getCols).")".var_export($getCols,1)."</pre>";
+  if ($getCols && is_array($getCols)) $outAr["cols"] = $getCols ; 
  } else if ($doc['isfolder']) {
   $outAr = $outNames;
   $outAr["group"] =  $childs;
  } else {
-  $outAr["calculator_type"] = array() + (array)$modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type'));
-  $outAr = $outNames + array(
+  $outAr["calculator_type"] = (array)$modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type'));
+  $outAr = array_merge($outNames, array(
    "preview" => $doc['image'],
    "image" => $doc['photos'],
    "data" => ($outAr["calculator_type"]=="multiple" ?
     $doc['calculator']:
     $modx->runSnippet("ddGetMultipleField",array("docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')))
-  );
+  ));
  }
  return $outAr;
 }
+$rAr = calcRecursive($id);
+$result = json_encode($rAr,true);
 
-$result = json_encode(calcRecursive($id),JSON_HEX_TAG);
+echo "<pre>";
+print_r($rAr);
+echo $result;
+exit;
 
 //echo "<pre> $id: $docLevel Last error: ".json_last_error()."</pre>";
 
