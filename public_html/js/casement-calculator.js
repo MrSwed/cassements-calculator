@@ -2,13 +2,15 @@
  * jQuery casement calculator plugin
  *
  * Required
- *  tabs extender like https://gist.github.com/MrSwed/4246691aa788058a9934
+ *  jQuery tabs extender like https://gist.github.com/MrSwed/4246691aa788058a9934
  *  jQuery class extender https://gist.github.com/MrSwed/0a837b3acbfbf8cfb19e
+ *  jQuery unParam function https://github.com/davetayls/jquery.unparam/blob/master/jquery.unparam.js 
  */
 $.fn.extend ({
  "calculator" : function(p){
   return this.each(function() {
    var _t=this;
+   var dataReady = true;
    _t.p = p;
    p=$.extend({},{
     "tabs": ".tabs",
@@ -116,6 +118,44 @@ $.fn.extend ({
        break;
      }
     });
+    $.each("data,reference".split(","), function(i,k) {
+     if (typeof _t._stor[k] == "string" && !/[\n\r]/.test(_t._stor[k]) && /^(http:\/)?[^\s\n\r\t]+$/.test(_t._stor[k])) {
+
+      _t._log(4,"Ajax load data : check ",_t._stor[k],typeof _t._stor[k] ,"!/[\n\r]/ "+ !/[\n\r]/.test(_t._stor[k]), "/^(http:\/)?[^\s\n\r\t] " + /^(http:\/)?[^\s\n\r\t]+$/.test(_t._stor[k]) );
+      var _request = _t._stor[k];
+
+      _t._ajaxLeft = (_t._ajaxLeft?_t._ajaxLeft:0) + 1;
+      _t._ajax = $.extend({},_t._ajax);
+      _t._ajax[_request] || (_t._ajax[_request]={});
+      if (_t._ajax[_request] && _t._ajax[_request].status==-1) return 1;
+      else _t._ajax[_request].status = -1;
+      var ajaxSetting = {
+       dataType: "json",
+       method: "post",
+       url: _t._stor[k].replace(/\?.*$/,""),
+       //data: $.unparam(_t._stor[k]),
+       data: _t._stor[k].replace(/^.*\?/,""),
+       success: function(response,textStatus,jqXHR ){
+        _t._log(4,"Ajax load success (response,textStatus,jqXHR,k)", response,textStatus,jqXHR,k,_t._stor[k] );
+        _t._ajax[_request] = $.extend({},_t._ajax[_request],response);
+        var data = response.data;
+        _t.init();
+        _t._ajaxLeft -= 1;
+        if (data[k]) _t._stor[k] = data[k];
+        else _t._stor[k] = data;
+        _t._ajax[_request].status = 1;
+        _t._log(4,"Ajax load data", data, "k: "+ k ,"left: "+_t._ajaxLeft);
+        
+       }
+      }; 
+      _t._log(4,"Ajax get data", i, k, _t._stor[k],ajaxSetting,"left: "+_t._ajaxLeft);
+      $.ajax(ajaxSetting);
+     }
+    });
+    if (_t._ajaxLeft || _t._ajaxLeft > 0) {
+     _t._log(4,"Ajax wait "+_t._ajaxLeft);
+     return;
+    }
     $(_t).on("change","[name]",function(e){
      var _r = _t._calc();
      _t._val("price",_r);

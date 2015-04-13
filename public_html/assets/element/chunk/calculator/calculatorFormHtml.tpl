@@ -9,36 +9,13 @@
  <link href="/design/casement-calculator.css" rel="stylesheet" type="text/css" property="all"/>
  
  <script type="text/javascript">
-  var CalcTest = [] ;
-  var jqxhr = $.getJSON( "/ajax.php", {"id":"37", "source":"snippet", "name":"calculator","formatIn":"json"},function(data) {
-   console.log(data);
-//   $.each( data.items, function( i, item ) {
-//    $( "<img>" ).attr( "src", item.media.m ).appendTo( "#images" );
-//    if ( i === 3 ) {
-//     return false;
-//    }
-//   });
-   CalcTest = data;
-   console.log( "success" );
-  })
-   .done(function(data) {
-    console.log( "second success" );
-   })
-   .fail(function() {
-    console.log( "error" );
-   })
-   .always(function() {
-    console.log( "complete" );
-   });
-
-  // Perform other work here ...
-
-  // Set another completion function for the request above
-  jqxhr.complete(function() {
-   console.log( "second complete" );
-  });
-  console.log(jqxhr);
-  
+  var calcSourceID=37;
+//  var CalcTest = [] ;
+//  var jqxhr = $.getJSON( "/ajax.php", {"id":"37", "source":"snippet", "name":"calculator","formatIn":"json"},function(data) {
+//   console.log(data);
+//   CalcTest = data;
+//   console.log( "success" );
+//  });
  var CalcData = [
   {"alias":"#windows", 
    "name":"пластиковые окна",
@@ -81,8 +58,8 @@
   $(function(){
    var _c = $(".form.calculator .workarea");
    _c.calculator({
-    "data": CalcData,
-    "reference": {
+    "data": "/ajax.php?id="+calcSourceID+"&source=snippet&name=calculator&formatIn=json",
+    "reference": { // ajax.php?source=snippet&name=ddGetMultipleField&formatIn=json&docId=37&totalRows=1&outputFormat=JSON&docField=calculator
      "price": {
       "montage": {
        "base": CalcData_add[0],

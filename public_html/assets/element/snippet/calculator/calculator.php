@@ -39,7 +39,11 @@ function calcRecursive($id) {
 // echo "<pre> $id: $docLevel childs:"; print_r($childs);echo "</pre>";
 
  if ($docLevel == 0) {
-  return array_values($childs);
+  $outAr = array_merge($outNames, array(
+   "doclevel"=>  $docLevel,
+   "reference" => $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')),
+   "data" => array_values($childs)
+  ));
  } else if ($docLevel == 1) {
   $outAr = array_merge($outNames, array(
    "doclevel"=>  $docLevel,
