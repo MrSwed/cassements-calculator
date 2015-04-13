@@ -1,58 +1,63 @@
 [
   {
-    "alias": "#windows",
+    "alias": "windows-PVC",
     "name": "пластиковые окна",
+    "debug": "38: 1",
+    "doclevel": 1,
     "cols": [
       [
         "width",
-        "\u0428\u0438\u0440\u0438\u043d\u0430",
-        "\u043c\u043c",
+        "Ширина",
+        "мм",
         "input#width"
       ],
       [
         "height",
-        "\u0412\u044b\u0441\u043e\u0442\u0430",
-        "\u043c\u043c",
+        "Высота",
+        "мм",
         "input#height"
       ],
       [
         "price[kbe]",
-        "\u041a\u0412\u0415",
-        "\u0440\u0443\u0431",
+        "КВЕ",
+        "руб",
         "radio#system"
       ],
       [
         "price[rehau]",
         "Rehau",
-        "\u0440\u0443\u0431",
+        "руб",
         "radio#system"
       ],
       [
         "kit[panel]",
-        "\u0434\u043b\u044f \u043f\u0430\u043d\u0435\u043b\u044c\u043d\u043e\u0433\u043e \u0434\u043e\u043c\u0430",
-        "\u0440\u0443\u0431",
+        "для панельного дома",
+        "руб",
         "radio#kit"
       ],
       [
         "kit[kirpich]",
-        "\u0434\u043b\u044f \u043a\u0438\u0440\u043f\u0438\u0447\u043d\u043e\u0433\u043e \u0434\u043e\u043c\u0430",
-        "\u0440\u0443\u0431",
+        "для кирпичного дома",
+        "руб",
         "radio#kit"
       ],
       [
         "kit[none]",
-        "\u043d\u0435 \u043d\u0443\u0436\u043d\u044b",
-        "\u0411\u0435\u0437 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u0430",
+        "не нужны",
+        "Без комплекта",
         "radio#kit"
       ]
     ],
     "data": {
-      //
       "40": {
-        "title": "Одностворчатые",
+        "alias": "odnostvorchatye",
+        "name": "Одностворчатые",
+        "debug": "40: 2",
         "group": {
           "44": {
-            "title": "глухое",
+            "alias": "gluhoe",
+            "name": "глухое",
+            "debug": "44: 3",
             "preview": "assets/images/windows/preview/g.png",
             "image": "assets/images/windows/g.png",
             "data": [
@@ -99,7 +104,9 @@
             ]
           },
           "45": {
-            "title": "поворотное",
+            "alias": "povorotnoe",
+            "name": "поворотное",
+            "debug": "45: 3",
             "preview": "assets/images/windows/preview/p.png",
             "image": "assets/images/windows/pr.png",
             "data": [
@@ -146,7 +153,9 @@
             ]
           },
           "46": {
-            "title": "поворотно-откидное",
+            "alias": "povorotno-otkidnoe",
+            "name": "поворотно-откидное",
+            "debug": "46: 3",
             "preview": "assets/images/windows/preview/o.png",
             "image": "assets/images/windows/pl.png",
             "data": [
@@ -193,7 +202,9 @@
             ]
           },
           "47": {
-            "title": "фрамуга",
+            "alias": "framuga",
+            "name": "фрамуга",
+            "debug": "47: 3",
             "preview": "assets/images/windows/preview/f.png",
             "image": "assets/images/windows/f.png",
             "data": [
@@ -241,12 +252,15 @@
           }
         }
       },
-      //
       "41": {
-        "title": "двухстворчатое",
+        "alias": "dvuhstvorchatoe",
+        "name": "двухстворчатое",
+        "debug": "41: 2",
         "group": {
           "48": {
-            "title": "глухое + поворотное",
+            "alias": "gluhoe-povorotnoe",
+            "name": "глухое + поворотное",
+            "debug": "48: 3",
             "preview": "assets/images/windows/preview/g-p.png",
             "image": "assets/images/windows/g-p.png",
             "data": [
@@ -293,7 +307,9 @@
             ]
           },
           "49": {
-            "title": "глухое + поворотно-откидное",
+            "alias": "gluhoe-povorotno-otkidnoe",
+            "name": "глухое + поворотно-откидное",
+            "debug": "49: 3",
             "preview": "assets/images/windows/preview/g-o.png",
             "image": "assets/images/windows/g-p.png",
             "data": [
@@ -340,7 +356,9 @@
             ]
           },
           "50": {
-            "title": "поворотное + поворотно-откидное",
+            "alias": "povorotnoe-povorotno-otkidnoe",
+            "name": "поворотное + поворотно-откидное",
+            "debug": "50: 3",
             "preview": "assets/images/windows/preview/p-o.png",
             "image": "assets/images/windows/p-p.png",
             "data": [
@@ -388,12 +406,15 @@
           }
         }
       },
-      //
       "42": {
-        "title": "трехстворчатое",
+        "alias": "trehstvorchatoe",
+        "name": "трехстворчатое",
+        "debug": "42: 2",
         "group": {
           "51": {
-            "title": "глухое + поворотно откидное + глухое",
+            "alias": "gluhoe-povorotno-otkidnoe-gluhoe",
+            "name": "глухое + поворотно откидное + глухое",
+            "debug": "51: 3",
             "preview": "assets/images/windows/preview/g-o-g.png",
             "image": "assets/images/windows/g-p-g.png",
             "data": [
@@ -440,7 +461,9 @@
             ]
           },
           "52": {
-            "title": "поворотное + глухое + поворотно откидное",
+            "alias": "povorotnoe-gluhoe-povorotno-otkidnoe",
+            "name": "поворотное + глухое + поворотно откидное",
+            "debug": "52: 3",
             "preview": "assets/images/windows/preview/p-g-o.png",
             "image": "assets/images/windows/p-g-p.png",
             "data": [
@@ -487,7 +510,9 @@
             ]
           },
           "53": {
-            "title": "поворотное + поворотное + поворотно-откидное",
+            "alias": "povorotnoe-povorotnoe-povorotno-otkidnoe",
+            "name": "поворотное + поворотное + поворотно-откидное",
+            "debug": "53: 3",
             "preview": "assets/images/windows/preview/p-p-o.png",
             "image": "assets/images/windows/p-p-p.png",
             "data": [
@@ -535,12 +560,15 @@
           }
         }
       },
-      //
       "43": {
-        "title": "двери",
+        "alias": "dveri",
+        "name": "двери",
+        "debug": "43: 2",
         "group": {
           "54": {
-            "title": "дверь",
+            "alias": "dver",
+            "name": "дверь",
+            "debug": "54: 3",
             "preview": "assets/images/windows/preview/b.png",
             "image": "assets/images/windows/b.png",
             "data": [
@@ -592,7 +620,9 @@
             ]
           },
           "55": {
-            "title": "дверь двустворчатая",
+            "alias": "dver-dvustvorchataya",
+            "name": "дверь двустворчатая",
+            "debug": "55: 3",
             "preview": "assets/images/windows/preview/b2.png",
             "image": "assets/images/windows/b2.png",
             "data": [
@@ -648,50 +678,66 @@
     }
   },
   {
-    "alias": "#balcony",
+    "alias": "balcony-PVC",
     "name": "остекление балконов",
+    "debug": "39: 1",
+    "doclevel": 1,
     "data": {
       "56": {
-        "title": "Балкон 1",
+        "alias": "balkon-1",
+        "name": "Балкон 1",
+        "debug": "56: 2",
         "preview": "assets/images/windows/preview/gu-p-g-o-g-ug.png",
         "image": "assets/images/windows/gu-p-g-p-g-ug.jpg",
-        "data": "44,48,49,44"
+        "data": [["44,48,49,44"]]
       },
       "57": {
-        "title": "Балкон 2",
+        "alias": "balkon-2",
+        "name": "Балкон 2",
+        "debug": "57: 2",
         "preview": "assets/images/windows/preview/gu-p-g-o-g.png",
         "image": "assets/images/windows/gu-p-g-p-g.jpg",
-        "data": "44,48,49"
+        "data": [["44,48,49"]]
       },
       "58": {
-        "title": "Балкон 3",
+        "alias": "balkon-3",
+        "name": "Балкон 3",
+        "debug": "58: 2",
         "preview": "assets/images/windows/preview/p-g-o-g.png",
         "image": "assets/images/windows/p-g-p-g.jpg",
-        "data": "48,49"
+        "data": [["48,49"]]
       },
       "59": {
-        "title": "Балкон 4",
+        "alias": "balkon-4",
+        "name": "Балкон 4",
+        "debug": "59: 2",
         "preview": "assets/images/windows/preview/p-g-g-o-g-p-g.png",
         "image": "assets/images/windows/p-g-g-p-g-p-g.jpg",
-        "data": "48,51,48"
+        "data": [["48,51,48"]]
       },
       "60": {
-        "title": "Балкон 5",
+        "alias": "balkon-5",
+        "name": "Балкон 5",
+        "debug": "60: 2",
         "preview": "assets/images/windows/preview/g-o-ug-p-ug.png",
         "image": "assets/images/windows/g-p-ug-p-ug.jpg",
-        "data": "49,44,45,44"
+        "data": [["49,44,45,44"]]
       },
       "61": {
-        "title": "Балкон 6",
+        "alias": "balkon-6",
+        "name": "Балкон 6",
+        "debug": "61: 2",
         "preview": "assets/images/windows/preview/g-pu-u-o.png",
         "image": "assets/images/windows/g-pu-g-p.jpg",
-        "data": "48,49"
+        "data": [["48,49"]]
       },
       "62": {
-        "title": "Балкон 7",
+        "alias": "balkon-7",
+        "name": "Балкон 7",
+        "debug": "62: 2",
         "preview": "assets/images/windows/preview/g-o-g-up-ug.png",
         "image": "assets/images/windows/g-p-g-up-ug.jpg",
-        "data": "51,45,44"
+        "data": [["51,45,44"]]
       }
     }
   }
