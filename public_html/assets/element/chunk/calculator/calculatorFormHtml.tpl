@@ -9,7 +9,36 @@
  <link href="/design/casement-calculator.css" rel="stylesheet" type="text/css" property="all"/>
  
  <script type="text/javascript">
-  var CalcTest = [[calculator? &id=`37`]] ; 
+  var CalcTest = [] ;
+  var jqxhr = $.getJSON( "/ajax.php", {"id":"37", "source":"snippet", "name":"calculator","formatOut":"json"},function(data) {
+   console.log(data);
+//   $.each( data.items, function( i, item ) {
+//    $( "<img>" ).attr( "src", item.media.m ).appendTo( "#images" );
+//    if ( i === 3 ) {
+//     return false;
+//    }
+//   });
+   CalcTest = data;
+   console.log( "success" );
+  })
+   .done(function(data) {
+    console.log( "second success" );
+   })
+   .fail(function() {
+    console.log( "error" );
+   })
+   .always(function() {
+    console.log( "complete" );
+   });
+
+  // Perform other work here ...
+
+  // Set another completion function for the request above
+  jqxhr.complete(function() {
+   console.log( "second complete" );
+  });
+  console.log(jqxhr);
+  
  var CalcData = [
   {"alias":"#windows", 
    "name":"пластиковые окна",

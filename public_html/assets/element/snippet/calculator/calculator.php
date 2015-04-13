@@ -62,10 +62,10 @@ function calcRecursive($id) {
 $rAr = calcRecursive($id);
 $result = json_encode($rAr,true);
 
-echo "<pre>";
-print_r($rAr);
-echo $result;
-exit;
+//echo "<pre>";
+//print_r($rAr);
+//echo $result;
+//exit;
 
 //echo "<pre> $id: $docLevel Last error: ".json_last_error()."</pre>";
 
