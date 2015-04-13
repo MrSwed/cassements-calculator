@@ -9,7 +9,10 @@
  * @param $id {integer} - The resource id. Current is default
  *
  * @link 
- *
+ * 
+ * @required 
+ * - Snippet getInheritField
+ * - Snippet ddGetMultipleField
  */
 
 $id = (int)$id?(int)$id:$modx->documentObject['id']; 
@@ -41,9 +44,9 @@ function calcRecursive($id) {
    "doclevel"=>  $docLevel,
   ));
   $getCols = $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')); 
-  if ($childs) $outAr["data"] = $childs;
 //  echo "<pre> $id: $docLevel \$outAr:"; print_r($outAr);echo "\$getCols (".gettype($getCols).")".var_export($getCols,1)."</pre>";
   if ($getCols && is_array($getCols)) $outAr["cols"] = $getCols ; 
+  if ($childs) $outAr["data"] = $childs;
  } else if ($doc['isfolder']) {
   $outAr = $outNames;
   $outAr["group"] =  $childs;
