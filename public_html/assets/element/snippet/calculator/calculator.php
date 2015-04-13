@@ -32,6 +32,7 @@ function calcRecursive($id) {
   "name"=>  $doc['pagetitle'],
   "debug" => "$id: $docLevel",
  );
+ if ($doc['longtitle']) $outNames["title"] = $doc['longtitle'];
  foreach ($modx->getChildIds($id,1) as $alias => $chId) 
   $childs[$chId] = calcRecursive($chId);
  
