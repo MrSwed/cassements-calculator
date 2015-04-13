@@ -9,6 +9,7 @@ $.fn.extend ({
  "calculator" : function(p){
   return this.each(function() {
    var _t=this;
+   _t.p = p;
    p=$.extend({},{
     "tabs": ".tabs",
     "params": ".parameters",
@@ -16,10 +17,10 @@ $.fn.extend ({
     "template": ".template",
     "preview": ".preview",
     "sizes":".sizes",
-    "reference":{}, // prices for service, step of slider, important message, etc
+    "reference":false, // prices for service, step of slider, important message, etc
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
-    "data": false, // need data
+    "data": false,  // need data
     "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
      function(o){ //#windows
@@ -28,7 +29,8 @@ $.fn.extend ({
       var $tg = $(".casement",$type);
       $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
       $tg.html();
-      $.each(_t._p.data[o.index()].data, function (id, gr) {
+      $.each(_t._stor.data[o.index()].data, function (id, gr) {
+       //_t. 
        var $gr = $("<div/>").addClass("group")
             .attr("title",(_t._debug(3)?id+": ":'')+gr.title)
             .appendTo($tg);
@@ -51,7 +53,7 @@ $.fn.extend ({
             $tg.find(".variants >*").removeClass("active");
             $a.addClass("active");
             _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": $i.attr("title")});
-            _t._val(_t._p.form.id,id);
+            _t._val(_t._stor.form.id,id);
             _t._sizes();
            }
           })
@@ -66,7 +68,7 @@ $.fn.extend ({
       var $tg = $(".casesets",$type);
       $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
       $tg.html();
-      $.each(_t._p.data[o.index()].data, function (id, item) {
+      $.each(_t._stor.data[o.index()].data, function (id, item) {
        $("<a>").prop({"href":item.image})
         .append($("<img/>").attr({"src":item.preview,"alt":item.title,"title":(_t._debug(3)?id+": ":'')+item.title}))
          .appendTo($tg)
@@ -79,7 +81,7 @@ $.fn.extend ({
            _t._log(2, "Clicked", $a);
            $a.addClass("active").siblings().removeClass("active");
            _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
-           _t._val(_t._p.form.id, id);
+           _t._val(_t._stor.form.id, id);
            _t._sizes();
           }
          });
@@ -90,8 +92,8 @@ $.fn.extend ({
    },p);
    // short aliaces
    p._ref = p.reference;
-   _t._p = p;
-   _t._debug = function(d) {return _t._p.debug && (!d || _t._p.debug <= d)};
+   _t._stor = p;
+   _t._debug = function(d) {return _t._stor.debug && (!d || _t._stor.debug <= d)};
    _t._log = function(d){
     if (arguments.length === 0) return;
     var args = [];
@@ -105,66 +107,66 @@ $.fn.extend ({
     p = {} || p;
     _t._log(1,"init");
     $.each("tabs,params".split(","), function (i, k) {
-     _t._log(1,"Params to $", i, k, _t._p[k]);
+     _t._log(1,"Params to $", i, k, _t._stor[k]);
      switch (true) {
-      case typeof _t._p[k] == "string":
-       _t._p[k] = $(_t._p[k], _t);
-       _t._p[k].size() || (_t._p[k] = $('<div/>').addClass(_t._p[k].class()).prependTo(_t));
-       _t._log(2,"Param inited:", k, _t._p[k]);
+      case typeof _t._stor[k] == "string":
+       _t._stor[k] = $(_t._stor[k], _t);
+       _t._stor[k].size() || (_t._stor[k] = $('<div/>').addClass(_t._stor[k].class()).prependTo(_t));
+       _t._log(2,"Param inited:", k, _t._stor[k]);
        break;
      }
     });
     $(_t).on("change","[name]",function(e){
      var _r = _t._calc();
      _t._val("price",_r);
-     _t._p.price && $(_t._p.price).html(number_format(_r,0));
-     _t._log(2,"Change triggered at :",e,"result "+_r,"Target: ",_t._p.price);
+     _t._stor.price && $(_t._stor.price).html(number_format(_r,0));
+     _t._log(2,"Change triggered at :",e,"result "+_r,"Target: ",_t._stor.price);
     });
     $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
       $("[type='radio']:first",this).attr("checked",true);
     });
-    if (_t._p.texts && _t._p.texts.warning) {
-     $(_t._p.warning=$(".warning", _t._p.params)).size() ||
-        (_t._p.warning = $("<div/>").addClass("warning")
-            .html(_t._p.texts.warning).appendTo(_t._p.params));
-     _t._log(1,"Init warning: ",_t._p.texts.warning);
+    if (_t._stor.texts && _t._stor.texts.warning) {
+     $(_t._stor.warning=$(".warning", _t._stor.params)).size() ||
+        (_t._stor.warning = $("<div/>").addClass("warning")
+            .html(_t._stor.texts.warning).appendTo(_t._stor.params));
+     _t._log(1,"Init warning: ",_t._stor.texts.warning);
     }
-    $.each(_t._p.form,function(a,item){
+    $.each(_t._stor.form,function(a,item){
      var v = item.value || "";
      var n = item.name || item.toString();
      var i = $("[name*='"+n+"']",_t);
      i.size() || (i = $("<input/>").attr({"type":"hidden","name":n,"value":v}).appendTo(_t));
-     _t._p.form[a] = i;
+     _t._stor.form[a] = i;
     });
     _t._tabs("init");
     return _t;
    };
    _t._val = function(n,v) {
     var i;
-    i = typeof n=="object"?n:((i=$("[name='"+_t._p.form[n.toString()]+"']")).size()?i:$("[name='"+n.toString()+"']",_t));
+    i = typeof n=="object"?n:((i=$("[name='"+_t._stor.form[n.toString()]+"']")).size()?i:$("[name='"+n.toString()+"']",_t));
     _t._log(2,"_val ",n,i,v);
     (!v && (v = i.val())) || i.val(v);
     return v ;
    };
    _t._err = function(m) {console.log(m)||alert(m); };
    _t._type = function(o) {
-    var $type = $(_t._p.type,o);
+    var $type = $(_t._stor.type,o);
     if (!$type.size()) {
      // use template or create new
-     ($(_t._p.template,_t).find(_t._p.type).size() && ($type = $(_t._p.template,_t).find(_t._p.type).clone().appendTo(o)))
+     ($(_t._stor.template,_t).find(_t._stor.type).size() && ($type = $(_t._stor.template,_t).find(_t._stor.type).clone().appendTo(o)))
       || ($type = $("<div/>").addClass($type.class()).appendTo(o));
     }
     return $type;
    };
    _t._tabs = function(p){
-    var $t = $(_t._p.tabs);
+    var $t = $(_t._stor.tabs);
     switch (true) {
      case p=="init":
       var $tH = $(".headers",$t);
       var $tC = $(".contents",$t);
       $tH.size() || ($tH = $("<div>").addClass($tH.class()).appendTo($t));
       $tC.size() || ($tC = $("<div>").addClass($tC.class()).appendTo($t));
-      (_t._p.data && $.each(_t._p.data, function(i,k){
+      (_t._stor.data && $.each(_t._stor.data, function(i,k){
        _t._log(1,"Tab init: ",i +" = ",k);
        if ($.isNumeric(i)){
         // check or add header tabs and it contents
@@ -173,8 +175,8 @@ $.fn.extend ({
         var $tCi=$(">*",$tC).eq(i);
         $tCi.size() || ($tCi = $("<div>").appendTo($tC)).addClass(k.alias.replace("#",""));
         // init control function for tab content
-        (!k.function && typeof _t._p.control[i]=="function" && (k.function = _t._p.control[i])) ||
-         (typeof k.function == "string" && typeof _t._p.control[k.function]=="function" && (k.function = _t._p.control[k.function]));
+        (!k.function && typeof _t._stor.control[i]=="function" && (k.function = _t._stor.control[i])) ||
+         (typeof k.function == "string" && typeof _t._stor.control[k.function]=="function" && (k.function = _t._stor.control[k.function]));
         (typeof k.function == "function" && k.function($tCi)) || _t._err("Control function error for "+ k.alias);
        }
       })) || _t._err("data error");
@@ -188,15 +190,15 @@ $.fn.extend ({
       }).tabs({"headers":$tH,"contents":$tC});
       break;
      case p=="opened":
-      _t._log(1,"Tabs opened",$(".active",_t._p.tabs).index());
-      return $(".active",_t._p.tabs).index();
+      _t._log(1,"Tabs opened",$(".active",_t._stor.tabs).index());
+      return $(".active",_t._stor.tabs).index();
       break;
     }
     return $t;
    };
    _t.preview = function(p){
     p = $.extend({},{"alt":"","src":"","title":""},p);
-    var $t = $(_t._p.preview);
+    var $t = $(_t._stor.preview);
     $t.size() || ($t = $("<div/>").addClass($t.class()).appendTo(_t));
     var $a = $("a",$t);
     $a.size() || ($a = $("<a/>").appendTo($t));
@@ -256,8 +258,8 @@ $.fn.extend ({
    _t._sizes = function(p) {
     // инициализация выбора размеров
     var dlevel=3;
-    var $t = $(_t._p.sizes);
-    var _d=_t._data(_t._val(_t._p.form.id));
+    var $t = $(_t._stor.sizes);
+    var _d=_t._data(_t._val(_t._stor.form.id));
     _t._log(dlevel+1,"Sizes: call (p,_d)",p,_d);
     $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
     $t.html("");
@@ -267,7 +269,7 @@ $.fn.extend ({
      case "object":
       //var colsT = ["alias","name","dimensions","input"];
       var cols=_t._cols(tabI);
-      _t._log(dlevel+1,"Sizes Data:",_t._val(_t._p.form.id),_d,"Tab: ",tabI,_t._p.data[tabI],cols);
+      _t._log(dlevel+1,"Sizes Data:",_t._val(_t._stor.form.id),_d,"Tab: ",tabI,_t._stor.data[tabI],cols);
       $.each($s,function(i,dim){
        // определяем поля ввода и слайдеры для каждого измерения 
        _d.atad || (_d.atad={});
@@ -279,7 +281,7 @@ $.fn.extend ({
             "minmax":_t._minmax(_dCol),
             "orientation":dim=="height"?"vertical":"horizontal",
             "caption":cols[dim][0]+', '+cols[dim][1],
-            "step":parseInt(_t._p._ref.step),
+            "step":parseInt(_t._stor._ref.step),
             "value":_dCol[Math.round(_dCol.length/2)]
            });
       });
@@ -303,7 +305,7 @@ $.fn.extend ({
          "minmax":_t._minmax(_dCol),
          "orientation":dim=="height"?"vertical":"horizontal",
          "caption":cols[dim][0]+', '+cols[dim][1],
-         "step":parseInt(_t._p._ref.step),
+         "step":parseInt(_t._stor._ref.step),
          "value":_dCol[Math.round(_dCol.length/2)]
         };
         if (dim=="height") {
@@ -338,7 +340,7 @@ $.fn.extend ({
    _t._cols = function(tabI) {
      // определение колонок данных секции, номер (строка), alias - 1ст, название - 2ст, ед изм - 3ст
     var dlevel=5;
-    var cols=_t._p.data[tabI].cols;
+    var cols=_t._stor.data[tabI].cols;
     var _al = ["alias","name","unit"];
     if (!cols._index) $.each(cols,function(k,item){
      $.each(item,function(i,v){
@@ -358,7 +360,7 @@ $.fn.extend ({
     var dlevel=2;
     var _result;
     var tabI;
-    data = data  || _t._p.data;
+    data = data  || _t._stor.data;
     if (data._index && data._index[p]) return data._index[p]; // cache
     grKey = grKey?grKey:"data,group";
     grKey = typeof grKey!="object"?grKey.split(","):grKey;
@@ -416,7 +418,7 @@ $.fn.extend ({
    _t._calcSection = function(_d,fData,dim) {
     var dlevel=3;
     var tabI = typeof _d.tabI=="undefined"?_t._tabs("opened"):_d.tabI;
-    var _ref = _t._p._ref.price;
+    var _ref = _t._stor._ref.price;
     dim || (dim={});
     dim.width || (dim.width = fData.width);
     dim.height || (dim.height = fData.height);
@@ -426,8 +428,8 @@ $.fn.extend ({
      for (var k in _d.atad.width) _d.atad.area[k] = _t._flFix((_d.atad.width[k] / 1000 ) * (_d.atad.height[k] / 1000 ));
     }
     var S = _t._flFix((dim.width/1000) *(dim.height/1000)); // площадь,м2
-    _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['price['+fData.system+']']));
-    _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._p.data[tabI].cols._index['kit['+fData.kit+']']));
+    _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._stor.data[tabI].cols._index['price['+fData.system+']']));
+    _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._stor.data[tabI].cols._index['kit['+fData.kit+']']));
     var _cAr = {// цены на комплект и монтаж по всем точкам
      "baseprice" : _d.atad['price['+fData.system+']'],
      "kitprice"  : _d.atad['kit['+fData.kit+']']
@@ -449,8 +451,8 @@ $.fn.extend ({
    _t._calc = function() {
     var dlevel = 3;
     var f = $("[name]", _t);
-    var _d = _t._data(_t._val(_t._p.form.id));
-    var _ref = _t._p._ref.price;
+    var _d = _t._data(_t._val(_t._stor.form.id));
+    var _ref = _t._stor._ref.price;
     var _result = 0;
     var fData = f.serializeObject();
     var L = 0;
