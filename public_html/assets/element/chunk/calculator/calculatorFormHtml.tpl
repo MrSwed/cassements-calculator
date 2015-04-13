@@ -10,7 +10,7 @@
  
  <script type="text/javascript">
   var CalcTest = [] ;
-  var jqxhr = $.getJSON( "/ajax.php", {"id":"37", "source":"snippet", "name":"calculator","formatOut":"json"},function(data) {
+  var jqxhr = $.getJSON( "/ajax.php", {"id":"37", "source":"snippet", "name":"calculator","formatIn":"json"},function(data) {
    console.log(data);
 //   $.each( data.items, function( i, item ) {
 //    $( "<img>" ).attr( "src", item.media.m ).appendTo( "#images" );
