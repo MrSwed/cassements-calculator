@@ -40,6 +40,22 @@ function calcRecursive($id,$debug=false) {
    "reference" => $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')),
    "data" => array_values($childs)
   ));
+
+  // разбиваем справочник по структуре price[montage][kit][panel]
+  $outArRef = array();
+  foreach ($outAr["reference"] as &$ref) {
+   if (!empty($ref[0])) {
+    if (FALSE !== ($levels = preg_split("/[\[\]]/", $ref[0], -1, PREG_SPLIT_NO_EMPTY))) {
+     $pointer = &$outArRef;
+     for ($i = 0; $i < sizeof($levels); $i++) {
+      if (!isset($pointer[$levels[$i]])) $pointer[$levels[$i]] = array();
+      $pointer =& $pointer[$levels[$i]];
+     }
+     $pointer = $ref[2];
+    }
+   }
+  }
+  $outAr["reference"] = &$outArRef;
  } else if ($deep == 1) {
   // Первый уровень - группы (вкладки в пользовательском интерфейсе)
   $outAr = array_merge($outNames, array());
