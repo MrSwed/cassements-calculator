@@ -119,11 +119,10 @@ $.fn.extend ({
      }
     });
     $.each("data,reference".split(","), function(i,k) {
+     // проверка вводных данных, если ссылка то получить данные аяксом
      if (typeof _t._stor[k] == "string" && !/[\n\r]/.test(_t._stor[k]) && /^(http:\/)?[^\s\n\r\t]+$/.test(_t._stor[k])) {
-
-      _t._log(4,"Ajax load data : check ",_t._stor[k],typeof _t._stor[k] ,"!/[\n\r]/ "+ !/[\n\r]/.test(_t._stor[k]), "/^(http:\/)?[^\s\n\r\t] " + /^(http:\/)?[^\s\n\r\t]+$/.test(_t._stor[k]) );
+      _t._log(4,"_INIT: Ajax load data : check ",_t._stor[k],typeof _t._stor[k] ,"!/[\n\r]/ "+ !/[\n\r]/.test(_t._stor[k]), "/^(http:\/)?[^\s\n\r\t] " + /^(http:\/)?[^\s\n\r\t]+$/.test(_t._stor[k]) );
       var _request = _t._stor[k];
-
       _t._ajaxLeft = (_t._ajaxLeft?_t._ajaxLeft:0) + 1;
       _t._ajax = $.extend({},_t._ajax);
       _t._ajax[_request] || (_t._ajax[_request]={});
@@ -136,19 +135,18 @@ $.fn.extend ({
        //data: $.unparam(_t._stor[k]),
        data: _t._stor[k].replace(/^.*\?/,""),
        success: function(response,textStatus,jqXHR ){
-        _t._log(4,"Ajax load success (response,textStatus,jqXHR,k)", response,textStatus,jqXHR,k,_t._stor[k] );
+        _t._log(4,"_INIT: Ajax load success (_request,response,textStatus,jqXHR,k)", _request,response,textStatus,jqXHR,k,_t._stor[k] );
         _t._ajax[_request] = $.extend({},_t._ajax[_request],response);
         var data = response.data;
-        _t.init();
         _t._ajaxLeft -= 1;
         if (data[k]) _t._stor[k] = data[k];
         else _t._stor[k] = data;
         _t._ajax[_request].status = 1;
-        _t._log(4,"Ajax load data", data, "k: "+ k ,"left: "+_t._ajaxLeft);
-        
+        _t._log(4,"_INIT: Ajax load data", data, "k: "+ k ,"left: "+_t._ajaxLeft);
+        _t.init();
        }
       }; 
-      _t._log(4,"Ajax get data", i, k, _t._stor[k],ajaxSetting,"left: "+_t._ajaxLeft);
+      _t._log(4,"_INIT: Ajax get data", i, k, _t._stor[k],ajaxSetting,"left: "+_t._ajaxLeft);
       $.ajax(ajaxSetting);
      }
     });
