@@ -13,16 +13,17 @@ $.fn.extend ({
    var dataReady = true;
    _t.p = p;
    p=$.extend({},{
+    "dataUrl": false, // получить данные и справочники калькулятора ajax запросом по указанной ссылке (data,reference)
     "tabs": ".tabs",
     "params": ".parameters",
     "type": ".type",
     "template": ".template",
     "preview": ".preview",
     "sizes":".sizes",
-    "reference":false, // prices for service, step of slider, important message, etc
+    "reference":false, // общие цены на монтаж, шаг,  или ссылка, аналогично dataUrl 
+    "data": false,  // данные кунструкций или ссылка, аналогично dataUrl 
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
-    "data": false,  // need data
     "texts" : {warning:""}, // set warning for understanding approximate calculation
     "control":[
      function(o){ //#windows
@@ -93,7 +94,6 @@ $.fn.extend ({
     ]
    },p);
    // short aliaces
-   p._ref = p.reference;
    _t._stor = p;
    _t._debug = function(d) {return _t._stor.debug && (!d || _t._stor.debug <= d)};
    _t._log = function(d){
@@ -118,38 +118,30 @@ $.fn.extend ({
        break;
      }
     });
-    $.each("data,reference".split(","), function(i,k) {
-     // проверка вводных данных, если ссылка то получить данные аяксом
-     if (typeof _t._stor[k] == "string" && !/[\n\r]/.test(_t._stor[k]) && /^(http:\/)?[^\s\n\r\t]+$/.test(_t._stor[k])) {
-      _t._log(4,"_INIT: Ajax load data : check ",_t._stor[k],typeof _t._stor[k] ,"!/[\n\r]/ "+ !/[\n\r]/.test(_t._stor[k]), "/^(http:\/)?[^\s\n\r\t] " + /^(http:\/)?[^\s\n\r\t]+$/.test(_t._stor[k]) );
-      var _request = _t._stor[k];
-      _t._ajaxLeft = (_t._ajaxLeft?_t._ajaxLeft:0) + 1;
-      _t._ajax = $.extend({},_t._ajax);
-      _t._ajax[_request] || (_t._ajax[_request]={});
-      if (_t._ajax[_request] && _t._ajax[_request].status==-1) return 1;
-      else _t._ajax[_request].status = -1;
-      var ajaxSetting = {
-       dataType: "json",
-       method: "post",
-       url: _t._stor[k].replace(/\?.*$/,""),
-       //data: $.unparam(_t._stor[k]),
-       data: _t._stor[k].replace(/^.*\?/,""),
-       success: function(response,textStatus,jqXHR ){
-        _t._log(4,"_INIT: Ajax load success (_request,response,textStatus,jqXHR,k)", _request,response,textStatus,jqXHR,k,_t._stor[k] );
-        _t._ajax[_request] = $.extend({},_t._ajax[_request],response);
-        var data = response.data;
-        _t._ajaxLeft -= 1;
-        if (data[k]) _t._stor[k] = data[k];
-        else _t._stor[k] = data;
-        _t._ajax[_request].status = 1;
-        _t._log(4,"_INIT: Ajax load data", data, "k: "+ k ,"left: "+_t._ajaxLeft);
-        _t.init();
-       }
-      }; 
-      _t._log(4,"_INIT: Ajax get data", i, k, _t._stor[k],ajaxSetting,"left: "+_t._ajaxLeft);
-      $.ajax(ajaxSetting);
-     }
-    });
+    var dataKeys = "data,reference".split(",");
+    if (_t._stor.dataUrl) {
+     // если есть ссылка то получить данные аяксом
+     _t._ajaxLeft = (_t._ajaxLeft ? _t._ajaxLeft : 0) + 1;
+     var ajaxSetting = {
+      dataType: "json",
+      method: "post",
+      url: _t._stor.dataUrl.replace(/\?.*$/, ""),
+      data: _t._stor.dataUrl.replace(/^.*\?/, ""),
+      success: function (response, textStatus, jqXHR) {
+       _t._log(4, "_INIT: Ajax load success (_t._stor.dataUrl,response,textStatus,jqXHR)", _t._stor.dataUrl, response, textStatus, jqXHR);
+       $.each(dataKeys, function (i, k) { // проверяем наличие данных для ключа
+        !_t._stor[k] && response.data[k] && (_t._stor[k] = response.data[k]);
+       });
+       _t._stor.dataUrl = false;
+       _t._ajaxLeft -= 1;
+       _t._log(4, "_INIT: Ajax loaded data, reinit", response.data,  "left: " + _t._ajaxLeft, _t._stor );
+       _t.init();
+      }
+     };
+     _t._log(4, "_INIT: Ajax get data", ajaxSetting, "left: " + _t._ajaxLeft);
+     $.ajax(ajaxSetting);
+
+    }
     if (_t._ajaxLeft || _t._ajaxLeft > 0) {
      _t._log(4,"Ajax wait "+_t._ajaxLeft);
      return;
@@ -319,7 +311,7 @@ $.fn.extend ({
             "minmax":_t._minmax(_dCol),
             "orientation":dim=="height"?"vertical":"horizontal",
             "caption":cols[dim][0]+', '+cols[dim][1],
-            "step":parseInt(_t._stor._ref.step),
+            "step":parseInt(_t._stor.reference.step),
             "value":_dCol[Math.round(_dCol.length/2)]
            });
       });
@@ -343,7 +335,7 @@ $.fn.extend ({
          "minmax":_t._minmax(_dCol),
          "orientation":dim=="height"?"vertical":"horizontal",
          "caption":cols[dim][0]+', '+cols[dim][1],
-         "step":parseInt(_t._stor._ref.step),
+         "step":parseInt(_t._stor.reference.step),
          "value":_dCol[Math.round(_dCol.length/2)]
         };
         if (dim=="height") {
@@ -456,7 +448,7 @@ $.fn.extend ({
    _t._calcSection = function(_d,fData,dim) {
     var dlevel=3;
     var tabI = typeof _d.tabI=="undefined"?_t._tabs("opened"):_d.tabI;
-    var _ref = _t._stor._ref.price;
+    var reference = _t._stor.reference.price;
     dim || (dim={});
     dim.width || (dim.width = fData.width);
     dim.height || (dim.height = fData.height);
@@ -482,7 +474,7 @@ $.fn.extend ({
       // определяем значения в диапазоне
       _c[k]= _t._calcToMatch(S,_d.atad.area,_cAr[k]);
      }
-    _c.montage = fData.montage==1?_t._flFix(S * _ref["montage"].base ):0;
+    _c.montage = fData.montage==1?_t._flFix(S * reference["montage"].base ):0;
     _t._log(dlevel," Calc section (S,_cI,_cAr,_c)",S,_cI,_cAr,_c);
     return _c.baseprice + _c.kitprice + _c.montage; 
    };
@@ -490,15 +482,15 @@ $.fn.extend ({
     var dlevel = 3;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._stor.form.id));
-    var _ref = _t._stor._ref.price;
+    var reference = _t._stor.reference.price;
     var _result = 0;
     var fData = f.serializeObject();
     var L = 0;
     switch (typeof _d.data) {
      case "object": // секция
       // цена секции (цена + цена комплекта + цена монтажа) + цена монтажа комлекта за периметр)
-      _result = _t._calcSection(_d,fData) + ((fData.montage==1 && _ref["montage"].kit[fData.kit])?
-       ((L=(1*fData.width + 1*fData.height) * 0.002) * _ref["montage"].kit[fData.kit] ):0);
+      _result = _t._calcSection(_d,fData) + ((fData.montage==1 && reference["montage"].kit[fData.kit])?
+       ((L=(1*fData.width + 1*fData.height) * 0.002) * reference["montage"].kit[fData.kit] ):0);
       break;
      case "string": // набор секций (ид через запятую)
       _d._complect || (_d._complect = _d.data.split(","));
@@ -507,8 +499,8 @@ $.fn.extend ({
        if (fData.montage==1) L += 1*fData.width[i];
        _result += _t._calcSection(_t._data(item),fData,{"width":fData.width[i]});
       });
-      if (fData.montage==1 && _ref["montage"].kit[fData.kit]) {
-       _result += (L=(L + 1*fData.height) * 0.002) * _ref["montage"].kit[fData.kit];
+      if (fData.montage==1 && reference["montage"].kit[fData.kit]) {
+       _result += (L=(L + 1*fData.height) * 0.002) * reference["montage"].kit[fData.kit];
       }
       break;
     }
