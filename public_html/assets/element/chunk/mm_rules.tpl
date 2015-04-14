@@ -60,9 +60,11 @@ if ($tpl == 8) { // Калькулятор
   mm_renameField($cTVnames['p'], 'Текст предупреждения');
   mm_changeFieldHelp($cTVnames['p'], '');
   mm_ddMultipleFields($cTVnames['p'], '', '', 'richtext', '', "auto", '||', '::', '', '', 0, 1);
-  mm_renameField($cTVnames['c'], 'Общие параметры');
-  mm_changeFieldHelp($cTVnames['c'], 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Стоимость монтажа комплектующих: Периметр: Lм * Pруб. ');
-  mm_ddMultipleFields($cTVnames['c'], '', '', 'number,number,number,number', 'Базовая (руб./м&sup2;),Монтаж панель (руб.м),Монтаж кирпич (руб.м),Шаг (мм)', "70,70,70,50", '||', '::', '', '', 0, 1);
+  mm_renameField($cTVnames['c'], 'Общие параметры ');
+  mm_changeFieldHelp($cTVnames['c'], 'Стоимость монтажных работ: <br/>примеры исползуемых полей:<ul><li><b>price[montage][base]</b> -  Стоимость монтажных работ: (Базовая: S<sub>(м&sup2)</sub>; * P<sub>(руб.)</sub></li><li><b>price[montage][kit][panel]</b> -  Стоимость монтажа комплектующих для панельного дома: Периметр: L<sub>(м)</sub> * P<sub>(руб.)</sub> </li><li><b>price[montage][kit][kirpich]</b> -  Стоимость монтажа комплектующих для кирпичного дома: Периметр: L<sub>(м)</sub> * P<sub>(руб.)</sub> </li><li><b>step</b> -  Шаг выбора высоты и ширины, мм </li></ul>');
+  mm_ddMultipleFields($cTVnames['c'], '', '', 'textarea,textarea,number,textarea', 'alias::Служебные идентификаторы полей. Алиасы,Название::Отображаемое название параметра,Значение,Формула расчета::В разработке', "70%");
+//  mm_changeFieldHelp($cTVnames['c'], 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Стоимость монтажа комплектующих: Периметр: Lм * Pруб. ');
+//  mm_ddMultipleFields($cTVnames['c'], '', '', 'number,number,number,number', 'Базовая (руб./м&sup2;),Монтаж панель (руб.м),Монтаж кирпич (руб.м),Шаг (мм)', "70,70,70,50", '||', '::', '', '', 0, 1);
  } else 
  if ($calcType=="section") { // Параметры секций 
   if (!empty($content["isfolder"])) { //настройки - количество колонок (в строках данные о них)
