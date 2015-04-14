@@ -18,64 +18,51 @@
 $id = (int)$id?(int)$id:$modx->documentObject['id']; 
 
 
-function calcRecursive($id) {
+function calcRecursive($id,$debug=false) {
  global $modx;
  $doc = $modx->getTemplateVarOutput(explode(",","alias,pagetitle,image,photos,calculator,isfolder"),$id);
  $outAr = array();
-//return json_encode($doc);
-
  $pidAr = $modx->getParentIds($id);
- $docLevel = count($pidAr);
+ $deep = count($pidAr);
  $childs = array();
  $outNames = array(
   "alias"=>  $doc['alias'],
   "name"=>  $doc['pagetitle'],
-  "debug" => "$id: $docLevel",
  );
+ if ($debug) $outNames["debug"] = "ID:$id, Deep:$deep";
  if ($doc['longtitle']) $outNames["title"] = $doc['longtitle'];
  foreach ($modx->getChildIds($id,1) as $alias => $chId) 
-  $childs[$chId] = calcRecursive($chId);
+  $childs[$chId] = calcRecursive($chId,$debug);
  
-// echo "<pre> $id: $docLevel childs:"; print_r($childs);echo "</pre>";
-
- if ($docLevel == 0) {
+ if ($deep == 0) {
+  // Корень. различные общие настройки
   $outAr = array_merge($outNames, array(
-   "doclevel"=>  $docLevel,
    "reference" => $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')),
    "data" => array_values($childs)
   ));
- } else if ($docLevel == 1) {
-  $outAr = array_merge($outNames, array(
-   "doclevel"=>  $docLevel,
-  ));
+ } else if ($deep == 1) {
+  // Первый уровень - группы (вкладки в пользовательском интерфейсе)
+  $outAr = array_merge($outNames, array());
   $getCols = $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')); 
-//  echo "<pre> $id: $docLevel \$outAr:"; print_r($outAr);echo "\$getCols (".gettype($getCols).")".var_export($getCols,1)."</pre>";
-  if ($getCols && is_array($getCols)) $outAr["cols"] = $getCols ; 
+  if ($getCols && is_array($getCols)) $outAr["cols"] = $getCols; 
   if ($childs) $outAr["data"] = $childs;
  } else if ($doc['isfolder']) {
+  // Группировка по подкатегориям
   $outAr = $outNames;
   $outAr["group"] =  $childs;
  } else {
-  $outAr["calculator_type"] = (array)$modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type'));
-  $outAr = array_merge($outNames, array(
+  // конечные объекты с данными
+  $outAr["data_type"] = $modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type'));
+  $outAr = array_merge($outNames, $outAr, array(
    "preview" => $doc['image'],
    "image" => $doc['photos'],
-   "data" => ($outAr["calculator_type"]=="multiple" ?
+   "data" => ($outAr["data_type"]=="multiple" ?
     $doc['calculator']:
     $modx->runSnippet("ddGetMultipleField",array("docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')))
   ));
  }
  return $outAr;
 }
-$rAr = calcRecursive($id);
+$rAr = calcRecursive($id,1);
 $result = json_encode($rAr,true);
-
-//echo "<pre>";
-//print_r($rAr);
-//echo $result;
-//exit;
-
-//echo "<pre> $id: $docLevel Last error: ".json_last_error()."</pre>";
-
 return $result;
-//return var_export(calcRecursive($id),1);
