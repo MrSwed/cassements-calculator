@@ -10,66 +10,10 @@
  
  <script type="text/javascript">
   var calcSourceID=37;
-//  var CalcTest = [] ;
-//  var jqxhr = $.getJSON( "/ajax.php", {"id":"37", "source":"snippet", "name":"calculator","formatIn":"json"},function(data) {
-//   console.log(data);
-//   CalcTest = data;
-//   console.log( "success" );
-//  });
- var CalcData = [
-  {"alias":"#windows", 
-   "name":"пластиковые окна",
-   "cols":[[ddGetMultipleField?
-           &docField=`calculator`
-          &docId=`38`
-          &outputFormat=`JSON`
-          ]],
-   "data": {[!Ditto?
-    &parents=`38`
-    &tpl=`item_calculator_json_recursive`
-    &tplLast=`item_calculator_json_recursive_last`
-    &paginate=`0`
-    &display=`all`
-    &orderBy=`menuindex asc`
-    &noResults=``
-    !]
-   }
-  },
-  {"alias":"#balcony",
-   "name":"остекление балконов",
-   "data": {[!Ditto?
-    &parents=`39`
-    &tpl=`item_calculator_json_recursive`
-    &tplLast=`item_calculator_json_recursive_last`
-    &paginate=`0`
-    &display=`all`
-    &orderBy=`menuindex asc`
-    &noResults=``
-   !]
-   }
-  }
- ];
-  var CalcData_add = [[ddGetMultipleField?
-    &docField=`calculator`
-    &docId=`37`
-    &totalRows=`1`
-    &outputFormat=`JSON`
-   ]];
   $(function(){
    var _c = $(".form.calculator .workarea");
    _c.calculator({
-    "data": "/ajax.php?id="+calcSourceID+"&source=snippet&name=calculator&formatIn=json",
-    "reference": { // ajax.php?source=snippet&name=ddGetMultipleField&formatIn=json&docId=37&totalRows=1&outputFormat=JSON&docField=calculator
-     "price": {
-      "montage": {
-       "base": CalcData_add[0],
-       "kit": {
-        "panel": CalcData_add[1],
-        "kirpich": CalcData_add[2]
-       }
-      }
-     }, "step": CalcData_add[3]
-    },
+    "dataUrl": "/ajax.php?id="+calcSourceID+"&source=snippet&name=calculator&formatIn=json",
     "price": $(".workarea .price span"),
     "debug": 2
     });
