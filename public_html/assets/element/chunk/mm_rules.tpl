@@ -56,21 +56,21 @@ if ($tpl == 8) { // Калькулятор
  mm_renameField($cTVnames['t'], 'Тип данных');
  mm_changeFieldHelp($cTVnames['t'], 'Если не выбрано - значение родителя <b class="tip" title="'.$calcType.'">'.$ctParams[$calcType].'</b>');
  if ($pid==0) { // Ресурс в корне - родительский для калькулятора - общие параметрые
-  mm_hideFields($cTVnames['i']);
+  mm_renameField($cTVnames['i'], 'Заголовки параметров'); // вместо image
+  mm_changeFieldHelp($cTVnames['i'], 'Укажите заголовки параметров. Определение привязки выбора определяется по пол. alias');
+  mm_ddMultipleFields($cTVnames['i'], '', '', 'text,text', 'alias::Служебный идентификатор поля. Алиас,Название::Отображаемое название раздела', "90%");
   mm_renameField($cTVnames['p'], 'Текст предупреждения');
   mm_changeFieldHelp($cTVnames['p'], '');
   mm_ddMultipleFields($cTVnames['p'], '', '', 'richtext', '', "auto", '||', '::', '', '', 0, 1);
   mm_renameField($cTVnames['c'], 'Общие параметры ');
   mm_changeFieldHelp($cTVnames['c'], 'Стоимость монтажных работ: <br/>примеры исползуемых полей:<ul><li><b>price[montage][base]</b> -  Стоимость монтажных работ: (Базовая: S<sub>(м&sup2)</sub>; * P<sub>(руб.)</sub></li><li><b>price[montage][kit][panel]</b> -  Стоимость монтажа комплектующих для панельного дома: Периметр: L<sub>(м)</sub> * P<sub>(руб.)</sub> </li><li><b>price[montage][kit][kirpich]</b> -  Стоимость монтажа комплектующих для кирпичного дома: Периметр: L<sub>(м)</sub> * P<sub>(руб.)</sub> </li><li><b>step</b> -  Шаг выбора высоты и ширины, мм </li></ul>');
-  mm_ddMultipleFields($cTVnames['c'], '', '', 'textarea,textarea,number,textarea', 'alias::Служебные идентификаторы полей. Алиасы,Название::Отображаемое название параметра,Значение,Формула расчета::В разработке', "70%");
-//  mm_changeFieldHelp($cTVnames['c'], 'Стоимость монтажных работ: (Базовая: Sм&sup2; * Pруб., Стоимость монтажа комплектующих: Периметр: Lм * Pруб. ');
-//  mm_ddMultipleFields($cTVnames['c'], '', '', 'number,number,number,number', 'Базовая (руб./м&sup2;),Монтаж панель (руб.м),Монтаж кирпич (руб.м),Шаг (мм)', "70,70,70,50", '||', '::', '', '', 0, 1);
+  mm_ddMultipleFields($cTVnames['c'], '', '', 'textarea,textarea,number,textarea', 'alias::Служебный идентификатор поля. Алиас,Название::Отображаемое название параметра,Значение,Формула расчета::В разработке', "90%");
  } else 
  if ($calcType=="section") { // Параметры секций 
   if (!empty($content["isfolder"])) { //настройки - количество колонок (в строках данные о них)
    mm_renameField($cTVnames['c'], 'Колонки параметров секции');
    mm_changeFieldHelp($cTVnames['c'], "1 - алиасы (служеб. идентификаторы),  2 - Отображаемое название, 3 - единицы измерения");
-   mm_ddMultipleFields($cTVnames['c'], '', '', 'textarea,textarea,textarea,textarea', 'alias::Служебные идентификаторы полей. Алиасы,Название::Отображаемое название колонок,Ед.Изм.::Единицы измерения', '70%');
+   mm_ddMultipleFields($cTVnames['c'], '', '', 'textarea,textarea,textarea,textarea', 'alias::Служебный идентификатор поля. Алиас,Название::Отображаемое название колонок,Ед.Изм.::Единицы измерения,Привязка::Привязка к выбору параметра тип#имя', '90%');
   } else {
    $titles = $modx->runSnippet("getInheritField",array("id"=>$pid,"field"=>$cTVnames['c']));
    $titles = $modx->runSnippet("ddGetMultipleField",array("string"=>$titles,"outputFormat"=>"array"));
