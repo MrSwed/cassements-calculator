@@ -16,13 +16,14 @@
  */
 
 $id = (int)$id?(int)$id:$modx->documentObject['id']; 
-
+$rootID = $id;
 
 function calcRecursive($id,$debug=false) {
- global $modx;
+ global $modx,$rootID;
  $doc = $modx->getTemplateVarOutput(explode(",","alias,pagetitle,image,photos,calculator,isfolder"),$id);
  $outAr = array();
- $pidAr = $modx->getParentIds($id);
+ $pidAr = array_reverse($modx->getParentIds($id)); 
+ $pidAr = array_slice($pidAr,array_search($rootID,$pidAr));
  $deep = count($pidAr);
  $childs = array();
  $outNames = array(
@@ -43,7 +44,7 @@ function calcRecursive($id,$debug=false) {
 
   // разбиваем справочник по структуре price[montage][kit][panel]
   $outArRef = array();
-  foreach ($outAr["reference"] as &$ref) {
+  if (is_array($outAr["reference"])) foreach ($outAr["reference"] as &$ref) {
    if (!empty($ref[0])) {
     if (FALSE !== ($levels = preg_split("/[\[\]]/", $ref[0], -1, PREG_SPLIT_NO_EMPTY))) {
      $pointer = &$outArRef;
@@ -68,7 +69,7 @@ function calcRecursive($id,$debug=false) {
   $outAr["group"] =  $childs;
  } else {
   // конечные объекты с данными
-  $outAr["data_type"] = $modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type'));
+  $outAr["data_type"] = $modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type','rootID'=>$rootID));
   $outAr = array_merge($outNames, $outAr, array(
    "preview" => $doc['image'],
    "image" => $doc['photos'],
