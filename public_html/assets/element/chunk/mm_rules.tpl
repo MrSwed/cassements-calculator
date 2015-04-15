@@ -54,7 +54,7 @@ if ($tpl == 8) { // Калькулятор
   $ctParams[$row[1]] = $row[0]; 
  } 
  mm_renameField($cTVnames['t'], 'Тип данных');
- mm_changeFieldHelp($cTVnames['t'], 'Если не выбрано - значение родителя <b class="tip" title="'.$calcType.'">'.$ctParams[$calcType].'</b>');
+ mm_changeFieldHelp($cTVnames['t'], 'Пусто - наследуеемое значение: <b class="tip" title="'.$calcType.'">"'.$ctParams[$calcType].'"</b>');
  if ($pid==0) { // Ресурс в корне - родительский для калькулятора - общие параметрые
   mm_renameField($cTVnames['i'], 'Заголовки параметров'); // вместо image
   mm_changeFieldHelp($cTVnames['i'], 'Укажите заголовки параметров. Определение привязки выбора определяется по пол. alias');
