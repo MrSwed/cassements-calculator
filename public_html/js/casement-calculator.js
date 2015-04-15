@@ -489,7 +489,7 @@ $.fn.extend ({
     switch (typeof _d.data) {
      case "object": // секция
       // цена секции (цена + цена комплекта + цена монтажа) + цена монтажа комлекта за периметр)
-      _result = _t._calcSection(_d,fData) + ((fData.montage==1 && reference["montage"].kit[fData.kit])?
+      _result = _t._calcSection(_d,fData) + ((fData.montage==1 && reference["montage"].kit && reference["montage"].kit[fData.kit])?
        ((L=(1*fData.width + 1*fData.height) * 0.002) * reference["montage"].kit[fData.kit] ):0);
       break;
      case "string": // набор секций (ид через запятую)
@@ -499,7 +499,7 @@ $.fn.extend ({
        if (fData.montage==1) L += 1*fData.width[i];
        _result += _t._calcSection(_t._data(item),fData,{"width":fData.width[i]});
       });
-      if (fData.montage==1 && reference["montage"].kit[fData.kit]) {
+      if (fData.montage==1 && reference["montage"].kit && reference["montage"].kit[fData.kit]) {
        _result += (L=(L + 1*fData.height) * 0.002) * reference["montage"].kit[fData.kit];
       }
       break;
