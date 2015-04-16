@@ -57,18 +57,19 @@ function calcRecursive($id,$debug=false) {
    }
   }
   $outAr["reference"] = &$outArRef;
- } else if ($deep == 1) {
-  // Первый уровень - группы (вкладки в пользовательском интерфейсе)
+  // заголовки, тексты
+  $outAr["reference"]["captions"] = array();
+  foreach ($modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'image', "outputFormat" => 'array')) as $p)
+   $outAr["reference"]["captions"][$p[0]] = $p[1];
+ } else if ($deep == 1) {                          // Первый уровень - группы (вкладки в пользовательском интерфейсе)
   $outAr = array_merge($outNames, array());
   $getCols = $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')); 
   if ($getCols && is_array($getCols)) $outAr["cols"] = $getCols; 
   if ($childs) $outAr["data"] = $childs;
- } else if ($doc['isfolder']) {
-  // Группировка по подкатегориям
+ } else if ($doc['isfolder']) {                    // Группировка по подкатегориям
   $outAr = $outNames;
   $outAr["group"] =  $childs;
- } else {
-  // конечные объекты с данными
+ } else {                                          // Конечный объект с данными
   $outAr["data_type"] = $modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type','rootID'=>$rootID));
   $outAr = array_merge($outNames, $outAr, array(
    "preview" => $doc['image'],
