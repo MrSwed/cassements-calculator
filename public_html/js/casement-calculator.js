@@ -104,7 +104,7 @@ $.fn.extend ({
      _t._stor.form[a] = i;
     });
     _t._tabs("init");
-    return _t;
+    return $(_t).trigger("inited");
    };
    _t._val = function(n,v) {
     var i;
