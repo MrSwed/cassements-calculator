@@ -108,16 +108,6 @@ $.fn.extend ({
    _t.init = function(p) {
     p = {} || p;
     _t._log(1,"init");
-    $.each("tabs,params".split(","), function (i, k) {
-     _t._log(1,"Params to $", i, k, _t._stor[k]);
-     switch (true) {
-      case typeof _t._stor[k] == "string":
-       _t._stor[k] = $(_t._stor[k], _t);
-       _t._stor[k].size() || (_t._stor[k] = $('<div/>').addClass(_t._stor[k].class()).prependTo(_t));
-       _t._log(2,"Param inited:", k, _t._stor[k]);
-       break;
-     }
-    });
     var dataKeys = "data,reference".split(",");
     if (_t._stor.dataUrl) {
      // если есть ссылка то получить данные аяксом
@@ -146,6 +136,18 @@ $.fn.extend ({
      _t._log(4,"Ajax wait "+_t._ajaxLeft);
      return;
     }
+    //инициализация элементов 
+    $.each("tabs,params".split(","), function (i, k) {
+     _t._log(1,"Params to $", i, k, _t._stor[k]);
+     switch (true) {
+      case typeof _t._stor[k] == "string":
+       _t._stor[k] = $(_t._stor[k], _t);
+       _t._stor[k].size() || (_t._stor[k] = $('<div/>').addClass(_t._stor[k].class()).prependTo(_t));
+       _t._log(2,"Param inited:", k, _t._stor[k]);
+       break;
+     }
+    });
+    // обработчик событий - расчет
     $(_t).on("change","[name]",function(e){
      var _r = _t._calc();
      _t._val("price",_r);
