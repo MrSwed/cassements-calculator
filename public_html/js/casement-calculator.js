@@ -24,76 +24,8 @@ $.fn.extend ({
     "data": false,  // данные кунструкций или ссылка, аналогично dataUrl 
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
-    "texts" : {warning:""}, // set warning for understanding approximate calculation
-    "control":{
-     "section":function(o){ //#windows
-      _t._log(3,"init windows control at ", o.index(), o);
-      var $type = _t._type(o);
-      var $tg = $(".casement",$type);
-      $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
-      $tg.html();
-      $.each(_t._stor.data[o.index()].data, function (id, gr) {
-       //_t. 
-       var $gr = $("<div/>").addClass("group")
-            .attr("title",(_t._debug(3)?id+": ":'')+gr.title)
-            .appendTo($tg);
-       var $gv = $("<div/>").addClass("variants").appendTo($gr);
-        $.each(gr.group, function (id, item) {
-         $("<a>").prop({"href":item.image})
-          .append($("<img/>").attr({"src":item.preview,"alt":item.title,"title":(_t._debug(3)?id+": ":'')+item.title})
-          .load(function () {
-           _t._log(1,"loaded ", this, this.width, $gr.width());
-           if ($gr.width() < this.width) $gr.width(this.width + ($gv.outerWidth()-$gv.width()));
-          })).appendTo($gv)
-          .on("init click", function (e) {
-           e.preventDefault();
-           var $a = $(this);
-           var $i = $a.find("[src]");
-           _t._log(2,"Img triggered ",e.type, $i, e);
-           $a.addClass("selected").siblings().removeClass("selected");
-           if (e.type == "click") {
-            _t._log(2,"Clicked", $a);
-            $tg.find(".variants >*").removeClass("active");
-            $a.addClass("active");
-            _t.preview({"src":$a.attr("href"),"alt": $i.attr("alt"),"title": $i.attr("title")});
-            _t._val(_t._stor.form.id,id);
-            _t._sizes();
-           }
-          })
-        });
-       $("img:first",$gv).trigger("init");
-      });
-      return o;
-     },
-     "multiple": function(o){ // #balcony
-      _t._log(2,"init balcony control at", o.index(), o);
-      var $type = _t._type(o);
-      var $tg = $(".casesets",$type);
-      $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
-      $tg.html();
-      $.each(_t._stor.data[o.index()].data, function (id, item) {
-       $("<a>").prop({"href":item.image})
-        .append($("<img/>").attr({"src":item.preview,"alt":item.title,"title":(_t._debug(3)?id+": ":'')+item.title}))
-         .appendTo($tg)
-         .on("init click", function (e) {
-          e.preventDefault();
-          var $a = $(this);
-          var $i = $a.find("[src]");
-          _t._log(2, "Img triggered ", e.type, $i, e);
-          if (e.type == "click") {
-           _t._log(2, "Clicked", $a);
-           $a.addClass("active").siblings().removeClass("active");
-           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
-           _t._val(_t._stor.form.id, id);
-           _t._sizes();
-          }
-         });
-      });
-      return o;
-     }
-    }
+    "texts" : {warning:""} // todo: сюда же заголовки параметров
    },p);
-   // short aliaces
    _t._stor = p;
    _t._debug = function(d) {return _t._stor.debug && (!d || _t._stor.debug <= d)};
    _t._log = function(d){
@@ -106,8 +38,9 @@ $.fn.extend ({
     return _t;
    };
    _t.init = function(p) {
+    var dlevel = 0;
     p = {} || p;
-    _t._log(1,"init");
+    _t._log(dlevel+1,"init");
     var dataKeys = "data,reference".split(",");
     if (_t._stor.dataUrl) {
      // если есть ссылка то получить данные аяксом
@@ -118,32 +51,32 @@ $.fn.extend ({
       url: _t._stor.dataUrl.replace(/\?.*$/, ""),
       data: _t._stor.dataUrl.replace(/^.*\?/, ""),
       success: function (response, textStatus, jqXHR) {
-       _t._log(4, "_INIT: Ajax load success (_t._stor.dataUrl,response,textStatus,jqXHR)", _t._stor.dataUrl, response, textStatus, jqXHR);
+       _t._log(dlevel+2, "_INIT: Ajax load success (_t._stor.dataUrl,response,textStatus,jqXHR)", _t._stor.dataUrl, response, textStatus, jqXHR);
        $.each(dataKeys, function (i, k) { // проверяем наличие данных для ключа
         !_t._stor[k] && response.data[k] && (_t._stor[k] = response.data[k]);
        });
        _t._stor.dataUrl = false;
        _t._ajaxLeft -= 1;
-       _t._log(4, "_INIT: Ajax loaded data, reinit", response.data,  "left: " + _t._ajaxLeft, _t._stor );
+       _t._log(dlevel+2, "_INIT: Ajax loaded data, reinit", response.data,  "left: " + _t._ajaxLeft, _t._stor );
        _t.init();
       }
      };
-     _t._log(4, "_INIT: Ajax get data", ajaxSetting, "left: " + _t._ajaxLeft);
+     _t._log(dlevel+2, "_INIT: Ajax get data", ajaxSetting, "left: " + _t._ajaxLeft);
      $.ajax(ajaxSetting);
 
     }
     if (_t._ajaxLeft || _t._ajaxLeft > 0) {
-     _t._log(4,"Ajax wait "+_t._ajaxLeft);
+     _t._log(dlevel+2,"Ajax wait "+_t._ajaxLeft);
      return;
     }
     //инициализация элементов 
     $.each("tabs,params".split(","), function (i, k) {
-     _t._log(1,"Params to $", i, k, _t._stor[k]);
+     _t._log(dlevel+1,"Params to $", i, k, _t._stor[k]);
      switch (true) {
       case typeof _t._stor[k] == "string":
        _t._stor[k] = $(_t._stor[k], _t);
        _t._stor[k].size() || (_t._stor[k] = $('<div/>').addClass(_t._stor[k].class()).prependTo(_t));
-       _t._log(2,"Param inited:", k, _t._stor[k]);
+       _t._log(dlevel+2,"Param inited:", k, _t._stor[k]);
        break;
      }
     });
@@ -152,7 +85,7 @@ $.fn.extend ({
      var _r = _t._calc();
      _t._val("price",_r);
      _t._stor.price && $(_t._stor.price).html(number_format(_r,0));
-     _t._log(2,"Change triggered at :",e,"result "+_r,"Target: ",_t._stor.price);
+     _t._log(dlevel+2,"Change triggered at :",e,"result "+_r,"Target: ",_t._stor.price);
     });
     $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
       $("[type='radio']:first",this).attr("checked",true);
@@ -161,7 +94,7 @@ $.fn.extend ({
      $(_t._stor.warning=$(".warning", _t._stor.params)).size() ||
         (_t._stor.warning = $("<div/>").addClass("warning")
             .html(_t._stor.texts.warning).appendTo(_t._stor.params));
-     _t._log(1,"Init warning: ",_t._stor.texts.warning);
+     _t._log(dlevel+1,"Init warning: ",_t._stor.texts.warning);
     }
     $.each(_t._stor.form,function(a,item){
      var v = item.value || "";
@@ -182,15 +115,76 @@ $.fn.extend ({
    };
    _t._err = function(m) {console.log(m)||alert(m); };
    _t._type = function(o) {
+    var dlevel = 1;
     var $type = $(_t._stor.type,o);
     if (!$type.size()) {
      // use template or create new
      ($(_t._stor.template,_t).find(_t._stor.type).size() && ($type = $(_t._stor.template,_t).find(_t._stor.type).clone().appendTo(o)))
       || ($type = $("<div/>").addClass($type.class()).appendTo(o));
     }
+    var tabI = o.index();
+    //var this
+    var $tg = $(".select",$type);
+    $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
+    if (!$type.data("activated")) {
+     _t._log(dlevel + 3, "_type: init type control control for \"" + _t._stor.data[tabI].datatype + "\" at ", "index check: " + o.index() + " " + tabI, "_t._stor.data[tabI]", _t._stor.data[tabI], "$type,$tg", $type, $tg);
+     $tg.html("");
+     $.each(_t._stor.data[o.index()].data, function (id1, item1) {
+      if (item1.group) {
+       $tg.addClass("casement");
+       _t._log(dlevel, "_type: twolevels structure: ");
+       var $gr = $("<div/>").addClass("group").attr("title", (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)).appendTo($tg);
+       var $gv = $("<div/>").addClass("variants").appendTo($gr);
+       $.each(item1.group, function (id, item) {
+        $("<a>").prop({"href": item.image}).append($("<img/>").attr({
+         "src": item.preview, "alt": item.title, "title": (_t._debug(3) ? id + ": " : '') + item.title
+        }).load(function () {
+         var $gr = $(this).closest(".group");
+         _t._log(dlevel + 2, "_type: loaded ", this, this.width, $gr.width());
+         if ($gr.width() < this.width) $gr.width(this.width + ($gv.outerWidth() - $gv.width()));
+        })).appendTo($gv).on("init click", function (e) {
+         e.preventDefault();
+         var $a = $(this);
+         var $i = $a.find("[src]");
+         _t._log(dlevel + 1, "_type: Img triggered ", e.type, $i, e);
+         $a.addClass("selected").siblings().removeClass("selected");
+         if (e.type == "click") {
+          _t._log(dlevel + 2, "_type: Clicked", $a);
+          $tg.find(".variants >*").removeClass("active");
+          $a.addClass("active");
+          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
+          _t._val(_t._stor.form.id, id);
+          _t._sizes();
+         }
+        })
+       });
+       $("img:first", $gv).trigger("init");
+      } else {
+       $tg.addClass("casesets");
+       _t._log(dlevel + 2, "_type: init one level structure", o.index(), o);
+       $("<a>").prop({"href": item1.image}).append($("<img/>").attr({
+        "src": item1.preview, "alt": item1.title, "title": (_t._debug(3) ? id1 + ": " : '') + item1.title
+       })).appendTo($tg).on("init click", function (e) {
+        e.preventDefault();
+        var $a = $(this);
+        var $i = $a.find("[src]");
+        _t._log(dlevel + 2, "_type: Img triggered ", e.type, $i, e);
+        if (e.type == "click") {
+         _t._log(dlevel + 2, "_type: Clicked", $a);
+         $a.addClass("active").siblings().removeClass("active");
+         _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
+         _t._val(_t._stor.form.id, id1);
+         _t._sizes();
+        }
+       });
+      }
+     });
+     
+    }
     return $type;
    };
    _t._tabs = function(p){
+    var dlevel = 1;
     var $t = $(_t._stor.tabs);
     switch (true) {
      case p=="init":
@@ -199,31 +193,31 @@ $.fn.extend ({
       $tH.size() || ($tH = $("<div>").addClass($tH.class()).appendTo($t));
       $tC.size() || ($tC = $("<div>").addClass($tC.class()).appendTo($t));
       (_t._stor.data && $.each(_t._stor.data, function(i,k){
-       _t._log(1,"Tab init: ",i +" = ",k);
+       _t._log(dlevel + 1,"Tab init: ",i +" = ",k);
        if ($.isNumeric(i)){
         // check or add header tabs and it contents
         var $tHi=$("[href*='"+ k.alias+"']",$tH);
         $tHi.size() || ($tHi = $("<a>").attr({"href": location.pathname+k.alias}).text(k.name).appendTo($tH));
         var $tCi=$(">*",$tC).eq(i);
         $tCi.size() || ($tCi = $("<div>").appendTo($tC)).addClass(k.alias.replace("#",""));
-        // init control function for tab content
-        (!k.function && k.datatype && typeof _t._stor.control[k.datatype]=="function" && (k.function = _t._stor.control[k.datatype])) ||
-         (typeof k.function == "string" && typeof _t._stor.control[k.function]=="function" && (k.function = _t._stor.control[k.function]));
-        (typeof k.function == "function" && k.function($tCi)) || _t._err("Control function error for "+ k.alias);
+        //// init control function for tab content
+        //(!k.function && k.datatype && typeof _t._stor.control[k.datatype]=="function" && (k.function = _t._stor.control[k.datatype])) ||
+        // (typeof k.function == "string" && typeof _t._stor.control[k.function]=="function" && (k.function = _t._stor.control[k.function]));
+        //(typeof k.function == "function" && k.function($tCi)) || _t._err("Control function error for "+ k.alias);
        }
       })) || _t._err("data error");
       return $t.on("change",function(e,p){
        var $active = $(".headers .active",this).index();
        var $type = _t._type($(".contents >* ",this).eq($active));
-       var $a = $("a.active",$type);
+       var $a = $(".active",$type);
        $a.size() || ($a = $("a:first",$type));
        $a.trigger("click");
-       _t._log(2,"Tabs changed (this, e,p,$type,$a)",this,e,p,$type,$a);
+       _t._log(dlevel + 3,"Tabs changed (this, e,p,$type,$a,$active)",this,e,p,$type,$a,$active);
       }).tabs({"headers":$tH,"contents":$tC});
       break;
      case p=="opened":
-      _t._log(1,"Tabs opened",$(".active",_t._stor.tabs).index());
-      return $(".active",_t._stor.tabs).index();
+      _t._log(dlevel + 1,"Tabs opened",$(":has(.active)",_t._stor.tabs).index());
+      return $(":has(.active)",_t._stor.tabs).index();
       break;
     }
     return $t;
@@ -269,7 +263,7 @@ $.fn.extend ({
     _s.val() || (p.value && _s.val(p.value));
     _s.attr("type","slider");
     // check and set defaults for slider
-    _t._log(dlevel+1,"_initDimension (p):",p);
+    _t._log(dlevel,"_initDimension (p):",p);
     var _slider = _s.next(".slider");
      _slider.size() || (_slider = $( "<div class='slider'></div>" ).insertAfter( _s ));
     _slider.slider({
@@ -289,10 +283,10 @@ $.fn.extend ({
    };
    _t._sizes = function(p) {
     // инициализация выбора размеров
-    var dlevel=3;
+    var dlevel=2;
     var $t = $(_t._stor.sizes);
     var _d=_t._data(_t._val(_t._stor.form.id));
-    _t._log(dlevel+1,"Sizes: call (p,_d)",p,_d);
+    _t._log(dlevel,"Sizes: call (p,_d)",p,_d);
     $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
     $t.html("");
     var $s=["height","width"];
@@ -371,7 +365,7 @@ $.fn.extend ({
    };
    _t._cols = function(tabI) {
      // определение колонок данных секции, номер (строка), alias - 1ст, название - 2ст, ед изм - 3ст
-    var dlevel=5;
+    var dlevel=2;
     var cols=_t._stor.data[tabI].cols;
     var _al = ["alias","name","unit"];
     if (!cols._index) $.each(cols,function(k,item){
@@ -448,7 +442,7 @@ $.fn.extend ({
     return _c.result;
    };
    _t._calcSection = function(_d,fData,dim) {
-    var dlevel=3;
+    var dlevel=2;
     var tabI = typeof _d.tabI=="undefined"?_t._tabs("opened"):_d.tabI;
     var reference = _t._stor.reference.price;
     dim || (dim={});
@@ -481,7 +475,7 @@ $.fn.extend ({
     return _c.baseprice + _c.kitprice + _c.montage; 
    };
    _t._calc = function() {
-    var dlevel = 3;
+    var dlevel = 2;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._stor.form.id));
     var reference = _t._stor.reference.price;
@@ -523,7 +517,7 @@ $.fn.extend ({
     c!=null || (c=0);
     var ar=[];
     for (var i in data) ar.push(data[i][c]);
-    _t._log(4,"_getDataCol ("+_t._counts("_getDataCol",1 + _t._counts("_getDataCol")).toString()+") (data,c,ar): ",data,c,ar);
+    _t._log(2,"_getDataCol ("+_t._counts("_getDataCol",1 + _t._counts("_getDataCol")).toString()+") (data,c,ar): ",data,c,ar);
     return ar;
    };
    _t._minmax = function(ar,c) {
