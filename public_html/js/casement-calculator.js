@@ -136,8 +136,8 @@ $.fn.extend ({
        var $gr = $("<div/>").addClass("group").attr("title", (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)).appendTo($tg);
        var $gv = $("<div/>").addClass("variants").appendTo($gr);
        $.each(item1.group, function (id, item) {
-        $("<a>").prop({"href": item.image}).append($("<img/>").attr({
-         "src": item.preview, "alt": item.title, "title": (_t._debug(3) ? id + ": " : '') + item.title
+        $("<a>").prop({"href": item.image,"title": (_t._debug(3) ? id + ": " : '') + (item.title || item.name)}).append($("<img/>").attr({
+         "src": item.preview, "alt": item.title || item.name
         }).load(function () {
          var $gr = $(this).closest(".group");
          _t._log(dlevel + 2, "_type: loaded ", this, this.width, $gr.width());
@@ -162,9 +162,8 @@ $.fn.extend ({
       } else {
        $tg.addClass("casesets");
        _t._log(dlevel + 2, "_type: init one level structure", o.index(), o);
-       $("<a>").prop({"href": item1.image}).append($("<img/>").attr({
-        "src": item1.preview, "alt": item1.title, "title": (_t._debug(3) ? id1 + ": " : '') + item1.title
-       })).appendTo($tg).on("init click", function (e) {
+       $("<a>").prop({"href": item1.image, "title": (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)}).append($("<img/>").attr({
+        "src": item1.preview, "alt": item1.title || item1.name})).appendTo($tg).on("init click", function (e) {
         e.preventDefault();
         var $a = $(this);
         var $i = $a.find("[src]");
