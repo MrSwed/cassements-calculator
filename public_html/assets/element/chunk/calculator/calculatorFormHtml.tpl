@@ -1,6 +1,6 @@
 <div class="form calculator">
 <div class="message">[+validationmessage+]</div>
-<form action="[~[*id*]~]?review=1" method="post">
+<form action="[~[*id*]~]?review=1" method="post" style="opacity:0;height:10em">
  <link rel="stylesheet" href="js/jquery-ui/jquery-ui.css" property="all"/>
  <script src="js/jquery-ui/jquery-ui.js"></script>
  <script type="text/javascript" src="/js/jquery.serialize-object.js"></script>
@@ -11,11 +11,15 @@
  <script type="text/javascript">
   var calcSourceID=37;
   $(function(){
-   var _c = $(".form.calculator .workarea");
-   _c.calculator({
+   var _cp = $(".form.calculator").addClass("loading");
+   var _c = $(".workarea",_cp)
+    .calculator({
     "dataUrl": "/ajax.php?id="+calcSourceID+"&source=snippet&name=calculator&formatIn=json",
-    "price": $(".workarea .price span"),
-    "debug": 3
+    "price": $(".workarea .price span")
+//    ,"debug": 3
+    }).on("inited",function(){
+     $(this).closest("form").css({"height":"auto"}).animate({"opacity":1},500);
+     $(this).closest(".calculator").removeClass("loading");
     });
    $(".parameters [type='button']",_c).click(function(){
      $(".modal").modal("open",{
