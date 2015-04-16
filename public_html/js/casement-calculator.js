@@ -25,8 +25,8 @@ $.fn.extend ({
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
     "texts" : {warning:""}, // set warning for understanding approximate calculation
-    "control":[
-     function(o){ //#windows
+    "control":{
+     "section":function(o){ //#windows
       _t._log(3,"init windows control at ", o.index(), o);
       var $type = _t._type(o);
       var $tg = $(".casement",$type);
@@ -65,7 +65,7 @@ $.fn.extend ({
       });
       return o;
      },
-     function(o){ // #balcony
+     "multiple": function(o){ // #balcony
       _t._log(2,"init balcony control at", o.index(), o);
       var $type = _t._type(o);
       var $tg = $(".casesets",$type);
@@ -91,7 +91,7 @@ $.fn.extend ({
       });
       return o;
      }
-    ]
+    }
    },p);
    // short aliaces
    _t._stor = p;
@@ -207,7 +207,7 @@ $.fn.extend ({
         var $tCi=$(">*",$tC).eq(i);
         $tCi.size() || ($tCi = $("<div>").appendTo($tC)).addClass(k.alias.replace("#",""));
         // init control function for tab content
-        (!k.function && typeof _t._stor.control[i]=="function" && (k.function = _t._stor.control[i])) ||
+        (!k.function && k.datatype && typeof _t._stor.control[k.datatype]=="function" && (k.function = _t._stor.control[k.datatype])) ||
          (typeof k.function == "string" && typeof _t._stor.control[k.function]=="function" && (k.function = _t._stor.control[k.function]));
         (typeof k.function == "function" && k.function($tCi)) || _t._err("Control function error for "+ k.alias);
        }

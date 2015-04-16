@@ -35,7 +35,7 @@ function calcRecursive($id,$debug=false) {
  foreach ($modx->getChildIds($id,1) as $alias => $chId) 
   $childs[$chId] = calcRecursive($chId,$debug);
 
- $outAr["data_type"] = $modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type','rootID'=>$rootID));
+ $outAr["datatype"] = $modx->runSnippet('getInheritField',array('id'=>$id, 'field'=>'calculator_type','rootID'=>$rootID));
  if ($deep == 0) {
   // Корень. различные общие настройки
   $outAr = array_merge($outNames, $outAr, array(
@@ -74,7 +74,7 @@ function calcRecursive($id,$debug=false) {
   $outAr = array_merge($outNames, $outAr, array(
    "preview" => $doc['image'],
    "image" => $doc['photos'],
-   "data" => ($outAr["data_type"]=="multiple" ?
+   "data" => ($outAr["datatype"]=="multiple" ?
     $doc['calculator']:
     $modx->runSnippet("ddGetMultipleField",array("docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')))
   ));
