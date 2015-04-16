@@ -150,7 +150,7 @@ $.fn.extend ({
          $a.addClass("selected").siblings().removeClass("selected");
          if (e.type == "click") {
           _t._log(dlevel + 2, "_type: Clicked", $a);
-          $tg.find(".variants >*").removeClass("active");
+          $(".active",$tg).removeClass("active");
           $a.addClass("active");
           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
           _t._val(_t._stor.form.id, id);
@@ -170,7 +170,8 @@ $.fn.extend ({
         _t._log(dlevel + 2, "_type: Img triggered ", e.type, $i, e);
         if (e.type == "click") {
          _t._log(dlevel + 2, "_type: Clicked", $a);
-         $a.addClass("active").siblings().removeClass("active");
+         $(".active",$tg).removeClass("active");
+         $a.addClass("active");
          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
          _t._val(_t._stor.form.id, id1);
          _t._sizes();
@@ -282,8 +283,9 @@ $.fn.extend ({
    };
    _t._sizes = function(p) {
     // инициализация выбора размеров
-    var dlevel=2;
+    var dlevel=5;
     var $t = $(_t._stor.sizes);
+    _t._log(dlevel,"Sizes: call (p,_d)",p,_d,_t._stor.form.id);
     var _d=_t._data(_t._val(_t._stor.form.id));
     _t._log(dlevel,"Sizes: call (p,_d)",p,_d);
     $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
@@ -392,7 +394,7 @@ $.fn.extend ({
     _result=false;
     _t._log(dlevel, "Get Data", p, data, deep);
      switch (true) {
-      case $.isNumeric(p): // return last level data
+      case p && $.isNumeric(p): // return last level data
        if (typeof data[p] !== "undefined") return data[p]; // end recursion
        $.each(data, function (i, item) {
        if (!deep) tabI = i; 
