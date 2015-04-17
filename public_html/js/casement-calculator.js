@@ -23,8 +23,8 @@ $.fn.extend ({
     "reference":false, // общие цены на монтаж, шаг,  или ссылка, аналогично dataUrl 
     "data": false,  // данные кунструкций или ссылка, аналогично dataUrl 
     "form":{"id":"id","width":"width","height":"height","price":"price"},
-    "price":$(".price",_t), // price output
-    "texts" : {warning:""} // todo: сюда же заголовки параметров
+    "price":$(".price",_t)//, // price output
+    //"texts" : {warning:""} // todo: сюда же заголовки параметров
    },p);
    _t._stor = p;
    _t._debug = function(d) {return _t._stor.debug && (!d || _t._stor.debug <= d)};
@@ -38,7 +38,7 @@ $.fn.extend ({
     return _t;
    };
    _t.init = function(p) {
-    var dlevel = 0;
+    var dlevel=0;
     p = {} || p;
     _t._log(dlevel+1,"init");
     var dataKeys = "data,reference".split(",");
@@ -80,6 +80,24 @@ $.fn.extend ({
        break;
      }
     });
+    // параметры
+    _t._stor.choice = $(">.choice",_t._stor.params); 
+    _t._stor.choice.size() || (_t._stor.choice = $('<div/>').addClass(_t._stor.choice.class()).prependTo(_t._stor.params));
+    if (_t._stor.reference.captions) $.each(_t._stor.reference.captions,function(k,v){
+     var $fieldset = $(">.radio:has([name='"+k+"'])", _t._stor.choice);
+     $fieldset.size() || ($fieldset = $('<div/>').addClass(k).addClass($fieldset.class()).appendTo(_t._stor.choice).append($("<div/>").addClass("title").html(v.name)));
+     if (v.variants) {
+      var $kAlias = k.split(/[\[\]]/,2);
+      var $kD = $(">*:not(:first):not(.title)", $fieldset);
+      $kD.size() || ($kD = $("<div/>").appendTo($fieldset));
+_t._log(dlevel+6,"Variants: ",$fieldset,k,v);
+      $.each({"да":"1","нет":"0"},function(n,val){
+      var _Lab = $("<label/>").append($("<input/>").attr({"name": $kAlias[0], "value": val, "type": "radio"}))
+                .append(" " + n).appendTo($kD);
+_t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
+      });
+     }
+    });
     // обработчик событий - расчет
     $(_t).on("change","[name]",function(e){
      var _r = _t._calc();
@@ -115,7 +133,7 @@ $.fn.extend ({
    };
    _t._err = function(m) {console.log(m)||alert(m); };
    _t._type = function(o) {
-    var dlevel = 1;
+    var dlevel=1;
     var $type = $(_t._stor.type,o);
     if (!$type.size()) {
      // use template or create new
@@ -154,7 +172,7 @@ $.fn.extend ({
           $a.addClass("active");
           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
           _t._val(_t._stor.form.id, id);
-          _t._sizes();
+          _t._parameters();
          }
         })
        });
@@ -174,7 +192,7 @@ $.fn.extend ({
          $a.addClass("active");
          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
          _t._val(_t._stor.form.id, id1);
-         _t._sizes();
+         _t._parameters();
         }
        });
       }
@@ -184,7 +202,7 @@ $.fn.extend ({
     return $type;
    };
    _t._tabs = function(p){
-    var dlevel = 1;
+    var dlevel=1;
     var $t = $(_t._stor.tabs);
     switch (true) {
      case p=="init":
@@ -238,7 +256,7 @@ $.fn.extend ({
    };
    _t._initDimension = function(p){
     // размеры. слайдер(ы) для высоты и ширины секции(й)
-    var dlevel = 2;
+    var dlevel=2;
     p = $.extend({},{
      // обязательные параметры
      "obj":false,
@@ -281,29 +299,59 @@ $.fn.extend ({
     });
     return _s;
    };
-   _t._sizes = function(p) {
-    // инициализация выбора размеров
-    var dlevel=5;
-    var $t = $(_t._stor.sizes);
-    _t._log(dlevel,"Sizes: call (p,_d)",p,_d,_t._stor.form.id);
+   _t._choice = function(cols,arr){
+    dlevel = 1;
+    var $c = $(_t._stor.choice);
+    if ($c.data("id")==_t._val(_t._stor.form.id)) return false;
+    var fData=$("[name]", _t).serializeObject();
+    if (!arr || !arr.length) {
+     arr=[];
+     $.each(cols._index,function(i){
+       if (i.split(/[\[\]]/).length>1)
+        arr.push(i)
+     });     
+    }
+    $.each(arr,function(i,k){
+      var $k = k.split(/[\[\]]/,2);//.filter(function(el){if (el )return el;});
+      if ($k.length>1) {
+       var $kAlias = (cols[k][2] || $k[0]);
+       var $kS = $("." + $kAlias, $c);
+       var $kD = $(">*:not(:first):not(.title)", $kS);
+       if ($kD.data("id")!=_t._val(_t._stor.form.id)) $("label",$kD).remove();
+       $kD.size() || ($kD = $("<div/>").appendTo($kS));
+       $("<label/>").append($("<input/>").attr({"name": $kAlias, "value": $k[1], "type": "radio"}))
+        .append(" " + cols[k][0]).appendTo($kD);
+       $("[name='" + $kAlias + "']"+(fData[$kAlias]?"[value='"+fData[$kAlias]+"']":":first")).prop("checked",true);
+       _t._log(dlevel + 5, "choices:", k, $kAlias, $kS, $kD,fData);
+       $kD.data("id",_t._val(_t._stor.form.id));
+      }
+    });
+    $c.data("id",_t._val(_t._stor.form.id));
+   };
+   _t._parameters = function(p) {
+    // инициализация выбора размеров и параметров
+    var dlevel=2;
+    var $s = $(_t._stor.sizes);
     var _d=_t._data(_t._val(_t._stor.form.id));
-    _t._log(dlevel,"Sizes: call (p,_d)",p,_d);
-    $t.size() || (($t = $("<div/>").addClass($t.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$t));
-    $t.html("");
-    var $s=["height","width"];
+    _t._log(dlevel,"_parameters: call (p,_d)",p,_d,_t._stor.form.id);
+    $s.size() || (($s = $("<div/>").addClass($s.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$s));
+    $s.html("");
+    var $dm=["height","width"];
     var tabI = _t._tabs("opened");
     switch (typeof _d.data) {
      case "object":
       //var colsT = ["alias","name","dimensions","input"];
       var cols=_t._cols(tabI);
       _t._log(dlevel+1,"Sizes Data:",_t._val(_t._stor.form.id),_d,"Tab: ",tabI,_t._stor.data[tabI],cols);
-      $.each($s,function(i,dim){
+      // параметры выбора
+      _t._choice(cols);
+      $.each($dm,function(i,dim){
        // определяем поля ввода и слайдеры для каждого измерения 
        _d.atad || (_d.atad={});
        if (!_d.atad[dim]) _d.atad[dim] = _t._getDataCol(_d.data,cols._index[dim]);
        var _dCol = _d.atad[dim];
-       $s[dim]=_t._initDimension({
-            "obj":$t,
+       $dm[dim]=_t._initDimension({
+            "obj":$s,
             "name":dim,
             "minmax":_t._minmax(_dCol),
             "orientation":dim=="height"?"vertical":"horizontal",
@@ -312,21 +360,25 @@ $.fn.extend ({
             "value":_dCol[Math.round(_dCol.length/2)]
            });
       });
-      _t._log(dlevel,"Sizes inited",$t,"Inputs: ",$s,"data",_d);
+      _t._log(dlevel,"_parameters inited",$s,"Inputs: ",$dm,"data",_d);
      break;
      case "string":
       _d._complect || (_d._complect = _d.data.split(","));
       var _wW = [];
+      var _colsUse=[];
       $.each(_d._complect,function(i,item){
        var _segment = _t._data(item);
        var cols=_t._cols(_segment.tabI);
-       $.each($s,function(n,dim){
+       // определение общих параметров параметров секций
+       if (!_colsUse.length) $.each(cols._index,function(i){ if (i.split(/[\[\]]/).length>1) _colsUse.push(i) });
+       else _colsUse = _colsUse.filter(function(el){ return !!cols._index[el]; });
+       $.each($dm,function(n,dim){
         // определяем поля ввода и слайдеры для каждого измерения 
         _segment.atad || (_segment.atad={});
         if (!_segment.atad[dim]) _segment.atad[dim] = _t._getDataCol(_segment.data,cols._index[dim]);
         var _dCol = _segment.atad[dim];
         var _dimP = {
-         "obj":$t,
+         "obj":$s,
          "name":dim,
          "label":dim,
          "minmax":_t._minmax(_dCol),
@@ -336,7 +388,7 @@ $.fn.extend ({
          "value":_dCol[Math.round(_dCol.length/2)]
         };
         if (dim=="height") {
-         var _vS = $("[name='"+dim+"']",$t).siblings(".slider");
+         var _vS = $("[name='"+dim+"']",$s).siblings(".slider");
          if (_vS.size()) {
           // проверка вертикального слайдера, установка минимальных макс-мин 
           if (_dimP.minmax.max > _vS.slider("option","max")) _dimP.minmax.max = _vS.slider("option","max");
@@ -353,7 +405,8 @@ $.fn.extend ({
         }
        });
       });
-      $("label.width",$t).each(function(){
+      _t._choice(cols,_colsUse);
+      $("label.width",$s).each(function(){
        var _s = $(".slider",this);
        var _sMnx = _s.slider("option","max");
        var _maxW = Math.max.apply(null,_wW);
@@ -361,7 +414,7 @@ $.fn.extend ({
       });
      break;
     }
-    $("input:first",$t).trigger("change");
+    $("input:first",$s).trigger("change");
     return _t;
    };
    _t._cols = function(tabI) {
@@ -428,7 +481,7 @@ $.fn.extend ({
    };
    _t._calcToMatch = function(Bval,BScope,SScope){
     // получение соответствующего значения из искомого диапазона SScope  (цены)
-    // на основе известной точки Bvsl заданного диапазона BScope (площадь)
+    // на основе известной точки Bval заданного диапазона BScope (площадь)
     var _scope = _t._getRange(Bval,BScope);                                          // определение точек, между которыми находится определяющее значение
     var _range = _t._flFix(BScope[_scope[1]] - BScope[_scope[0]]);                   // определение диапазона между заданными точками
     var _c = {
@@ -476,7 +529,7 @@ $.fn.extend ({
     return _c.baseprice + _c.kitprice + _c.montage; 
    };
    _t._calc = function() {
-    var dlevel = 2;
+    var dlevel=2;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._stor.form.id));
     var reference = _t._stor.reference.price;
