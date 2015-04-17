@@ -60,8 +60,10 @@ function calcRecursive($id,$debug=false) {
   $outAr["reference"] = &$outArRef;
   // заголовки, тексты
   $outAr["reference"]["captions"] = array();
-  foreach ($modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'image', "outputFormat" => 'array')) as $p)
-   $outAr["reference"]["captions"][$p[0]] = $p[1];
+  foreach ($modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'image', "outputFormat" => 'array')) as $p) {
+   $outAr["reference"]["captions"][$p[0]] = array("name"=>$p[1]);
+  if (!empty($p[2])) $outAr["reference"]["captions"][$p[0]]["variants"] = $p[2];
+  }
  } else if ($deep == 1) {                          // Первый уровень - группы (вкладки в пользовательском интерфейсе)
   $outAr = array_merge($outNames, $outAr);
   $getCols = $modx->runSnippet("ddGetMultipleField",array( "docId" => $id, "docField" => 'calculator', "outputFormat" => 'array')); 
