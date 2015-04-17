@@ -366,12 +366,13 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       _d._complect || (_d._complect = _d.data.split(","));
       var _wW = [];
       var _colsUse=[];
+      var cols; // если будут сегменты с разным набором параметров - будет ошибка
       $.each(_d._complect,function(i,item){
        var _segment = _t._data(item);
-       var cols=_t._cols(_segment.tabI);
-       // определение общих параметров параметров секций
-       if (!_colsUse.length) $.each(cols._index,function(i){ if (i.split(/[\[\]]/).length>1) _colsUse.push(i) });
-       else _colsUse = _colsUse.filter(function(el){ return !!cols._index[el]; });
+       cols=_t._cols(_segment.tabI);
+       //// определение общих параметров параметров секций для секций с разным набором параметров
+       //if (!_colsUse.length) $.each(cols._index,function(i){ if (i.split(/[\[\]]/).length>1) _colsUse.push(i) });
+       //else _colsUse = _colsUse.filter(function(el){ return !!cols._index[el]; });
        $.each($dm,function(n,dim){
         // определяем поля ввода и слайдеры для каждого измерения 
         _segment.atad || (_segment.atad={});
@@ -405,7 +406,7 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
         }
        });
       });
-      _t._choice(cols,_colsUse);
+      _t._choice(cols);
       $("label.width",$s).each(function(){
        var _s = $(".slider",this);
        var _sMnx = _s.slider("option","max");
