@@ -24,7 +24,7 @@ $.fn.extend ({
     "data": false,  // данные кунструкций или ссылка, аналогично dataUrl 
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t)//, // price output
-    //"texts" : {warning:""} // todo: сюда же заголовки параметров
+    //"texts" : {warning:""}
    },p);
    _t._stor = p;
    _t._debug = function(d) {return _t._stor.debug && (!d || _t._stor.debug <= d)};
@@ -320,9 +320,18 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        $kD.size() || ($kD = $("<div/>").appendTo($kS));
        $("<label/>").append($("<input/>").attr({"name": $kAlias, "value": $k[1], "type": "radio"}))
         .append(" " + cols[k][0]).appendTo($kD);
-       $("[name='" + $kAlias + "']"+(fData[$kAlias]?"[value='"+fData[$kAlias]+"']":":first")).prop("checked",true);
        _t._log(dlevel+5, "choices:", k, $kAlias, $kS, $kD,fData);
        $kD.data("id",_t._val(_t._stor.form.id));
+      }
+    });
+    $(">*",_t._stor.choice).each(function(){
+      var _c = $(this);
+      var $kAlias = _c.class().split(" ")[0];
+     _t._log(dlevel+5, "choices cet checked:", $kAlias, fData);
+
+      if (!$("*:checked",_c).size()) {
+       $("[name='" + $kAlias + "'][value='"+fData[$kAlias]+"']",_c).prop("checked",true);
+       $("*:checked",_c).size() || $("[name='" + $kAlias + "']:first",_c).prop("checked",true); 
       }
     });
     $c.data("id",_t._val(_t._stor.form.id));
