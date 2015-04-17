@@ -438,7 +438,7 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._data = function(p,data,grKey,deep) {
     // получение и кеширование данных по идентификатору
-    var dlevel=2;
+    var dlevel=3;
     var _result;
     var tabI;
     data = data  || _t._stor.data;
@@ -450,7 +450,7 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
      switch (true) {
       case p && $.isNumeric(p): // return last level data
        if (typeof data[p] !== "undefined") return data[p]; // end recursion
-       $.each(data, function (i, item) {
+       (typeof data=="object") && $.each(data, function (i, item) {
        if (!deep) tabI = i; 
         _t._log(dlevel, "Get Data: check item ", i, item, deep);
         if (typeof item == "object") {
