@@ -91,7 +91,7 @@ if ($tpl == 8 && $cid) { // Калькулятор
    if (empty($content["isfolder"])) {
     mm_renameField($cTVnames['c'], 'Состав остекления');
     mm_changeFieldHelp($cTVnames['c'], 'ID ресурсов с окнами через запятую или двойной клик в поле ввода для выбора из списка');
-    mm_ddSelectDocuments($cTVnames['c'], '', '', 38, 10, 'isfolder=0', 0, '[+title+] ([+id+])', true);
+    mm_ddSelectDocuments($cTVnames['c'], '', '', 37, 10, 'isfolder=0', 0, '[+title+] ([+id+])', true);
    }
   }
 }
