@@ -63,7 +63,6 @@ $.fn.extend ({
      };
      _t._log(dlevel+2, "_INIT: Ajax get data", ajaxSetting, "left: " + _t._ajaxLeft);
      $.ajax(ajaxSetting);
-
     }
     if (_t._ajaxLeft || _t._ajaxLeft > 0) {
      _t._log(dlevel+2,"Ajax wait "+_t._ajaxLeft);
@@ -90,11 +89,11 @@ $.fn.extend ({
       var $kAlias = k.split(/[\[\]]/,2);
       var $kD = $(">*:not(:first):not(.title)", $fieldset);
       $kD.size() || ($kD = $("<div/>").appendTo($fieldset));
-_t._log(dlevel+6,"Variants: ",$fieldset,k,v);
+_t._log(dlevel+2,"Variants: ",$fieldset,k,v);
       $.each({"да":"1","нет":"0"},function(n,val){
       var _Lab = $("<label/>").append($("<input/>").attr({"name": $kAlias[0], "value": val, "type": "radio"}))
                 .append(" " + n).appendTo($kD);
-_t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
+_t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       });
      }
     });
@@ -145,7 +144,7 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     var $tg = $(".select",$type);
     $tg.size() || ($tg = $("<div/>").addClass($tg.class()).appendTo($type));
     if (!$type.data("activated")) {
-     _t._log(dlevel + 3, "_type: init type control control for \"" + _t._stor.data[tabI].datatype + "\" at ", "index check: " + o.index() + " " + tabI, "_t._stor.data[tabI]", _t._stor.data[tabI], "$type,$tg", $type, $tg);
+     _t._log(dlevel+1, "_type: init type control control for \"" + _t._stor.data[tabI].datatype + "\" at ", "index check: " + o.index() + " " + tabI, "_t._stor.data[tabI]", _t._stor.data[tabI], "$type,$tg", $type, $tg);
      $tg.html("");
      $.each(_t._stor.data[o.index()].data, function (id1, item1) {
       if (item1.group) {
@@ -158,16 +157,16 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          "src": item.preview, "alt": item.title || item.name
         }).load(function () {
          var $gr = $(this).closest(".group");
-         _t._log(dlevel + 2, "_type: loaded ", this, this.width, $gr.width());
+         _t._log(dlevel+2, "_type: loaded ", this, this.width, $gr.width());
          if ($gr.width() < this.width) $gr.width(this.width + ($gv.outerWidth() - $gv.width()));
         })).appendTo($gv).on("init click", function (e) {
          e.preventDefault();
          var $a = $(this);
          var $i = $a.find("[src]");
-         _t._log(dlevel + 1, "_type: Img triggered ", e.type, $i, e);
+         _t._log(dlevel+1, "_type: Img triggered ", e.type, $i, e);
          $a.addClass("selected").siblings().removeClass("selected");
          if (e.type == "click") {
-          _t._log(dlevel + 2, "_type: Clicked", $a);
+          _t._log(dlevel+2, "_type: Clicked", $a);
           $(".active",$tg).removeClass("active");
           $a.addClass("active");
           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
@@ -179,15 +178,15 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        $("img:first", $gv).trigger("init");
       } else {
        $tg.addClass("casesets");
-       _t._log(dlevel + 2, "_type: init one level structure", o.index(), o);
+       _t._log(dlevel+2, "_type: init one level structure", o.index(), o);
        $("<a>").prop({"href": item1.image, "title": (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)}).append($("<img/>").attr({
         "src": item1.preview, "alt": item1.title || item1.name})).appendTo($tg).on("init click", function (e) {
         e.preventDefault();
         var $a = $(this);
         var $i = $a.find("[src]");
-        _t._log(dlevel + 2, "_type: Img triggered ", e.type, $i, e);
+        _t._log(dlevel+2, "_type: Img triggered ", e.type, $i, e);
         if (e.type == "click") {
-         _t._log(dlevel + 2, "_type: Clicked", $a);
+         _t._log(dlevel+2, "_type: Clicked", $a);
          $(".active",$tg).removeClass("active");
          $a.addClass("active");
          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
@@ -202,12 +201,12 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     return $type;
    };
    _t._tabs = function(p){
-    var dlevel=1;
+    var dlevel=5;
     var $t = $(_t._stor.tabs);
+    var $tH = $(".headers", $t);
+    var $tC = $(".contents", $t);
     switch (true) {
      case p=="init":
-      var $tH = $(".headers",$t);
-      var $tC = $(".contents",$t);
       $tH.size() || ($tH = $("<div>").addClass($tH.class()).appendTo($t));
       $tC.size() || ($tC = $("<div>").addClass($tC.class()).appendTo($t));
       (_t._stor.data && $.each(_t._stor.data, function(i,k){
@@ -234,8 +233,8 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       }).tabs({"headers":$tH,"contents":$tC});
       break;
      case p=="opened":
-      _t._log(dlevel + 1,"Tabs opened",$(":has(.active)",_t._stor.tabs).index());
-      return $(":has(.active)",_t._stor.tabs).index();
+      _t._log(dlevel + 1,"Tabs opened",$(".active",$tH).index());
+      return $(".active",$tH).index();
       break;
     }
     return $t;
@@ -322,7 +321,7 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        $("<label/>").append($("<input/>").attr({"name": $kAlias, "value": $k[1], "type": "radio"}))
         .append(" " + cols[k][0]).appendTo($kD);
        $("[name='" + $kAlias + "']"+(fData[$kAlias]?"[value='"+fData[$kAlias]+"']":":first")).prop("checked",true);
-       _t._log(dlevel + 5, "choices:", k, $kAlias, $kS, $kD,fData);
+       _t._log(dlevel+5, "choices:", k, $kAlias, $kS, $kD,fData);
        $kD.data("id",_t._val(_t._stor.form.id));
       }
     });
@@ -420,9 +419,9 @@ _t._log(dlevel+6,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._cols = function(tabI) {
      // определение колонок данных секции, номер (строка), alias - 1ст, название - 2ст, ед изм - 3ст
-    var dlevel=2;
+    var dlevel=5;
     var cols=_t._stor.data[tabI].cols;
-    var _al = ["alias","name","unit"];
+    //var _al = ["alias","name","unit"];
     if (!cols._index) $.each(cols,function(k,item){
      $.each(item,function(i,v){
       if (!parseInt(i)) { // первая строка (i=0) содержит алиасы
