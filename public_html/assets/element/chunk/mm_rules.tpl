@@ -40,7 +40,7 @@ if ($tpl != 8 )  {
 }
 
 
-if ($tpl == 8) { // Калькулятор
+if ($tpl == 8 && $cid) { // Калькулятор
  $cTVnames = array('i'=>'image','p'=>'photos','t'=>'calculator_type','c'=>'calculator');
  mm_createTab('Калькулятор', $cTVnames['c']);
  mm_moveFieldsToTab(implode(",",array_values($cTVnames)), $cTVnames['c']);
