@@ -47,27 +47,6 @@
     <label class="width"><span>Ширина, мм</span> <input type="text" name="width" eform="Ширина::1" /></label>
    </div>
   <div class="parameters">
-   <div class="radio">
-    <div>Оконная система</div>
-    <div>
-     <label><input type="radio" name="system" value="rehau" eform="Оконная система::1"/> Rehau</label>
-     <label><input type="radio" name="system" value="kbe" eform="Оконная система::1"/> KBE</label>
-    </div>
-   </div>
-   <div class="radio">
-    <div>Комплектующие</div>
-    <div><label><input type="radio" name="kit" eform="Комплектующие::1" value="panel"/> для панельного дома</label>
-     <label><input type="radio" name="kit" eform="Комплектующие::1" value="kirpich"/> для кирпичного дома</label>
-     <label><input type="radio" name="kit" eform="Комплектующие::1" value="none"/> не нужны</label>
-    </div>
-   </div>
-   <div class="radio">
-    <div>Монтажные работы</div>
-    <div>
-     <label><input type="radio" name="montage" value="1" eform="Монтажные работы::1"/> Да</label>
-     <label><input type="radio" name="montage" value="0" eform="Монтажные работы::1"/> Нет</label>
-    </div>
-   </div>
    <div class="price"><span>00000</span> руб</div>
    <input type="button" value="Заказать"/>
    <div class="warning">
