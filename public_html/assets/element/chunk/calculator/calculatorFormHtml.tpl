@@ -28,24 +28,40 @@
       }
      })
    });
+   $(".calculator form").submit(function(e){
+    e.preventDefault();
+    var f = $(this);
+    var fData = {};
+    $.each(f.serializeObject(),function(k,v){
+     if ($.inArray(k,"formid,email,id,notes,phone,price,veridata,name".split(","))!=-1) fData[k]=v;
+    });
+    var m = $(".calculator .modal").wrapInner("<div class='innerm'/>");
+    m.find(".close").remove();
+    var cl = m.find(".innerm").detach(); 
+    console.log(fData,cl);
+    m.load(f.attr("action")+" .calcform ",fData,function(data){
+     var mess = $(data).find(".message");
+     if (mess.size()) return mess;
+     m.modal();
+     m.find(".close").click(function(){
+      m.html("").append(cl).modal();
+     })
+    });
+   });
   });
  </script>
  <input type="hidden" name="formid" value="calculatorForm" />
  <label style="display:none"><input type="text" name="veridata" eform="&nbsp;:date:0::#REGEX /^$/" value=""/></label>
  <div class="workarea">
-  <input type="hidden" name="id" value="" eform="Ошибка получения идентификатора:integer:1" value=""/>
-  <input type="hidden" name="price" value="" eform="Ошибка расчета стоимости:float:1" value=""/>
+  <input type="hidden" name="id" value="" eform="::0::" value=""/>
+  <input type="hidden" name="price" value="" eform="::0::" value=""/>
+  <input type="hidden" name="data" value="" eform="::0::" value=""/>
   <div class="template" >
    <div class="type">
     <div class="caption">Выберите тип окна</div>
-
    </div>
   </div>
   <div class="preview"><a href="#"><img src="#" alt="" title=""/></a></div>
-   <div class="sizes">
-    <label class="height"><span>Высота, мм</span> <input type="text" name="height" eform="Высота::1" /></label>
-    <label class="width"><span>Ширина, мм</span> <input type="text" name="width" eform="Ширина::1" /></label>
-   </div>
   <div class="parameters">
    <div class="price"><span>00000</span> руб</div>
    <input type="button" value="Заказать"/>

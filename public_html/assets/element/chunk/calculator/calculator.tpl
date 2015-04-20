@@ -1,4 +1,4 @@
-
+<div class="calcform">
 [!eForm?
  &formid=`calculatorForm`
  &tpl=`calculatorFormHtml`
@@ -9,3 +9,4 @@
  &to=`test@web-grafica.info` &sendAsText=`1`
  &requiredClass=`invalid`
 !]
+</div>
