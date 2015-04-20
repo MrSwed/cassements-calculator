@@ -1,744 +1,832 @@
-[
-  {
-    "alias": "windows-PVC",
-    "name": "пластиковые окна",
-    "debug": "38: 1",
-    "doclevel": 1,
-    "cols": [
-      [
-        "width",
-        "Ширина",
-        "мм",
-        "input#width"
-      ],
-      [
-        "height",
-        "Высота",
-        "мм",
-        "input#height"
-      ],
-      [
-        "price[kbe]",
-        "КВЕ",
-        "руб",
-        "radio#system"
-      ],
-      [
-        "price[rehau]",
-        "Rehau",
-        "руб",
-        "radio#system"
-      ],
-      [
-        "kit[panel]",
-        "для панельного дома",
-        "руб",
-        "radio#kit"
-      ],
-      [
-        "kit[kirpich]",
-        "для кирпичного дома",
-        "руб",
-        "radio#kit"
-      ],
-      [
-        "kit[none]",
-        "не нужны",
-        "Без комплекта",
-        "radio#kit"
-      ]
-    ],
-    "data": {
-      "40": {
-        "alias": "odnostvorchatye",
-        "name": "Одностворчатые",
-        "debug": "40: 2",
-        "group": {
-          "44": {
-            "alias": "gluhoe",
-            "name": "глухое",
-            "debug": "44: 3",
-            "preview": "assets/images/windows/preview/g.png",
-            "image": "assets/images/windows/g.png",
-            "data": [
-              [
-                "500",
-                "500",
-                "1242",
-                "1346",
-                "490",
-                "1340"
-              ],
-              [
-                "660",
-                "1000",
-                "2266",
-                "2461",
-                "660",
-                "1500"
-              ],
-              [
-                "750",
-                "1430",
-                "3266",
-                "3542",
-                "820",
-                "1670"
-              ],
-              [
-                "880",
-                "1680",
-                "4175",
-                "4531",
-                "980",
-                "1870"
-              ],
-              [
-                "1000",
-                "1900",
-                "5060",
-                "5509",
-                "1100",
-                "2100"
-              ]
-            ]
-          },
-          "45": {
-            "alias": "povorotnoe",
-            "name": "поворотное",
-            "debug": "45: 3",
-            "preview": "assets/images/windows/preview/p.png",
-            "image": "assets/images/windows/pr.png",
-            "data": [
-              [
-                "500",
-                "500",
-                "3278",
-                "3496",
-                "490",
-                "1340"
-              ],
-              [
-                "660",
-                "1000",
-                "4554",
-                "4853",
-                "660",
-                "1500"
-              ],
-              [
-                "750",
-                "1430",
-                "6095",
-                "6509",
-                "820",
-                "1670"
-              ],
-              [
-                "880",
-                "1680",
-                "7222",
-                "7717",
-                "980",
-                "1870"
-              ],
-              [
-                "1000",
-                "1900",
-                "8545",
-                "9131",
-                "1100",
-                "2100"
-              ]
-            ]
-          },
-          "46": {
-            "alias": "povorotno-otkidnoe",
-            "name": "поворотно-откидное",
-            "debug": "46: 3",
-            "preview": "assets/images/windows/preview/o.png",
-            "image": "assets/images/windows/pl.png",
-            "data": [
-              [
-                "500",
-                "500",
-                "3370",
-                "3577",
-                "490",
-                "1340"
-              ],
-              [
-                "660",
-                "1000",
-                "4899",
-                "5233",
-                "660",
-                "1500"
-              ],
-              [
-                "750",
-                "1430",
-                "6314",
-                "6739",
-                "820",
-                "1670"
-              ],
-              [
-                "880",
-                "1680",
-                "7452",
-                "7947",
-                "980",
-                "1870"
-              ],
-              [
-                "1000",
-                "1900",
-                "8970",
-                "9568",
-                "1100",
-                "2100"
-              ]
-            ]
-          },
-          "47": {
-            "alias": "framuga",
-            "name": "фрамуга",
-            "debug": "47: 3",
-            "preview": "assets/images/windows/preview/f.png",
-            "image": "assets/images/windows/f.png",
-            "data": [
-              [
-                "500",
-                "500",
-                "2875",
-                "3059",
-                "490",
-                "1340"
-              ],
-              [
-                "1000",
-                "660",
-                "4876",
-                "5210",
-                "950",
-                "1880"
-              ],
-              [
-                "1430",
-                "750",
-                "6440",
-                "6877",
-                "1330",
-                "2450"
-              ],
-              [
-                "1680",
-                "880",
-                "7763",
-                "8303",
-                "1450",
-                "2760"
-              ],
-              [
-                "1900",
-                "1000",
-                "9085",
-                "9718",
-                "1750",
-                "3330"
-              ]
-            ]
-          }
+{
+  "alias": "calculator",
+  "name": "Расчет стоимости пластиковых окон",
+  "debug": "ID:37, Deep:0",
+  "datatype": "section",
+  "reference": {
+    "price": {
+      "montage": {
+        "base": "800",
+        "kit": {
+          "panel": "250",
+          "kirpich": "300"
         }
-      },
-      "41": {
-        "alias": "dvuhstvorchatoe",
-        "name": "двухстворчатое",
-        "debug": "41: 2",
-        "group": {
-          "48": {
-            "alias": "gluhoe-povorotnoe",
-            "name": "глухое + поворотное",
-            "debug": "48: 3",
-            "preview": "assets/images/windows/preview/g-p.png",
-            "image": "assets/images/windows/g-p.png",
-            "data": [
-              [
-                "1000",
-                "1000",
-                "5923",
-                "6417",
-                "1050",
-                "2000"
-              ],
-              [
-                "1200",
-                "1300",
-                "7429",
-                "8027",
-                "1240",
-                "2280"
-              ],
-              [
-                "1410",
-                "1500",
-                "9016",
-                "9729",
-                "1490",
-                "2830"
-              ],
-              [
-                "1600",
-                "1680",
-                "10546",
-                "11362",
-                "1630",
-                "2980"
-              ],
-              [
-                "1800",
-                "1800",
-                "11972",
-                "12892",
-                "1720",
-                "3150"
-              ]
-            ]
-          },
-          "49": {
-            "alias": "gluhoe-povorotno-otkidnoe",
-            "name": "глухое + поворотно-откидное",
-            "debug": "49: 3",
-            "preview": "assets/images/windows/preview/g-o.png",
-            "image": "assets/images/windows/g-p.png",
-            "data": [
-              [
-                "1000",
-                "1000",
-                "6325",
-                "6797",
-                "1050",
-                "2000"
-              ],
-              [
-                "1200",
-                "1300",
-                "7786",
-                "8407",
-                "1240",
-                "2280"
-              ],
-              [
-                "1410",
-                "1500",
-                "9338",
-                "10074",
-                "1490",
-                "2830"
-              ],
-              [
-                "1600",
-                "1680",
-                "10764",
-                "11592",
-                "1630",
-                "2980"
-              ],
-              [
-                "1800",
-                "1800",
-                "12466",
-                "13432",
-                "1720",
-                "3150"
-              ]
-            ]
-          },
-          "50": {
-            "alias": "povorotnoe-povorotno-otkidnoe",
-            "name": "поворотное + поворотно-откидное",
-            "debug": "50: 3",
-            "preview": "assets/images/windows/preview/p-o.png",
-            "image": "assets/images/windows/p-p.png",
-            "data": [
-              [
-                "1000",
-                "1000",
-                "8625",
-                "9200",
-                "1050",
-                "2000"
-              ],
-              [
-                "1200",
-                "1300",
-                "10212",
-                "10960",
-                "1240",
-                "2280"
-              ],
-              [
-                "1410",
-                "1500",
-                "12110",
-                "12972",
-                "1490",
-                "2830"
-              ],
-              [
-                "1600",
-                "1680",
-                "13800",
-                "14778",
-                "1630",
-                "2980"
-              ],
-              [
-                "1800",
-                "1800",
-                "15755",
-                "16859",
-                "1720",
-                "3150"
-              ]
-            ]
-          }
-        }
-      },
-      "42": {
-        "alias": "trehstvorchatoe",
-        "name": "трехстворчатое",
-        "debug": "42: 2",
-        "group": {
-          "51": {
-            "alias": "gluhoe-povorotno-otkidnoe-gluhoe",
-            "name": "глухое + поворотно откидное + глухое",
-            "debug": "51: 3",
-            "preview": "assets/images/windows/preview/g-o-g.png",
-            "image": "assets/images/windows/g-p-g.png",
-            "data": [
-              [
-                "1500",
-                "1000",
-                "8016",
-                "8763",
-                "1410",
-                "2450"
-              ],
-              [
-                "1800",
-                "1300",
-                "10189",
-                "11075",
-                "1620",
-                "2850"
-              ],
-              [
-                "2120",
-                "1500",
-                "12374",
-                "13421",
-                "2000",
-                "3400"
-              ],
-              [
-                "2390",
-                "1680",
-                "14352",
-                "15525",
-                "2130",
-                "3570"
-              ],
-              [
-                "2700",
-                "1800",
-                "16675",
-                "18021",
-                "2330",
-                "3900"
-              ]
-            ]
-          },
-          "52": {
-            "alias": "povorotnoe-gluhoe-povorotno-otkidnoe",
-            "name": "поворотное + глухое + поворотно откидное",
-            "debug": "52: 3",
-            "preview": "assets/images/windows/preview/p-g-o.png",
-            "image": "assets/images/windows/p-g-p.png",
-            "data": [
-              [
-                "1500",
-                "1000",
-                "10350",
-                "11155",
-                "1410",
-                "2450"
-              ],
-              [
-                "1800",
-                "1300",
-                "12604",
-                "13605",
-                "1620",
-                "2850"
-              ],
-              [
-                "2120",
-                "1500",
-                "15123",
-                "16296",
-                "2000",
-                "3400"
-              ],
-              [
-                "2390",
-                "1680",
-                "17365",
-                "18665",
-                "2130",
-                "3570"
-              ],
-              [
-                "2700",
-                "1800",
-                "19953",
-                "21448",
-                "2330",
-                "3900"
-              ]
-            ]
-          },
-          "53": {
-            "alias": "povorotnoe-povorotnoe-povorotno-otkidnoe",
-            "name": "поворотное + поворотное + поворотно-откидное",
-            "debug": "53: 3",
-            "preview": "assets/images/windows/preview/p-p-o.png",
-            "image": "assets/images/windows/p-p-p.png",
-            "data": [
-              [
-                "1500",
-                "1000",
-                "12650",
-                "13582",
-                "1410",
-                "2450"
-              ],
-              [
-                "1800",
-                "1300",
-                "15042",
-                "16158",
-                "1620",
-                "2850"
-              ],
-              [
-                "2120",
-                "1500",
-                "17998",
-                "19309",
-                "2000",
-                "3400"
-              ],
-              [
-                "2390",
-                "1680",
-                "20390",
-                "21827",
-                "2130",
-                "3570"
-              ],
-              [
-                "2700",
-                "1800",
-                "23230",
-                "24886",
-                "2330",
-                "3900"
-              ]
-            ]
-          }
-        }
-      },
-      "43": {
-        "alias": "dveri",
-        "name": "двери",
-        "debug": "43: 2",
-        "group": {
-          "54": {
-            "alias": "dver",
-            "name": "дверь",
-            "debug": "54: 3",
-            "preview": "assets/images/windows/preview/b.png",
-            "image": "assets/images/windows/b.png",
-            "data": [
-              [
-                "600",
-                "1800",
-                "6624",
-                "6730",
-                "810",
-                "1440",
-                ""
-              ],
-              [
-                "680",
-                "1950",
-                "7590",
-                "7700",
-                "870",
-                "1560",
-                ""
-              ],
-              [
-                "750",
-                "2100",
-                "8453",
-                "8570",
-                "990",
-                "1860",
-                ""
-              ],
-              [
-                "830",
-                "2200",
-                "9143",
-                "9230",
-                "1040",
-                "1860",
-                ""
-              ],
-              [
-                "900",
-                "2300",
-                "9741",
-                "9800",
-                "1040",
-                "1860",
-                ""
-              ]
-            ]
-          },
-          "55": {
-            "alias": "dver-dvustvorchataya",
-            "name": "дверь двустворчатая",
-            "debug": "55: 3",
-            "preview": "assets/images/windows/preview/b2.png",
-            "image": "assets/images/windows/b2.png",
-            "data": [
-              [
-                "1200",
-                "1800",
-                "12800",
-                "14400",
-                "920",
-                "1620",
-                ""
-              ],
-              [
-                "1360",
-                "1950",
-                "14421",
-                "16200",
-                "1040",
-                "1860",
-                ""
-              ],
-              [
-                "1500",
-                "2100",
-                "15962",
-                "17700",
-                "1100",
-                "1980",
-                ""
-              ],
-              [
-                "1650",
-                "2210",
-                "17319",
-                "19100",
-                "1100",
-                "1980",
-                ""
-              ],
-              [
-                "1760",
-                "2350",
-                "18573",
-                "20300",
-                "1100",
-                "1980",
-                ""
-              ]
-            ]
-          }
-        }
+      }
+    },
+    "step": "10",
+    "captions": {
+      "system": {"name": "Оконная система"},
+      "kit": {"name": "Комплектующие"},
+      "montage": {
+        "name": "Монтажные работы",
+        "variants": "1"
       }
     }
   },
-  {
-    "alias": "balcony-PVC",
-    "name": "остекление балконов",
-    "debug": "39: 1",
-    "doclevel": 1,
-    "data": {
-      "56": {
-        "alias": "balkon-1",
-        "name": "Балкон 1",
-        "debug": "56: 2",
-        "preview": "assets/images/windows/preview/gu-p-g-o-g-ug.png",
-        "image": "assets/images/windows/gu-p-g-p-g-ug.jpg",
-        "data": [["44,48,49,44"]]
-      },
-      "57": {
-        "alias": "balkon-2",
-        "name": "Балкон 2",
-        "debug": "57: 2",
-        "preview": "assets/images/windows/preview/gu-p-g-o-g.png",
-        "image": "assets/images/windows/gu-p-g-p-g.jpg",
-        "data": [["44,48,49"]]
-      },
-      "58": {
-        "alias": "balkon-3",
-        "name": "Балкон 3",
-        "debug": "58: 2",
-        "preview": "assets/images/windows/preview/p-g-o-g.png",
-        "image": "assets/images/windows/p-g-p-g.jpg",
-        "data": [["48,49"]]
-      },
-      "59": {
-        "alias": "balkon-4",
-        "name": "Балкон 4",
-        "debug": "59: 2",
-        "preview": "assets/images/windows/preview/p-g-g-o-g-p-g.png",
-        "image": "assets/images/windows/p-g-g-p-g-p-g.jpg",
-        "data": [["48,51,48"]]
-      },
-      "60": {
-        "alias": "balkon-5",
-        "name": "Балкон 5",
-        "debug": "60: 2",
-        "preview": "assets/images/windows/preview/g-o-ug-p-ug.png",
-        "image": "assets/images/windows/g-p-ug-p-ug.jpg",
-        "data": [["49,44,45,44"]]
-      },
-      "61": {
-        "alias": "balkon-6",
-        "name": "Балкон 6",
-        "debug": "61: 2",
-        "preview": "assets/images/windows/preview/g-pu-u-o.png",
-        "image": "assets/images/windows/g-pu-g-p.jpg",
-        "data": [["48,49"]]
-      },
-      "62": {
-        "alias": "balkon-7",
-        "name": "Балкон 7",
-        "debug": "62: 2",
-        "preview": "assets/images/windows/preview/g-o-g-up-ug.png",
-        "image": "assets/images/windows/g-p-g-up-ug.jpg",
-        "data": [["51,45,44"]]
+  "data": [
+    {
+      "alias": "windows-PVC",
+      "name": "пластиковые окна",
+      "debug": "ID:38, Deep:1",
+      "datatype": "section",
+      "cols": [
+        [
+          "width",
+          "Ширина",
+          "мм",
+          ""
+        ],
+        [
+          "height",
+          "Высота",
+          "мм",
+          ""
+        ],
+        [
+          "price[kbe]",
+          "КВЕ",
+          "руб",
+          "system"
+        ],
+        [
+          "price[rehau]",
+          "Rehau",
+          "руб",
+          "system"
+        ],
+        [
+          "kit[panel]",
+          "для панельного дома",
+          "руб",
+          ""
+        ],
+        [
+          "kit[kirpich]",
+          "для кирпичного дома",
+          "руб",
+          ""
+        ],
+        [
+          "kit[none]",
+          "не нужны",
+          "Без комплекта",
+          ""
+        ]
+      ],
+      "data": {
+        "40": {
+          "alias": "odnostvorchatye",
+          "name": "Одностворчатые",
+          "debug": "ID:40, Deep:2",
+          "datatype": "section",
+          "group": {
+            "44": {
+              "alias": "gluhoe",
+              "name": "глухое",
+              "debug": "ID:44, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/g.png",
+              "image": "assets/images/windows/g.png",
+              "data": [
+                [
+                  "500",
+                  "500",
+                  "1242",
+                  "1346",
+                  "490",
+                  "1340"
+                ],
+                [
+                  "660",
+                  "1000",
+                  "2266",
+                  "2461",
+                  "660",
+                  "1500"
+                ],
+                [
+                  "750",
+                  "1430",
+                  "3266",
+                  "3542",
+                  "820",
+                  "1670"
+                ],
+                [
+                  "880",
+                  "1680",
+                  "4175",
+                  "4531",
+                  "980",
+                  "1870"
+                ],
+                [
+                  "1000",
+                  "1900",
+                  "5060",
+                  "5509",
+                  "1100",
+                  "2100"
+                ]
+              ]
+            },
+            "45": {
+              "alias": "povorotnoe",
+              "name": "поворотное",
+              "debug": "ID:45, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/p.png",
+              "image": "assets/images/windows/pr.png",
+              "data": [
+                [
+                  "500",
+                  "500",
+                  "3278",
+                  "3496",
+                  "490",
+                  "1340"
+                ],
+                [
+                  "660",
+                  "1000",
+                  "4554",
+                  "4853",
+                  "660",
+                  "1500"
+                ],
+                [
+                  "750",
+                  "1430",
+                  "6095",
+                  "6509",
+                  "820",
+                  "1670"
+                ],
+                [
+                  "880",
+                  "1680",
+                  "7222",
+                  "7717",
+                  "980",
+                  "1870"
+                ],
+                [
+                  "1000",
+                  "1900",
+                  "8545",
+                  "9131",
+                  "1100",
+                  "2100"
+                ]
+              ]
+            },
+            "46": {
+              "alias": "povorotno-otkidnoe",
+              "name": "поворотно-откидное",
+              "debug": "ID:46, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/o.png",
+              "image": "assets/images/windows/pl.png",
+              "data": [
+                [
+                  "500",
+                  "500",
+                  "3370",
+                  "3577",
+                  "490",
+                  "1340"
+                ],
+                [
+                  "660",
+                  "1000",
+                  "4899",
+                  "5233",
+                  "660",
+                  "1500"
+                ],
+                [
+                  "750",
+                  "1430",
+                  "6314",
+                  "6739",
+                  "820",
+                  "1670"
+                ],
+                [
+                  "880",
+                  "1680",
+                  "7452",
+                  "7947",
+                  "980",
+                  "1870"
+                ],
+                [
+                  "1000",
+                  "1900",
+                  "8970",
+                  "9568",
+                  "1100",
+                  "2100"
+                ]
+              ]
+            },
+            "47": {
+              "alias": "framuga",
+              "name": "фрамуга",
+              "debug": "ID:47, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/f.png",
+              "image": "assets/images/windows/f.png",
+              "data": [
+                [
+                  "500",
+                  "500",
+                  "2875",
+                  "3059",
+                  "490",
+                  "1340"
+                ],
+                [
+                  "1000",
+                  "660",
+                  "4876",
+                  "5210",
+                  "950",
+                  "1880"
+                ],
+                [
+                  "1430",
+                  "750",
+                  "6440",
+                  "6877",
+                  "1330",
+                  "2450"
+                ],
+                [
+                  "1680",
+                  "880",
+                  "7763",
+                  "8303",
+                  "1450",
+                  "2760"
+                ],
+                [
+                  "1900",
+                  "1000",
+                  "9085",
+                  "9718",
+                  "1750",
+                  "3330"
+                ]
+              ]
+            }
+          }
+        },
+        "41": {
+          "alias": "dvuhstvorchatoe",
+          "name": "двухстворчатое",
+          "debug": "ID:41, Deep:2",
+          "datatype": "section",
+          "group": {
+            "48": {
+              "alias": "gluhoe-povorotnoe",
+              "name": "глухое + поворотное",
+              "debug": "ID:48, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/g-p.png",
+              "image": "assets/images/windows/g-p.png",
+              "data": [
+                [
+                  "1000",
+                  "1000",
+                  "5923",
+                  "6417",
+                  "1050",
+                  "2000"
+                ],
+                [
+                  "1200",
+                  "1300",
+                  "7429",
+                  "8027",
+                  "1240",
+                  "2280"
+                ],
+                [
+                  "1410",
+                  "1500",
+                  "9016",
+                  "9729",
+                  "1490",
+                  "2830"
+                ],
+                [
+                  "1600",
+                  "1680",
+                  "10546",
+                  "11362",
+                  "1630",
+                  "2980"
+                ],
+                [
+                  "1800",
+                  "1800",
+                  "11972",
+                  "12892",
+                  "1720",
+                  "3150"
+                ]
+              ]
+            },
+            "49": {
+              "alias": "gluhoe-povorotno-otkidnoe",
+              "name": "глухое + поворотно-откидное",
+              "debug": "ID:49, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/g-o.png",
+              "image": "assets/images/windows/g-p.png",
+              "data": [
+                [
+                  "1000",
+                  "1000",
+                  "6325",
+                  "6797",
+                  "1050",
+                  "2000"
+                ],
+                [
+                  "1200",
+                  "1300",
+                  "7786",
+                  "8407",
+                  "1240",
+                  "2280"
+                ],
+                [
+                  "1410",
+                  "1500",
+                  "9338",
+                  "10074",
+                  "1490",
+                  "2830"
+                ],
+                [
+                  "1600",
+                  "1680",
+                  "10764",
+                  "11592",
+                  "1630",
+                  "2980"
+                ],
+                [
+                  "1800",
+                  "1800",
+                  "12466",
+                  "13432",
+                  "1720",
+                  "3150"
+                ]
+              ]
+            },
+            "50": {
+              "alias": "povorotnoe-povorotno-otkidnoe",
+              "name": "поворотное + поворотно-откидное",
+              "debug": "ID:50, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/p-o.png",
+              "image": "assets/images/windows/p-p.png",
+              "data": [
+                [
+                  "1000",
+                  "1000",
+                  "8625",
+                  "9200",
+                  "1050",
+                  "2000"
+                ],
+                [
+                  "1200",
+                  "1300",
+                  "10212",
+                  "10960",
+                  "1240",
+                  "2280"
+                ],
+                [
+                  "1410",
+                  "1500",
+                  "12110",
+                  "12972",
+                  "1490",
+                  "2830"
+                ],
+                [
+                  "1600",
+                  "1680",
+                  "13800",
+                  "14778",
+                  "1630",
+                  "2980"
+                ],
+                [
+                  "1800",
+                  "1800",
+                  "15755",
+                  "16859",
+                  "1720",
+                  "3150"
+                ]
+              ]
+            }
+          }
+        },
+        "42": {
+          "alias": "trehstvorchatoe",
+          "name": "трехстворчатое",
+          "debug": "ID:42, Deep:2",
+          "datatype": "section",
+          "group": {
+            "51": {
+              "alias": "gluhoe-povorotno-otkidnoe-gluhoe",
+              "name": "глухое + поворотно откидное + глухое",
+              "debug": "ID:51, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/g-o-g.png",
+              "image": "assets/images/windows/g-p-g.png",
+              "data": [
+                [
+                  "1500",
+                  "1000",
+                  "8016",
+                  "8763",
+                  "1410",
+                  "2450"
+                ],
+                [
+                  "1800",
+                  "1300",
+                  "10189",
+                  "11075",
+                  "1620",
+                  "2850"
+                ],
+                [
+                  "2120",
+                  "1500",
+                  "12374",
+                  "13421",
+                  "2000",
+                  "3400"
+                ],
+                [
+                  "2390",
+                  "1680",
+                  "14352",
+                  "15525",
+                  "2130",
+                  "3570"
+                ],
+                [
+                  "2700",
+                  "1800",
+                  "16675",
+                  "18021",
+                  "2330",
+                  "3900"
+                ]
+              ]
+            },
+            "52": {
+              "alias": "povorotnoe-gluhoe-povorotno-otkidnoe",
+              "name": "поворотное + глухое + поворотно откидное",
+              "debug": "ID:52, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/p-g-o.png",
+              "image": "assets/images/windows/p-g-p.png",
+              "data": [
+                [
+                  "1500",
+                  "1000",
+                  "10350",
+                  "11155",
+                  "1410",
+                  "2450"
+                ],
+                [
+                  "1800",
+                  "1300",
+                  "12604",
+                  "13605",
+                  "1620",
+                  "2850"
+                ],
+                [
+                  "2120",
+                  "1500",
+                  "15123",
+                  "16296",
+                  "2000",
+                  "3400"
+                ],
+                [
+                  "2390",
+                  "1680",
+                  "17365",
+                  "18665",
+                  "2130",
+                  "3570"
+                ],
+                [
+                  "2700",
+                  "1800",
+                  "19953",
+                  "21448",
+                  "2330",
+                  "3900"
+                ]
+              ]
+            },
+            "53": {
+              "alias": "povorotnoe-povorotnoe-povorotno-otkidnoe",
+              "name": "поворотное + поворотное + поворотно-откидное",
+              "debug": "ID:53, Deep:3",
+              "datatype": "section",
+              "preview": "assets/images/windows/preview/p-p-o.png",
+              "image": "assets/images/windows/p-p-p.png",
+              "data": [
+                [
+                  "1500",
+                  "1000",
+                  "12650",
+                  "13582",
+                  "1410",
+                  "2450"
+                ],
+                [
+                  "1800",
+                  "1300",
+                  "15042",
+                  "16158",
+                  "1620",
+                  "2850"
+                ],
+                [
+                  "2120",
+                  "1500",
+                  "17998",
+                  "19309",
+                  "2000",
+                  "3400"
+                ],
+                [
+                  "2390",
+                  "1680",
+                  "20390",
+                  "21827",
+                  "2130",
+                  "3570"
+                ],
+                [
+                  "2700",
+                  "1800",
+                  "23230",
+                  "24886",
+                  "2330",
+                  "3900"
+                ]
+              ]
+            }
+          }
+        },
+        "43": {
+          "alias": null,
+          "name": null,
+          "debug": "ID:43, Deep:2",
+          "datatype": "",
+          "preview": null,
+          "image": null,
+          "data": "1"
+        }
+      }
+    },
+    {
+      "alias": "balcony-PVC",
+      "name": "Балконы из ПВХ",
+      "debug": "ID:39, Deep:1",
+      "datatype": "multiple",
+      "data": {
+        "56": {
+          "alias": "balkon-1",
+          "name": "Балкон 1",
+          "debug": "ID:56, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/gu-p-g-o-g-ug.png",
+          "image": "assets/images/windows/gu-p-g-p-g-ug.jpg",
+          "data": "44,48,49,44"
+        },
+        "57": {
+          "alias": "balkon-2",
+          "name": "Балкон 2",
+          "debug": "ID:57, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/gu-p-g-o-g.png",
+          "image": "assets/images/windows/gu-p-g-p-g.jpg",
+          "data": "44,48,49"
+        },
+        "58": {
+          "alias": "balkon-3",
+          "name": "Балкон 3",
+          "debug": "ID:58, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/p-g-o-g.png",
+          "image": "assets/images/windows/p-g-p-g.jpg",
+          "data": "48,49"
+        },
+        "59": {
+          "alias": "balkon-4",
+          "name": "Балкон 4",
+          "debug": "ID:59, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/p-g-g-o-g-p-g.png",
+          "image": "assets/images/windows/p-g-g-p-g-p-g.jpg",
+          "data": "48,51,48"
+        },
+        "60": {
+          "alias": "balkon-5",
+          "name": "Балкон 5",
+          "debug": "ID:60, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/g-o-ug-p-ug.png",
+          "image": "assets/images/windows/g-p-ug-p-ug.jpg",
+          "data": "49,44,45,44"
+        },
+        "61": {
+          "alias": "balkon-6",
+          "name": "Балкон 6",
+          "debug": "ID:61, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/g-pu-u-o.png",
+          "image": "assets/images/windows/g-pu-g-p.jpg",
+          "data": "48,49"
+        },
+        "62": {
+          "alias": "balkon-7",
+          "name": "Балкон 7",
+          "debug": "ID:62, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/g-o-g-up-ug.png",
+          "image": "assets/images/windows/g-p-g-up-ug.jpg",
+          "data": "51,45,44"
+        }
+      }
+    },
+    {
+      "alias": "balcony-aluminum",
+      "name": "Балконы из Алюминия",
+      "debug": "ID:63, Deep:1",
+      "datatype": "section",
+      "cols": [
+        [
+          "width",
+          "Ширина",
+          "мм",
+          ""
+        ],
+        [
+          "height",
+          "Высота",
+          "мм",
+          ""
+        ],
+        [
+          "price[Provedal]",
+          "Provedal",
+          "руб",
+          "system"
+        ],
+        [
+          "kit[Provedal]",
+          "Да",
+          "Комплектация",
+          ""
+        ],
+        [
+          "kit[none]",
+          "Нет",
+          "Без комплекта",
+          ""
+        ]
+      ],
+      "data": {
+        "64": {
+          "alias": null,
+          "name": null,
+          "debug": "ID:64, Deep:2",
+          "datatype": "",
+          "preview": null,
+          "image": null,
+          "data": [
+            [
+              "500",
+              "1000",
+              "1950",
+              "1400",
+              ""
+            ],
+            [
+              "680",
+              "1150",
+              "2400",
+              "1700",
+              ""
+            ],
+            [
+              "810",
+              "1300",
+              "2800",
+              "1950",
+              ""
+            ],
+            [
+              "910",
+              "1450",
+              "3350",
+              "2150",
+              ""
+            ],
+            [
+              "1000",
+              "1600",
+              "3770",
+              "2400",
+              ""
+            ]
+          ]
+        },
+        "65": {
+          "alias": "razdvizhka-iz-4-chastej",
+          "name": "раздвижка из 4 частей",
+          "debug": "ID:65, Deep:2",
+          "datatype": "section",
+          "preview": "assets/images/windows/preview/s-g-s-s.jpg",
+          "image": "assets/images/windows/s-g-s-s.jpg",
+          "data": [
+            [
+              "2000",
+              "1000",
+              "8600",
+              "1600",
+              ""
+            ],
+            [
+              "2250",
+              "1200",
+              "10000",
+              "1800",
+              ""
+            ],
+            [
+              "2500",
+              "1360",
+              "11300",
+              "2000",
+              ""
+            ],
+            [
+              "2750",
+              "1490",
+              "12450",
+              "2200",
+              ""
+            ],
+            [
+              "3000",
+              "1600",
+              "13600",
+              "2400",
+              ""
+            ]
+          ]
+        },
+        "66": {
+          "alias": "dvojnaya-razdvizhka-iz-chetyreh-chastej",
+          "name": "Двойная раздвижка из четырех частей",
+          "debug": "ID:66, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/s-g-s-s-s-g-s-s.jpg",
+          "image": "assets/images/windows/s-s-s-s-s-s-s-s.jpg",
+          "data": "65,65"
+        },
+        "67": {
+          "alias": "balkon-gluhoe-razdvizhka-gluhoe",
+          "name": "Балкон (глухое + раздвижка + глухое)",
+          "debug": "ID:67, Deep:2",
+          "datatype": "multiple",
+          "preview": "assets/images/windows/preview/gu-s-g-s-s-ug.jpg",
+          "image": "assets/images/windows/gu-s-s-s-s-ug.jpg",
+          "data": "64,65,64"
+        }
       }
     }
-  }
-]
+  ]
+}
