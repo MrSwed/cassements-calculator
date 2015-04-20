@@ -16,7 +16,7 @@
     .calculator({
     "dataUrl": "/ajax.php?id="+calcSourceID+"&source=snippet&name=calculator&formatIn=json",
     "price": $(".workarea .price span")
-//    ,"debug": 3
+//    ,"debug": 7
     }).on("inited",function(){
      $(this).closest("form").css({"height":"auto"}).animate({"opacity":1},500);
      $(this).closest(".calculator").removeClass("loading");

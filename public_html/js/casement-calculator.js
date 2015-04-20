@@ -339,7 +339,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._parameters = function(p) {
     // инициализация выбора размеров и параметров
-    var dlevel=2;
+    var dlevel=8;
     var $s = $(_t._stor.sizes);
     var _d=_t._data(_t._val(_t._stor.form.id));
     _t._log(dlevel,"_parameters: call (p,_d)",p,_d,_t._stor.form.id);
@@ -401,8 +401,9 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          var _vS = $("[name='"+dim+"']",$s).siblings(".slider");
          if (_vS.size()) {
           // проверка вертикального слайдера, установка минимальных макс-мин 
-          if (_dimP.minmax.max > _vS.slider("option","max")) _dimP.minmax.max = _vS.slider("option","max");
-          if (_dimP.minmax.min < _vS.slider("option","min")) _dimP.minmax.min = _vS.slider("option","min");
+          _t._log(dlevel,'_parameters Multi height sets (_dimP.minmax,) _vS.slider("option","maxmax")',_dimP.minmax,{"max":_vS.slider("option","max"),"min":_vS.slider("option","min")});
+          ((_dimP.minmax.max > _vS.slider("option","max")) && (_dimP.minmax.max = _vS.slider("option","max"))) || _vS.slider("option","max",_dimP.minmax.max );
+          ((_dimP.minmax.min < _vS.slider("option","min")) && (_dimP.minmax.min = _vS.slider("option","min"))) || _vS.slider("option","min",_dimP.minmax.min );
          } else {
           _t._initDimension(_dimP);
          }
@@ -429,7 +430,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._cols = function(tabI) {
      // определение колонок данных секции, номер (строка), alias - 1ст, название - 2ст, ед изм - 3ст
-    var dlevel=5;
+    var dlevel=1;
     var cols=_t._stor.data[tabI].cols;
     //var _al = ["alias","name","unit"];
     if (!cols._index) $.each(cols,function(k,item){
@@ -490,9 +491,11 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     return !isNaN(v)?parseFloat(v.toFixed(d)):0;
    };
    _t._calcToMatch = function(Bval,BScope,SScope){
+    var dlevel=8;
     // получение соответствующего значения из искомого диапазона SScope  (цены)
     // на основе известной точки Bval заданного диапазона BScope (площадь)
     var _scope = _t._getRange(Bval,BScope);                                          // определение точек, между которыми находится определяющее значение
+    _t._log(dlevel,"_calcToMatch Start: (Bval,BScope,SScope,_scope)",Bval,BScope,SScope,_scope);
     var _range = _t._flFix(BScope[_scope[1]] - BScope[_scope[0]]);                   // определение диапазона между заданными точками
     var _c = {
      "BDelta"       : _t._flFix(Bval - BScope[_scope[0]]),                           // разница между минимальной точкой и текущим значением
@@ -502,7 +505,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
      "IDelta_range" : _t._flFix(( SScope[_scope[1]] - SScope[_scope[0]] ) / _range)  // шаг соответственно известному диапазону 
     };
     _c.result = _c.first + (_c.BDelta * _c.IDelta_range);                            // искомое значение в нужном диапазоне
-    _t._log(2,"_calcToMatch (Bval,BScope,SScope,_scope,_range,_c)",Bval,BScope,SScope,_scope,_range,_c);
+    _t._log(dlevel,"_calcToMatch (Bval,BScope,SScope,_scope,_range,_c)",Bval,BScope,SScope,_scope,_range,_c);
     return _c.result;
    };
    _t._calcSection = function(_d,fData,dim) {
