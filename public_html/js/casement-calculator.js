@@ -148,12 +148,14 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
      _t._log(dlevel+1, "_type: init type control control for \"" + _t._stor.data[tabI].datatype + "\" at ", "index check: " + o.index() + " " + tabI, "_t._stor.data[tabI]", _t._stor.data[tabI], "$type,$tg", $type, $tg);
      $tg.html("");
      $.each(_t._stor.data[o.index()].data, function (id1, item1) {
+       if (!(item1.name + item1.alias)) return 1; // Пропускаем неопубликованные
       if (item1.group) {
        $tg.addClass("casement");
        _t._log(dlevel, "_type: twolevels structure: ");
        var $gr = $("<div/>").addClass("group").attr("title", (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)).appendTo($tg);
        var $gv = $("<div/>").addClass("variants").appendTo($gr);
        $.each(item1.group, function (id, item) {
+        if (!(item.name + item.alias)) return 1; // Пропускаем неопубликованные
         $("<a>").prop({"href": item.image,"title": (_t._debug(3) ? id + ": " : '') + (item.title || item.name)}).append($("<img/>").attr({
          "src": item.preview, "alt": item.title || item.name
         }).load(function () {
