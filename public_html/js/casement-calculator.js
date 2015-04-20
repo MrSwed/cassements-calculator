@@ -4,7 +4,8 @@
  * Required
  *  jQuery tabs extender like https://gist.github.com/MrSwed/4246691aa788058a9934
  *  jQuery class extender https://gist.github.com/MrSwed/0a837b3acbfbf8cfb19e
- *  
+ *  number_format https://gist.github.com/MrSwed/fb740550b60d07ab7449
+ *  jQuery serializeObject https://github.com/macek/jquery-serialize-object
  */
 $.fn.extend ({
  "calculator" : function(p){
