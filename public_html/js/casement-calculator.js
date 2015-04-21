@@ -6,6 +6,7 @@
  *  jQuery class extender https://gist.github.com/MrSwed/0a837b3acbfbf8cfb19e
  *  number_format https://gist.github.com/MrSwed/fb740550b60d07ab7449
  *  jQuery serializeObject https://github.com/macek/jquery-serialize-object
+ *  jQuery unparam https://github.com/MrSwed/jquery.unparam
  */
 $.fn.extend ({
  "calculator" : function(p){
@@ -24,7 +25,7 @@ $.fn.extend ({
     "data": false,  // данные кунструкций или ссылка, аналогично dataUrl 
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
-    "showurl":false // Показать ссылку на выбранный вариант
+    "showUrl":true // Показать ссылку на выбранный вариант
     //"texts" : {warning:""}
    },p);
    _t._stor = p;
@@ -99,8 +100,8 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
      }
     });
     // обработчик событий - расчет
-    $(_t).on("change","[name]",function(e){
-     var _r = _t._calc();
+    $(_t).on("change","[name]",function(e,init){
+     var _r = _t._calc(init);
      _t._val("price",_r);
      _t._stor.price && $(_t._stor.price).html(number_format(_r,0));
      _t._log(dlevel+2,"Change triggered at :",e,"result "+_r,"Target: ",_t._stor.price);
@@ -108,12 +109,6 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
       $("[type='radio']:first",this).attr("checked",true);
     });
-    if (_t._stor.texts && _t._stor.texts.warning) {
-     $(_t._stor.warning=$(".warning", _t._stor.params)).size() ||
-        (_t._stor.warning = $("<div/>").addClass("warning")
-            .html(_t._stor.texts.warning).appendTo(_t._stor.params));
-     _t._log(dlevel+1,"Init warning: ",_t._stor.texts.warning);
-    }
     $.each(_t._stor.form,function(a,item){
      var v = item.value || "";
      var n = item.name || item.toString();
@@ -132,6 +127,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     return v ;
    };
    _t._err = function(m) {console.log(m)||alert(m); };
+   _t._itemUrl = function(item) { return (item.url && item.url.replace(location.pathname,'')) || item.alias || item.id; };
    _t._type = function(o) {
     var dlevel=1;
     var $type = $(_t._stor.type,o);
@@ -157,13 +153,13 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        $.each(item1.group, function (id, item) {
         if (!(item.name + item.alias)) return 1; // Пропускаем неопубликованные
         $("<a>").prop({"href": item.image,"title": (_t._debug(3) ? id + ": " : '') + (item.title || item.name)})
-         .attr({"data-url":(item.url && item.url.replace(location.pathname,'')) || item.alias || item.id})
+         .attr({"data-url":_t._itemUrl(item)})
          .append($("<img/>").attr({"src": item.preview, "alt": item.title || item.name
         }).load(function () {
          var $gr = $(this).closest(".group");
          _t._log(dlevel+2, "_type: loaded ", this, this.width, $gr.width());
          if ($gr.width() < this.width) $gr.width(this.width + ($gv.outerWidth() - $gv.width()));
-        })).appendTo($gv).on("init click", function (e) {
+        })).appendTo($gv).on("init click", function (e,init) {
          e.preventDefault();
          var $a = $(this);
          var $i = $a.find("[src]");
@@ -175,8 +171,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
           $a.addClass("active");
           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
           _t._val(_t._stor.form.id, id);
-          _t._parameters();
-          if (_t._stor.showurl) location.hash = $a.attr("data-url");
+          _t._parameters(init);
          }
         })
        });
@@ -185,9 +180,9 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        $tg.addClass("casesets");
        _t._log(dlevel+2, "_type: init one level structure", o.index(), o);
        $("<a>").prop({"href": item1.image, "title": (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)})
-        .attr({"data-url":(item1.url && item1.url.replace(location.pathname,'')) || item1.alias || item1.id})
+        .attr({"data-url":_t._itemUrl(item1)})
         .append($("<img/>").attr({
-        "src": item1.preview, "alt": item1.title || item1.name})).appendTo($tg).on("init click", function (e) {
+        "src": item1.preview, "alt": item1.title || item1.name})).appendTo($tg).on("init click", function (e,init) {
         e.preventDefault();
         var $a = $(this);
         var $i = $a.find("[src]");
@@ -198,13 +193,11 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          $a.addClass("active");
          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
          _t._val(_t._stor.form.id, id1);
-         _t._parameters();
-         if (_t._stor.showurl) location.hash = $a.attr("data-url");
+         _t._parameters(init);
         }
        });
       }
-     });
-     
+     });     
     }
     return $type;
    };
@@ -225,20 +218,16 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
         $tHi.size() || ($tHi = $("<a>").attr({"href": location.pathname+k.alias}).text(k.name).appendTo($tH));
         var $tCi=$(">*",$tC).eq(i);
         $tCi.size() || ($tCi = $("<div>").appendTo($tC)).addClass(k.alias.replace("#",""));
-        //// init control function for tab content
-        //(!k.function && k.datatype && typeof _t._stor.control[k.datatype]=="function" && (k.function = _t._stor.control[k.datatype])) ||
-        // (typeof k.function == "string" && typeof _t._stor.control[k.function]=="function" && (k.function = _t._stor.control[k.function]));
-        //(typeof k.function == "function" && k.function($tCi)) || _t._err("Control function error for "+ k.alias);
        }
       })) || _t._err("data error");
-      return $t.on("change",function(e,p){
+      return $t.on("change",function(e,init){
        var $active = $(".headers > .active",this).index();
        var $type = _t._type($(".contents >* ",this).eq($active));
        var $a = $(".active",$type);
        $a.size() || ($a = $("[data-url*='"+location.hash.replace("#",'')+"']:first"));
        $a.size() || ($a = $("a:first",$type));
        _t._log(dlevel + 3,"Tabs changed (this, e,p,$type,$a,$active.location.hash)",this,e,p,$type,$a,$active,location.hash.replace("#",''));
-       $a.trigger("click");
+       $a.trigger("click",[init]);
       }).tabs({"headers":$tH,"contents":$tC,"active":location.hash.replace(/\/.*$/,'')});
       break;
      case p=="opened":
@@ -346,12 +335,12 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     });
     $c.data("id",_t._val(_t._stor.form.id));
    };
-   _t._parameters = function(p) {
+   _t._parameters = function(init) {
     // инициализация выбора размеров и параметров
     var dlevel=8;
     var $s = $(_t._stor.sizes);
     var _d=_t._data(_t._val(_t._stor.form.id));
-    _t._log(dlevel,"_parameters: call (p,_d)",p,_d,_t._stor.form.id);
+    _t._log(dlevel,"_parameters: call (p,_d)",_d,_t._stor.form.id);
     $s.size() || (($s = $("<div/>").addClass($s.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$s));
     $s.html("");
     var $dm=["height","width"];
@@ -434,7 +423,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       });
      break;
     }
-    $("input:first",$s).trigger("change");
+    $("input:first",$s).trigger("change",[init]);
     return _t;
    };
    _t._cols = function(tabI,key) {
@@ -551,8 +540,8 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     _t._log(dlevel," Calc section (S,_cI,_cAr,_c)",S,_cI,_cAr,_c);
     return _c.baseprice + _c.kitprice + _c.montage; 
    };
-   _t._calc = function() {
-    var dlevel=2;
+   _t._calc = function(init) {
+    var dlevel=9;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._stor.form.id));
     var reference = _t._stor.reference.price;
@@ -579,7 +568,13 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     }
     _result = _t._flFix(_result);
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
-        "form data:",fData,"data",_d,"L",L,"_result",_result);
+        "form data:",fData,"data",_d,"L",L,"_result",_result,"p",p);
+    if (_t._stor.showUrl && !init) {
+     location.hash = _t._itemUrl(_d) + "?"+$.param($.extend({}, $.unparam(location.hash.split('?',2)[1]),
+       f.filter(function(){return $(this).val() && ($.inArray($(this).attr("name").replace(/\[.*$/,''),
+                      "height,width,id,system,kit,montage".split(","))!=-1)}).serializeObject()
+     ))
+    }
     return _result;
    };
    _t._counts = function(n,v) {
