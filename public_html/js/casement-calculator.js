@@ -21,8 +21,8 @@ $.fn.extend ({
     "template": ".template",
     "preview": ".preview",
     "sizes":".sizes",
-    "reference":false, // общие цены на монтаж, шаг,  или ссылка, аналогично dataUrl 
-    "data": false,  // данные кунструкций или ссылка, аналогично dataUrl 
+    "reference":false, // справочник. общие цены на монтаж, шаг  
+    "data": false,  // данные конструкций  
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
     "showUrl":true, // Показать ссылку на выбранный вариант
@@ -603,6 +603,36 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._minmax = function(ar,c) {
      return {"max":Math.max.apply(null, ar),"min":Math.min.apply(null, ar)};
+   };
+   _t.report = function(){
+    var dlevel=12;
+    var _r = _t._stor.report;
+    if (!_r || !_r.tpl ) return false;
+    _r._out = _r.tpl.toString();
+    $.each(_t._stor.initVal,function(k,v){ // по собранным данным
+     _t._log(dlevel,"Report: initVal set",k,v);
+     _r._out = _r._out.replace("<%"+k+"%>",typeof v == "object" ? $.map(v,function(v) {return v;}).join(","):v);
+    });
+    var _d=_t._data(_t._val(_t._stor.form.id));
+    $.each(_d,function(k,v){  // данные элемента (тфьубгкд
+     _t._log(dlevel,"Report: data set ",k,v);
+     var _v = v;
+     if (k=="url") _v = location.protocol+"//"+location.host+v+($.param(_t._stor.initVal));
+     _r._out = _r._out.replace("<%"+k+"%>",!_v?_v: (typeof _v == "object" ? $.map(_v,function(_v) {return _v;}).join(","):_v));
+    });
+    _r._out = _r._out.replace("<%price%>",number_format(_t._val("price")));
+     _t._log(dlevel, "Report: _r.out ",_r.out,_d);
+    if (_r.out && $(_r.out).size()) {
+     switch (true) {
+      case $(_r.out).is(":not([type='chechbox']),:not([type='radio']),:not([type='password']),textarea,:not(input),:not(select)"):
+       $(_r.out).val(_r._out);
+       break;
+      default:
+       $(_r.out).html(_r._out);
+       break;
+     }
+    }
+    return _r._out;
    };
    _t.init();
   });
