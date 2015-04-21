@@ -13,33 +13,34 @@
   var calcSourceID=37;
   $(function(){
    var _cp = $(".form.calculator").addClass("loading");
-   var _c = $(".workarea",_cp)
-    .calculator({
+   var _c = $(".workarea",_cp);
+   _c.calculator({
     "dataUrl": "/ajax.php?id="+calcSourceID+"&source=snippet&name=calculator&formatIn=json",
     "price": $(".workarea .price span"),
     "report":{"tpl":"\
-Конструкция:      <%name%>\
-url:              <%url%>\
-Оконная система:  <%system%>\
-Комплектующие:    <%kit%>\
-Монтаж:           <%montage%>\
-Ширина:           <%width%>\
-Высота:           <%height%>\
-ID Секций:        <%id%>\
-\
-Цена:             <%price%>\
-    "
+Конструкция:      <%name%>\n\
+url:              <%url%>\n\
+Оконная система:  <%system%>\n\
+Комплектующие:    <%kit%>\n\
+Монтаж:           <%montage%>\n\
+Ширина:           <%width%>\n\
+Высота:           <%height%>\n\
+ID Секций:        <%id%>\n\
+\n\
+Цена:             <%price%>руб.\n\
+","out":$("[name='data']",_cp)
      }
 //    ,"showUrl":false
-//    ,"debug": 10
+//    ,"debug": 12
     }).on("inited",function(){
      $(this).closest("form").css({"height":"auto"}).animate({"opacity":1},500);
      $(this).closest(".calculator").removeClass("loading");
     });
    $(".parameters [type='button']",_c).click(function(){
-     $(".modal").modal("open",{
+     $(".modal",_cp).modal("open",{
       "afterOpen":function(){
        $("input:first",this).focus();
+       _c[0].report();
       }
      })
    });
@@ -53,7 +54,6 @@ ID Секций:        <%id%>\
     var m = $(".calculator .modal").wrapInner("<div class='innerm'/>");
     m.find(".close").remove();
     var cl = m.find(".innerm").detach(); 
-    console.log(fData,cl);
     m.load(f.attr("action")+" .calcform ",fData,function(data){
      var mess = $(data).find(".message");
      if (mess.size()) return mess;
@@ -70,7 +70,6 @@ ID Секций:        <%id%>\
  <div class="workarea">
   <input type="hidden" name="id" value="" eform="::0::" value=""/>
   <input type="hidden" name="price" value="" eform="::0::" value=""/>
-  <input type="hidden" name="data" value="" eform="::0::" value=""/>
   <div class="template" >
    <div class="type">
     <div class="caption">Выберите тип окна</div>
@@ -91,6 +90,7 @@ ID Секций:        <%id%>\
   <label for="name" class=" required">Ваше имя <span class="required-s">*</span>:<br/><input type="text" id="name" value="[+name+]" name="name" placeholder="Ваше имя" eform="Ваше имя::1"></label>
   <label for="phone" class="">телефон <span class="required-s">*</span>:<br/><input type="text" id="phone" value="[+phone+]" name="phone" placeholder="телефон"  eform="телефон::1" /></label>
   <label for="notes" class="">Комментарии<br/><textarea id="notes" name="notes" placeholder="Вопрос" cols="60" rows="5" eform="Комментарии::0">[+notes+]</textarea></label>
+  <label for="data" class="">Выбранный вариант<br/><textarea id="data" name="data" placeholder="" cols="60" rows="5" eform="Комментарии::0">[+data+]</textarea></label>
   <input type="submit" value="Отправить">
  </div>
 </form>

@@ -609,7 +609,8 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     var _r = _t._stor.report;
     if (!_r || !_r.tpl ) return false;
     _r._out = _r.tpl.toString();
-    $.each(_t._stor.initVal,function(k,v){ // по собранным данным
+    var fData = $.extend({},_t._stor.initVal,$("[name]", _t).serializeObject());
+    $.each(fData,function(k,v){ // по собранным данным
      _t._log(dlevel,"Report: initVal set",k,v);
      _r._out = _r._out.replace("<%"+k+"%>",typeof v == "object" ? $.map(v,function(v) {return v;}).join(","):v);
     });
