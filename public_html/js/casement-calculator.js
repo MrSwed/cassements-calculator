@@ -23,7 +23,8 @@ $.fn.extend ({
     "reference":false, // общие цены на монтаж, шаг,  или ссылка, аналогично dataUrl 
     "data": false,  // данные кунструкций или ссылка, аналогично dataUrl 
     "form":{"id":"id","width":"width","height":"height","price":"price"},
-    "price":$(".price",_t)//, // price output
+    "price":$(".price",_t), // price output
+    "showurl":false // Показать ссылку на выбранный вариант
     //"texts" : {warning:""}
    },p);
    _t._stor = p;
@@ -175,7 +176,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
           _t._val(_t._stor.form.id, id);
           _t._parameters();
-          location.hash = $a.attr("data-url");
+          if (_t._stor.showurl) location.hash = $a.attr("data-url");
          }
         })
        });
@@ -198,7 +199,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
          _t._val(_t._stor.form.id, id1);
          _t._parameters();
-         location.hash = $a.attr("data-url");
+         if (_t._stor.showurl) location.hash = $a.attr("data-url");
         }
        });
       }
@@ -234,7 +235,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        var $active = $(".headers > .active",this).index();
        var $type = _t._type($(".contents >* ",this).eq($active));
        var $a = $(".active",$type);
-       $a.size() || ($a = $("[data-url*='"+location.hash.replace("#",'')+"']"));
+       $a.size() || ($a = $("[data-url*='"+location.hash.replace("#",'')+"']:first"));
        $a.size() || ($a = $("a:first",$type));
        _t._log(dlevel + 3,"Tabs changed (this, e,p,$type,$a,$active.location.hash)",this,e,p,$type,$a,$active,location.hash.replace("#",''));
        $a.trigger("click");
@@ -438,7 +439,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._cols = function(tabI,key) {
      // определение колонок данных секции, номер (строка), alias - 1ст, название - 2ст, ед изм - 3ст
-    var dlevel=7;
+    var dlevel=2;
     var cols=_t._stor.data[tabI].cols;
     //var _al = ["alias","name","unit"];
       _t._log(dlevel+2,"_COLS Start: ","tabI = "+tabI,"cols",cols);
