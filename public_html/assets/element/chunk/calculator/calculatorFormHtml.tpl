@@ -49,7 +49,7 @@ ID Секций:        <%id%>\n\
     var f = $(this);
     var fData = {};
     $.each(f.serializeObject(),function(k,v){
-     if ($.inArray(k,"formid,email,id,notes,phone,price,veridata,name".split(","))!=-1) fData[k]=v;
+     if ($.inArray(k,"formid,email,id,notes,phone,price,veridata,name,data".split(","))!=-1) fData[k]=v;
     });
     var m = $(".calculator .modal").wrapInner("<div class='innerm'/>");
     m.find(".close").remove();
