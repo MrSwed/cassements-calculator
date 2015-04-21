@@ -31,7 +31,7 @@ ID Секций:        <%id%>\
     "
      }
 //    ,"showUrl":false
-//    ,"debug": 9
+//    ,"debug": 10
     }).on("inited",function(){
      $(this).closest("form").css({"height":"auto"}).animate({"opacity":1},500);
      $(this).closest(".calculator").removeClass("loading");

@@ -26,7 +26,7 @@ $.fn.extend ({
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
     "showUrl":true, // Показать ссылку на выбранный вариант
-    "initVal": location.hash.split('?',2)[1]?$.unparam(location.hash.split('?',2)[1]):false //  Параметры инициализации по умолчанию 
+    "initVal": location.hash.split('?',2)[1]?$.unparam(location.hash.split('?',2)[1]):{} //  Параметры инициализации по умолчанию 
     //"texts" : {warning:""}
    },p);
    _t._stor = p;
@@ -107,9 +107,6 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
      _t._stor.price && $(_t._stor.price).html(number_format(_r,0));
      _t._log(dlevel+2,"Change triggered at :",e,"result "+_r,"Target: ",_t._stor.price);
     });
-    $(".radio:has([type='radio'])",_t).filter(":not(:has([type='radio']:checked))").each(function(){
-      $("[type='radio']:first",this).attr("checked",true);
-    });
     $.each(_t._stor.form,function(a,item){
      var v = item.value || "";
      var n = item.name || item.toString();
@@ -146,7 +143,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
      $tg.html("");
      $.each(_t._stor.data[o.index()].data, function (id1, item1) {
        if (!(item1.name + item1.alias)) return 1; // Пропускаем неопубликованные
-      if (item1.group) {
+      if (item1.group) { // два уровня todo:модернизировать в соответствии с новой структурой данных
        $tg.addClass("casement");
        _t._log(dlevel, "_type: twolevels structure: ");
        var $gr = $("<div/>").addClass("group").attr("title", (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)).appendTo($tg);
@@ -160,7 +157,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          var $gr = $(this).closest(".group");
          _t._log(dlevel+2, "_type: loaded ", this, this.width, $gr.width());
          if ($gr.width() < this.width) $gr.width(this.width + ($gv.outerWidth() - $gv.width()));
-        })).appendTo($gv).on("init click", function (e,init) {
+        })).appendTo($gv).on("init click", function (e,init) { // обработка нажатия на изображение просмотра - смена параметров
          e.preventDefault();
          var $a = $(this);
          var $i = $a.find("[src]");
@@ -172,19 +169,19 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
           $a.addClass("active");
           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
           _t._val(_t._stor.form.id, id);
-          _t._parameters(_t._stor.initVal? _t._stor.initVal:false);
-          if (_t._stor.showUrl && !init && !_t._stor.initVal) location.hash = $a.attr("data-url");
+          _t._parameters(true);
+          if (_t._stor.showUrl && !init && !Object.keys(_t._stor.initVal).length) location.hash = $a.attr("data-url");
          }
         })
        });
        $("img:first", $gv).trigger("init");
-      } else {
+      } else { // один уровень
        $tg.addClass("casesets");
        _t._log(dlevel+2, "_type: init one level structure", o.index(), o);
        $("<a>").prop({"href": item1.image, "title": (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)})
         .attr({"data-url":_t._itemUrl(item1)})
-        .append($("<img/>").attr({
-        "src": item1.preview, "alt": item1.title || item1.name})).appendTo($tg).on("init click", function (e,init) {
+        .append($("<img/>").attr({ "src": item1.preview, "alt": item1.title || item1.name}))
+        .appendTo($tg).on("init click", function (e,init) { // обработка нажатия на изображение просмотра - смена параметров
         e.preventDefault();
         var $a = $(this);
         var $i = $a.find("[src]");
@@ -195,8 +192,8 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          $a.addClass("active");
          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
          _t._val(_t._stor.form.id, id1);
-         _t._parameters(_t._stor.initVal? $.unparam(_t._stor.initVal):false);
-         if (_t._stor.showUrl && !init && !_t._stor.initVal) location.hash = $a.attr("data-url");
+         _t._parameters(true);
+         if (_t._stor.showUrl && !init && !Object.keys(_t._stor.initVal).length) location.hash = $a.attr("data-url");
         }
        });
       }
@@ -299,7 +296,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     });
     return _s;
    };
-   _t._choice = function(cols,arr){
+   _t._choice = function(cols,init,arr){
     // Построение выбора параметров
     dlevel = 8;
     var $c = $(_t._stor.choice);
@@ -341,13 +338,12 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._parameters = function(init) {
     // инициализация выбора размеров и параметров
-    var dlevel=1;
+    var dlevel=10;
     var $s = $(_t._stor.sizes);
     var _d=_t._data(_t._val(_t._stor.form.id));
     _t._log(dlevel,"_parameters: call (p,_d)",_d,_t._stor.form.id);
     $s.size() || (($s = $("<div/>").addClass($s.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$s));
     $s.html("");
-    var InitVal = init || {};
     var $dm=["height","width"];
     var tabI = _t._tabs("opened");
     var cols=_t._cols(tabI);
@@ -356,15 +352,16 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       //var colsT = ["alias","name","dimensions","input"];
       _t._log(dlevel+1,"Sizes Data:",_t._val(_t._stor.form.id),_d,"Tab: ",tabI,_t._stor.data[tabI],cols);
       // параметры выбора
-      _t._choice(cols);
+      _t._choice(cols,init);
       $.each($dm,function(i,dim){
        // определяем поля ввода и слайдеры для каждого измерения 
        _d.atad || (_d.atad={});
        if (!_d.atad[dim]) _d.atad[dim] = _t._getDataCol(_d.data,cols._index[dim]);
        var _dCol = _d.atad[dim];
        var $minmax = _t._minmax(_dCol);
-       InitVal[dim] || (InitVal[dim] = _dCol[Math.round(_dCol.length/2)]);
-       (InitVal[dim] > $minmax.max || InitVal[dim] < $minmax.min) && (InitVal[dim] = _dCol[Math.round(_dCol.length/2)]);
+       _t._stor.initVal[dim] || (_t._stor.initVal[dim] = _dCol[Math.round(_dCol.length/2)]);
+       _t._stor.initVal[dim] && typeof _t._stor.initVal[dim] == "object" && (_t._stor.initVal[dim] = _t._stor.initVal[dim][0]);
+       (_t._stor.initVal[dim] > $minmax.max || _t._stor.initVal[dim] < $minmax.min) && (_t._stor.initVal[dim] = _dCol[Math.round(_dCol.length/2)]);
        $dm[dim]=_t._initDimension({
             "obj":$s,
             "name":dim,
@@ -372,10 +369,10 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
             "orientation":dim=="height"?"vertical":"horizontal",
             "caption":cols[dim][0]+', '+cols[dim][1],
             "step":parseInt(_t._stor.reference.step),
-            "value":InitVal[dim]
+            "value":_t._stor.initVal[dim]
            });
+      _t._log(dlevel+1,"_parameters inited",$s,"Inputs: ",$dm,"data","dim",dim,_d,"_t._stor.initVal",_t._stor.initVal);
       });
-      _t._log(dlevel+1,"_parameters inited",$s,"Inputs: ",$dm,"data",_d,"InitVal",InitVal);
      break;
      case "string": // datatype == multiple
       _d._complect || (_d._complect = _d.data.split(","));
@@ -394,7 +391,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
         if (!_segment.atad[dim]) _segment.atad[dim] = _t._getDataCol(_segment.data,cols._index[dim]);
         var _dCol = _segment.atad[dim];
         var $minmax = _t._minmax(_dCol);
-        var slVal = (typeof InitVal[dim] =="object")?InitVal[dim][i] : InitVal[dim] || _dCol[Math.round(_dCol.length/2)]; 
+        var slVal = ((typeof _t._stor.initVal[dim] =="object")?_t._stor.initVal[dim][i] : _t._stor.initVal[dim]) || _dCol[Math.round(_dCol.length/2)]; 
         (slVal > $minmax.max || slVal < $minmax.min) && (slVal = _dCol[Math.round(_dCol.length/2)]);
         var _dimP = {
          "obj":$s,
@@ -406,7 +403,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          "step":parseInt(_t._stor.reference.step),
          "value":slVal
         };
-        _t._log(dlevel+1,'_parameters Multi (dim,_dCol,InitVal,$minmax)',dim,_dCol,InitVal,init,$minmax,slVal );
+        _t._log(dlevel+1,'_parameters Multi (dim,_dCol,_t._stor.initVal,$minmax)',dim,_dCol,_t._stor.initVal,init,$minmax,slVal );
         if (dim=="height") {
          var _vS = $("[name='"+dim+"']",$s).siblings(".slider");
          if (_vS.size()) {
@@ -426,7 +423,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
         }
        });
       });
-      _t._choice(cols);
+      _t._choice(cols,init);
       $("label.width",$s).each(function(){
        var _s = $(".slider",this);
        var _sMnx = _s.slider("option","max");
@@ -435,7 +432,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       });
      break;
     }
-    $("input:first",$s).trigger("change",[!!init]);
+    $("input:first",$s).trigger("change",[init]);
     return _t;
    };
    _t._cols = function(tabI,key) {
