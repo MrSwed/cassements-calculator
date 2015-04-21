@@ -16,8 +16,22 @@
    var _c = $(".workarea",_cp)
     .calculator({
     "dataUrl": "/ajax.php?id="+calcSourceID+"&source=snippet&name=calculator&formatIn=json",
-    "price": $(".workarea .price span")
-//    ,"debug": 7
+    "price": $(".workarea .price span"),
+    "report":{"tpl":"\
+Конструкция:      <%name%>\
+url:              <%url%>\
+Оконная система:  <%system%>\
+Комплектующие:    <%kit%>\
+Монтаж:           <%montage%>\
+Ширина:           <%width%>\
+Высота:           <%height%>\
+ID Секций:        <%id%>\
+\
+Цена:             <%price%>\
+    "
+     }
+//    ,"showUrl":false
+//    ,"debug": 9
     }).on("inited",function(){
      $(this).closest("form").css({"height":"auto"}).animate({"opacity":1},500);
      $(this).closest(".calculator").removeClass("loading");
