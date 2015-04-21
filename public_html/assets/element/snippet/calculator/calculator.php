@@ -27,8 +27,10 @@ function calcRecursive($id,$debug=false) {
  $deep = count($pidAr);
  $childs = array();
  $outNames = array(
-  "alias"=>  $doc['alias'],
-  "name"=>  $doc['pagetitle'],
+  "alias"  => $doc['alias'],
+  "name"   => $doc['pagetitle'],
+  "parent" => $doc['parent'],
+  "url"    => $modx->makeUrl($id)
  );
  if ($debug) $outNames["debug"] = "ID:$id, Deep:$deep";
  if ($doc['longtitle']) $outNames["title"] = $doc['longtitle'];

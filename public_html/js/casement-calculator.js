@@ -11,7 +11,6 @@ $.fn.extend ({
  "calculator" : function(p){
   return this.each(function() {
    var _t=this;
-   var dataReady = true;
    _t.p = p;
    p=$.extend({},{
     "dataUrl": false, // получить данные и справочники калькулятора ajax запросом по указанной ссылке (data,reference)
@@ -156,8 +155,9 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        var $gv = $("<div/>").addClass("variants").appendTo($gr);
        $.each(item1.group, function (id, item) {
         if (!(item.name + item.alias)) return 1; // Пропускаем неопубликованные
-        $("<a>").prop({"href": item.image,"title": (_t._debug(3) ? id + ": " : '') + (item.title || item.name)}).append($("<img/>").attr({
-         "src": item.preview, "alt": item.title || item.name
+        $("<a>").prop({"href": item.image,"title": (_t._debug(3) ? id + ": " : '') + (item.title || item.name)})
+         .attr({"data-url":(item.url && item.url.replace(location.pathname,'')) || item.alias || item.id})
+         .append($("<img/>").attr({"src": item.preview, "alt": item.title || item.name
         }).load(function () {
          var $gr = $(this).closest(".group");
          _t._log(dlevel+2, "_type: loaded ", this, this.width, $gr.width());
@@ -175,6 +175,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
           _t._val(_t._stor.form.id, id);
           _t._parameters();
+          location.hash = $a.attr("data-url");
          }
         })
        });
@@ -182,7 +183,9 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       } else {
        $tg.addClass("casesets");
        _t._log(dlevel+2, "_type: init one level structure", o.index(), o);
-       $("<a>").prop({"href": item1.image, "title": (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)}).append($("<img/>").attr({
+       $("<a>").prop({"href": item1.image, "title": (_t._debug(3) ? id1 + ": " : '') + (item1.title || item1.name)})
+        .attr({"data-url":(item1.url && item1.url.replace(location.pathname,'')) || item1.alias || item1.id})
+        .append($("<img/>").attr({
         "src": item1.preview, "alt": item1.title || item1.name})).appendTo($tg).on("init click", function (e) {
         e.preventDefault();
         var $a = $(this);
@@ -195,6 +198,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
          _t._val(_t._stor.form.id, id1);
          _t._parameters();
+         location.hash = $a.attr("data-url");
         }
        });
       }
@@ -204,7 +208,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     return $type;
    };
    _t._tabs = function(p){
-    var dlevel=5;
+    var dlevel=7;
     var $t = $(_t._stor.tabs);
     var $tH = $(".headers", $t);
     var $tC = $(".contents", $t);
@@ -227,13 +231,14 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        }
       })) || _t._err("data error");
       return $t.on("change",function(e,p){
-       var $active = $(".headers .active",this).index();
+       var $active = $(".headers > .active",this).index();
        var $type = _t._type($(".contents >* ",this).eq($active));
        var $a = $(".active",$type);
+       $a.size() || ($a = $("[data-url*='"+location.hash.replace("#",'')+"']"));
        $a.size() || ($a = $("a:first",$type));
+       _t._log(dlevel + 3,"Tabs changed (this, e,p,$type,$a,$active.location.hash)",this,e,p,$type,$a,$active,location.hash.replace("#",''));
        $a.trigger("click");
-       _t._log(dlevel + 3,"Tabs changed (this, e,p,$type,$a,$active)",this,e,p,$type,$a,$active);
-      }).tabs({"headers":$tH,"contents":$tC});
+      }).tabs({"headers":$tH,"contents":$tC,"active":location.hash.replace(/\/.*$/,'')});
       break;
      case p=="opened":
       _t._log(dlevel + 1,"Tabs opened",$(".active",$tH).index());
@@ -451,7 +456,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     return key?cols._index[key]:cols;
    };
    _t._data = function(p,data,grKey,deep) {
-    // получение и кеширование данных по идентификатору
+    // рекурсивное получение и кеширование данных по идентификатору
     var dlevel=3;
     var _result;
     var tabI;
