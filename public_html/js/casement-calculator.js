@@ -25,7 +25,8 @@ $.fn.extend ({
     "data": false,  // данные кунструкций или ссылка, аналогично dataUrl 
     "form":{"id":"id","width":"width","height":"height","price":"price"},
     "price":$(".price",_t), // price output
-    "showUrl":true // Показать ссылку на выбранный вариант
+    "showUrl":true, // Показать ссылку на выбранный вариант
+    "initVal": location.hash.split('?',2)[1]?$.unparam(location.hash.split('?',2)[1]):false //  Параметры инициализации по умолчанию 
     //"texts" : {warning:""}
    },p);
    _t._stor = p;
@@ -171,7 +172,8 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
           $a.addClass("active");
           _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
           _t._val(_t._stor.form.id, id);
-          _t._parameters(init);
+          _t._parameters(_t._stor.initVal? _t._stor.initVal:false);
+          if (_t._stor.showUrl && !init && !_t._stor.initVal) location.hash = $a.attr("data-url");
          }
         })
        });
@@ -193,16 +195,17 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
          $a.addClass("active");
          _t.preview({"src": $a.attr("href"), "alt": $i.attr("alt"), "title": $i.attr("title")});
          _t._val(_t._stor.form.id, id1);
-         _t._parameters(init);
+         _t._parameters(_t._stor.initVal? $.unparam(_t._stor.initVal):false);
+         if (_t._stor.showUrl && !init && !_t._stor.initVal) location.hash = $a.attr("data-url");
         }
        });
       }
-     });     
+     });
     }
     return $type;
    };
    _t._tabs = function(p){
-    var dlevel=7;
+    var dlevel=3;
     var $t = $(_t._stor.tabs);
     var $tH = $(".headers", $t);
     var $tC = $(".contents", $t);
@@ -224,7 +227,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        var $active = $(".headers > .active",this).index();
        var $type = _t._type($(".contents >* ",this).eq($active));
        var $a = $(".active",$type);
-       $a.size() || ($a = $("[data-url*='"+location.hash.replace("#",'')+"']:first"));
+       $a.size() || ($a = $("[data-url*='"+location.hash.replace("#",'').split("?")[0]+"']:first"));
        $a.size() || ($a = $("a:first",$type));
        _t._log(dlevel + 3,"Tabs changed (this, e,p,$type,$a,$active.location.hash)",this,e,p,$type,$a,$active,location.hash.replace("#",''));
        $a.trigger("click",[init]);
@@ -298,7 +301,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._choice = function(cols,arr){
     // Построение выбора параметров
-    dlevel = 1;
+    dlevel = 8;
     var $c = $(_t._stor.choice);
     if ($c.data("id")==_t._val(_t._stor.form.id)) return false;
     var fData=$("[name]", _t).serializeObject();
@@ -326,10 +329,11 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     $(">*",_t._stor.choice).each(function(){
       var _c = $(this);
       var $kAlias = _c.class().split(" ")[0];
-     _t._log(dlevel+5, "choices cet checked:", $kAlias, fData);
+     _t._log(dlevel+5, "choices set checked:", $kAlias, fData);
 
       if (!$("*:checked",_c).size()) {
        $("[name='" + $kAlias + "'][value='"+fData[$kAlias]+"']",_c).prop("checked",true);
+       $("*:checked",_c).size() || (_t._stor.initVal && _t._stor.initVal[$kAlias] && $("[name='" + $kAlias + "'][value='"+_t._stor.initVal[$kAlias]+"']",_c).prop("checked",true)); 
        $("*:checked",_c).size() || $("[name='" + $kAlias + "']:first",_c).prop("checked",true); 
       }
     });
@@ -337,12 +341,13 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
    };
    _t._parameters = function(init) {
     // инициализация выбора размеров и параметров
-    var dlevel=8;
+    var dlevel=1;
     var $s = $(_t._stor.sizes);
     var _d=_t._data(_t._val(_t._stor.form.id));
     _t._log(dlevel,"_parameters: call (p,_d)",_d,_t._stor.form.id);
     $s.size() || (($s = $("<div/>").addClass($s.class()).appendTo(_t)) || _t._log(dlevel,"Create Sizes",$s));
     $s.html("");
+    var InitVal = init || {};
     var $dm=["height","width"];
     var tabI = _t._tabs("opened");
     var cols=_t._cols(tabI);
@@ -357,22 +362,25 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
        _d.atad || (_d.atad={});
        if (!_d.atad[dim]) _d.atad[dim] = _t._getDataCol(_d.data,cols._index[dim]);
        var _dCol = _d.atad[dim];
+       var $minmax = _t._minmax(_dCol);
+       InitVal[dim] || (InitVal[dim] = _dCol[Math.round(_dCol.length/2)]);
+       (InitVal[dim] > $minmax.max || InitVal[dim] < $minmax.min) && (InitVal[dim] = _dCol[Math.round(_dCol.length/2)]);
        $dm[dim]=_t._initDimension({
             "obj":$s,
             "name":dim,
-            "minmax":_t._minmax(_dCol),
+            "minmax":$minmax,
             "orientation":dim=="height"?"vertical":"horizontal",
             "caption":cols[dim][0]+', '+cols[dim][1],
             "step":parseInt(_t._stor.reference.step),
-            "value":_dCol[Math.round(_dCol.length/2)]
+            "value":InitVal[dim]
            });
       });
-      _t._log(dlevel,"_parameters inited",$s,"Inputs: ",$dm,"data",_d);
+      _t._log(dlevel+1,"_parameters inited",$s,"Inputs: ",$dm,"data",_d,"InitVal",InitVal);
      break;
      case "string": // datatype == multiple
       _d._complect || (_d._complect = _d.data.split(","));
       var _wW = [];
-      var _colsUse=[];
+      //var _colsUse=[];
                    // если будут сегменты с разным набором параметров - будет ошибка
       $.each(_d._complect,function(i,item){
        var _segment = _t._data(item);
@@ -385,16 +393,20 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
         _segment.atad || (_segment.atad={});
         if (!_segment.atad[dim]) _segment.atad[dim] = _t._getDataCol(_segment.data,cols._index[dim]);
         var _dCol = _segment.atad[dim];
+        var $minmax = _t._minmax(_dCol);
+        var slVal = (typeof InitVal[dim] =="object")?InitVal[dim][i] : InitVal[dim] || _dCol[Math.round(_dCol.length/2)]; 
+        (slVal > $minmax.max || slVal < $minmax.min) && (slVal = _dCol[Math.round(_dCol.length/2)]);
         var _dimP = {
          "obj":$s,
          "name":dim,
          "label":dim,
-         "minmax":_t._minmax(_dCol),
+         "minmax":$minmax,
          "orientation":dim=="height"?"vertical":"horizontal",
          "caption":cols[dim][0]+', '+cols[dim][1],
          "step":parseInt(_t._stor.reference.step),
-         "value":_dCol[Math.round(_dCol.length/2)]
+         "value":slVal
         };
+        _t._log(dlevel+1,'_parameters Multi (dim,_dCol,InitVal,$minmax)',dim,_dCol,InitVal,init,$minmax,slVal );
         if (dim=="height") {
          var _vS = $("[name='"+dim+"']",$s).siblings(".slider");
          if (_vS.size()) {
@@ -423,7 +435,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       });
      break;
     }
-    $("input:first",$s).trigger("change",[init]);
+    $("input:first",$s).trigger("change",[!!init]);
     return _t;
    };
    _t._cols = function(tabI,key) {
@@ -490,11 +502,11 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     return !isNaN(v)?parseFloat(v.toFixed(d)):0;
    };
    _t._calcToMatch = function(Bval,BScope,SScope){
-    var dlevel=8;
+    var dlevel=3;
     // получение соответствующего значения из искомого диапазона SScope  (цены)
     // на основе известной точки Bval заданного диапазона BScope (площадь)
     var _scope = _t._getRange(Bval,BScope);                                          // определение точек, между которыми находится определяющее значение
-    _t._log(dlevel,"_calcToMatch Start: (Bval,BScope,SScope,_scope)",Bval,BScope,SScope,_scope);
+    _t._log(dlevel+1,"_calcToMatch Start: (Bval,BScope,SScope,_scope)",Bval,BScope,SScope,_scope);
     var _range = _t._flFix(BScope[_scope[1]] - BScope[_scope[0]]);                   // определение диапазона между заданными точками
     var _c = {
      "BDelta"       : _t._flFix(Bval - BScope[_scope[0]]),                           // разница между минимальной точкой и текущим значением
@@ -541,7 +553,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     return _c.baseprice + _c.kitprice + _c.montage; 
    };
    _t._calc = function(init) {
-    var dlevel=9;
+    var dlevel=3;
     var f = $("[name]", _t);
     var _d = _t._data(_t._val(_t._stor.form.id));
     var reference = _t._stor.reference.price;
@@ -568,9 +580,9 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     }
     _result = _t._flFix(_result);
     _t._log(dlevel,"Calc ("+_t._counts("_calc",1 + _t._counts("_calc")).toString()+"): ",
-        "form data:",fData,"data",_d,"L",L,"_result",_result,"p",p);
+        "form data:",fData,"data",_d,"L",L,"_result",_result,"init",init);
     if (_t._stor.showUrl && !init) {
-     location.hash = _t._itemUrl(_d) + "?"+$.param($.extend({}, $.unparam(location.hash.split('?',2)[1]),
+     location.hash = _t._itemUrl(_d) + "?"+$.param($.extend({}, _t._stor.initVal,
        f.filter(function(){return $(this).val() && ($.inArray($(this).attr("name").replace(/\[.*$/,''),
                       "height,width,id,system,kit,montage".split(","))!=-1)}).serializeObject()
      ))
