@@ -91,7 +91,7 @@ $.fn.extend ({
       var $kD = $(">*:not(:first):not(.title)", $fieldset);
       $kD.size() || ($kD = $("<div/>").appendTo($fieldset));
 _t._log(dlevel+2,"Variants: ",$fieldset,k,v);
-      $.each({"да":"1","нет":"0"},function(n,val){
+      $.each({"Да":"1","Нет":"0"},function(n,val){
       var _Lab = $("<label/>").append($("<input/>").attr({"name": $kAlias[0], "value": val, "type": "radio"}))
                 .append(" " + n).appendTo($kD);
 _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
@@ -302,6 +302,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     return _s;
    };
    _t._choice = function(cols,arr){
+    // Построение выбора параметров
     dlevel = 1;
     var $c = $(_t._stor.choice);
     if ($c.data("id")==_t._val(_t._stor.form.id)) return false;
@@ -349,10 +350,10 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     $s.html("");
     var $dm=["height","width"];
     var tabI = _t._tabs("opened");
+    var cols=_t._cols(tabI);
     switch (typeof _d.data) {
-     case "object":
+     case "object": // datatype = section
       //var colsT = ["alias","name","dimensions","input"];
-      var cols=_t._cols(tabI);
       _t._log(dlevel+1,"Sizes Data:",_t._val(_t._stor.form.id),_d,"Tab: ",tabI,_t._stor.data[tabI],cols);
       // параметры выбора
       _t._choice(cols);
@@ -373,14 +374,14 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       });
       _t._log(dlevel,"_parameters inited",$s,"Inputs: ",$dm,"data",_d);
      break;
-     case "string":
+     case "string": // datatype == multiple
       _d._complect || (_d._complect = _d.data.split(","));
       var _wW = [];
       var _colsUse=[];
-      var cols; // если будут сегменты с разным набором параметров - будет ошибка
+                   // если будут сегменты с разным набором параметров - будет ошибка
       $.each(_d._complect,function(i,item){
        var _segment = _t._data(item);
-       cols=_t._cols(_segment.tabI);
+       !cols && (cols=_t._cols(_segment.tabI));
        //// определение общих параметров параметров секций для секций с разным набором параметров
        //if (!_colsUse.length) $.each(cols._index,function(i){ if (i.split(/[\[\]]/).length>1) _colsUse.push(i) });
        //else _colsUse = _colsUse.filter(function(el){ return !!cols._index[el]; });
@@ -430,11 +431,12 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     $("input:first",$s).trigger("change");
     return _t;
    };
-   _t._cols = function(tabI) {
+   _t._cols = function(tabI,key) {
      // определение колонок данных секции, номер (строка), alias - 1ст, название - 2ст, ед изм - 3ст
-    var dlevel=1;
+    var dlevel=7;
     var cols=_t._stor.data[tabI].cols;
     //var _al = ["alias","name","unit"];
+      _t._log(dlevel+2,"_COLS Start: ","tabI = "+tabI,"cols",cols);
     if (!cols._index) $.each(cols,function(k,item){
      $.each(item,function(i,v){
       if (!parseInt(i)) { // первая строка (i=0) содержит алиасы
@@ -446,7 +448,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
       _t._log(dlevel,"_cols : [k="+k+"]= ","i = "+i, "value = "+v,"tabI = "+tabI);
      });
     });
-    return cols;
+    return key?cols._index[key]:cols;
    };
    _t._data = function(p,data,grKey,deep) {
     // получение и кеширование данных по идентификатору
@@ -523,7 +525,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
      for (var k in _d.atad.width) _d.atad.area[k] = _t._flFix((_d.atad.width[k] / 1000 ) * (_d.atad.height[k] / 1000 ));
     }
     var S = _t._flFix((dim.width/1000) *(dim.height/1000)); // площадь,м2
-    _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._stor.data[tabI].cols._index['price['+fData.system+']']));
+    _d.atad['price['+fData.system+']'] || (_d.atad['price['+fData.system+']'] = _t._getDataCol(_d.data,_t._cols(tabI,'price['+fData.system+']')));
     _d.atad['kit['+fData.kit+']'] || (_d.atad['kit['+fData.kit+']'] = _t._getDataCol(_d.data,_t._stor.data[tabI].cols._index['kit['+fData.kit+']']));
     var _cAr = {// цены на комплект и монтаж по всем точкам
      "baseprice" : _d.atad['price['+fData.system+']'],
