@@ -25,12 +25,11 @@
 Высота:             <%height%>\n\
 ID Секций:          <%id%>\n\
 \n\
-Рассчитанная цена:  <%price%>руб.\n\
+Рассчитанная цена:  <%price%> руб.\n\
 \n\
-Ссылка на расчет:\
-<%url%>\n\
-\n\
-"//,"out":$("[name='data']",m)
+Ссылка на расчет:   \n\
+<%url%>"
+      //,"out":$("[name='data']",m)
      }
 //    ,"showUrl":false
 //    ,"debug": 12
@@ -57,6 +56,7 @@ ID Секций:          <%id%>\n\
      if ($.inArray(k,"formid,email,id,notes,phone,price,veridata,name,data".split(","))!=-1) fData[k]=v;
     });
     _c.modalform =  f.detach();
+    _c.modalform.find(".invalid").removeClass("invalid");
     $(".innerm",m).load(location.href+" .calculator .modal .innerm",fData);
    });
    if ($(".modal .message",_cp).text()) $(".parameters #order",_c).click();
