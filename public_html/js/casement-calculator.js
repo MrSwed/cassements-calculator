@@ -609,23 +609,26 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
     var _r = _t._stor.report;
     if (!_r || !_r.tpl ) return false;
     _r._out = _r.tpl.toString();
-    var fData = $.extend({},_t._stor.initVal,$("[name]", _t).serializeObject());
+    var fData = $.extend({},_t._stor.initVal,$("[name]:visible", _t).serializeObject());
     $.each(fData,function(k,v){ // по собранным данным
-     _t._log(dlevel,"Report: initVal set",k,v);
+     _t._log(dlevel,"Report: Template set <%"+k+"%> to "+v);
+     var fItem = $("[name='"+k+"'][value='"+v+"']", _t);
+     
+     if (fItem.is("[type='radio']")) v = fItem.closest("label").text().trim();
      _r._out = _r._out.replace("<%"+k+"%>",typeof v == "object" ? $.map(v,function(v) {return v;}).join(","):v);
     });
     var _d=_t._data(_t._val(_t._stor.form.id));
-    $.each(_d,function(k,v){  // данные элемента (тфьубгкд
+    $.each(_d,function(k,v){  // данные элемента (name,item)
      _t._log(dlevel,"Report: data set ",k,v);
      var _v = v;
-     if (k=="url") _v = location.protocol+"//"+location.host+v+($.param(_t._stor.initVal));
+     if (k=="url") _v = location.protocol+"//"+location.host+location.pathname + "#"+ v.replace(location.pathname,'')+"?"+$.param(fData);
      _r._out = _r._out.replace("<%"+k+"%>",!_v?_v: (typeof _v == "object" ? $.map(_v,function(_v) {return _v;}).join(","):_v));
     });
     _r._out = _r._out.replace("<%price%>",number_format(_t._val("price")));
      _t._log(dlevel, "Report: _r.out ",_r.out,_d);
     if (_r.out && $(_r.out).size()) {
      switch (true) {
-      case $(_r.out).is(":not([type='chechbox']),:not([type='radio']),:not([type='password']),textarea,:not(input),:not(select)"):
+      case $(_r.out).is(":not([type='checkbox']),:not([type='radio']),:not([type='password']),textarea,:not(input),:not(select)"):
        $(_r.out).val(_r._out);
        break;
       default:
