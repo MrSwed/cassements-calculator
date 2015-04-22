@@ -625,6 +625,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
      _r._out = _r._out.replace("<%"+k+"%>",!_v?_v: (typeof _v == "object" ? $.map(_v,function(_v) {return _v;}).join(","):_v));
     });
     _r._out = _r._out.replace("<%price%>",number_format(_t._val("price")));
+    _r._out = _r._out.replace("<%id%>",_t._val(_t._stor.form.id)+(typeof _d.data=="string"?": "+_d.data+"":""));
      _t._log(dlevel, "Report: _r.out ",_r.out,_d);
     if (_r.out && $(_r.out).size()) {
      switch (true) {
