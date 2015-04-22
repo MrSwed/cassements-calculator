@@ -11,6 +11,7 @@
   var calcSourceID=37;
   $(function(){
    var _cp = $(".form.calculator").addClass("loading");
+   var m = $(".modal",_cp);   
    var _c = $(".workarea",_cp);
    _c.calculator({
     "dataUrl": "/ajax.php?id="+calcSourceID+"&source=snippet&name=calculator&formatIn=json",
@@ -29,7 +30,7 @@ ID Секций:          <%id%>\n\
 Ссылка на расчет:\
 <%url%>\n\
 \n\
-","out":$("[name='data']",_cp)
+"//,"out":$("[name='data']",m)
      }
 //    ,"showUrl":false
 //    ,"debug": 12
@@ -38,21 +39,24 @@ ID Секций:          <%id%>\n\
      $(this).closest(".calculator").removeClass("loading");
     });
    $(".parameters #order",_c).click(function(){
-     $(".modal",_cp).modal("open",{
+     m.modal("open",{
       "afterOpen":function(){
+       if (!$("form",m).size()) {
+        $(".innerm",m).html("").append(_c.modalform);
+       }
        $("input:first",this).focus();
-       _c[0].report();
+       $("[name='data']").val(_c[0].report());
       }
      })
    });
-   $(".calculator .modal").on("submit","form",function(e){
+   m.on("submit","form",function(e){
     e.preventDefault();
     var f = $(this);
     var fData = {};
     $.each(f.serializeObject(),function(k,v){
      if ($.inArray(k,"formid,email,id,notes,phone,price,veridata,name,data".split(","))!=-1) fData[k]=v;
     });
-    var m = $(".calculator .modal");
+    _c.modalform =  f.detach();
     $(".innerm",m).load(location.href+" .calculator .modal .innerm",fData);
    });
    if ($(".modal .message",_cp).text()) $(".parameters #order",_c).click();
