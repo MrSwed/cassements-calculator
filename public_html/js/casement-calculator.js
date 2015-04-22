@@ -23,7 +23,7 @@ $.fn.extend ({
     "sizes":".sizes",
     "reference":false, // справочник. общие цены на монтаж, шаг  
     "data": false,  // данные конструкций  
-    "form":{"id":"id","width":"width","height":"height","price":"price"},
+    "form":{"id":"id","price":"price"},
     "price":$(".price",_t), // price output
     "showUrl":true, // Показать ссылку на выбранный вариант
     "initVal": location.hash.split('?',2)[1]?$.unparam(location.hash.split('?',2)[1]):{} //  Параметры инициализации по умолчанию 
@@ -584,6 +584,7 @@ _t._log(dlevel+2,"Variants each ",$kAlias,$kD,n,val,v,_Lab);
                       "height,width,id,system,kit,montage".split(","))!=-1)}).serializeObject()
      ))
     }
+    $(_t).trigger("calc");
     return _result;
    };
    _t._counts = function(n,v) {
