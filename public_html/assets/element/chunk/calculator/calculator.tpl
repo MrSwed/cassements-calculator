@@ -57,7 +57,7 @@ ID Секций:          <%id%>\n\
     });
     _c.modalform =  f.detach();
     _c.modalform.find(".invalid").removeClass("invalid");
-    $(".innerm",m).load(location.href+" .calculator .modal .innerm",fData);
+    $(".innerm",m).addClass("loading").load(location.href+" .calculator .modal .innerm >*",fData,function(){$(this).removeClass("loading")});
    });
    if ($(".modal .message",_cp).text()) $(".parameters #order",_c).click();
   });

@@ -26,7 +26,7 @@ $.fn.extend ({
     "form":{"id":"id","price":"price"},
     "price":$(".price",_t), // price output
     "showUrl":true, // Показать ссылку на выбранный вариант
-    "initVal": location.hash.split('?',2)[1]?$.unparam(location.hash.split('?',2)[1]):{} //  Параметры инициализации по умолчанию 
+    "initVal": location.hash.split('?',2)[1]?$.unparam(location.hash.replace("&amp;","&").split('?',2)[1]):{} //  Параметры инициализации по умолчанию 
     //"texts" : {warning:""}
    },p);
    _t._stor = p;
