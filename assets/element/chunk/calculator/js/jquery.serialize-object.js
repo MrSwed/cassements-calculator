@@ -9,7 +9,7 @@
 
   // AMD
   if (typeof define === "function" && define.amd) {
-    define(["exports", "jquery"], function(exports, $) {
+    define(["exports", "jquery.unparam.min"], function(exports, $) {
       return factory(exports, $);
     });
   }

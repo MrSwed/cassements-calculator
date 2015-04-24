@@ -1,14 +1,14 @@
 <div class="form calculator loading">
- <link rel="stylesheet" href="js/jquery-ui/jquery-ui.css" property="all"/>
- <script src="js/jquery-ui/jquery-ui.js"></script>
- <script type="text/javascript" src="/js/jquery.serialize-object.js"></script>
- <script type="text/javascript" src="/js/common.js"></script>
- <script type="text/javascript" src="/js/casement-calculator.js"></script>
- <script type="text/javascript" src="/js/jquery.unparam.min.js"></script>
- <link href="/design/casement-calculator.css" rel="stylesheet" type="text/css" property="all"/>
+ <link rel="stylesheet" href="/assets/element/chunk/calculator/design/jquery-ui.min.css" property="all"/>
+ <script src="/assets/element/chunk/calculator/js/jquery-ui.min.js"></script>
+ <script type="text/javascript" src="/assets/element/chunk/calculator/js/jquery.serialize-object.js"></script>
+ <script type="text/javascript" src="/assets/element/chunk/calculator/js/common.js"></script>
+ <script type="text/javascript" src="/assets/element/chunk/calculator/js/casement-calculator.js"></script>
+ <script type="text/javascript" src="/assets/element/chunk/calculator/js/jquery.unparam.min.js"></script>
+ <link href="/assets/element/chunk/calculator/design/casement-calculator.css" rel="stylesheet" type="text/css" property="all"/>
  
  <script type="text/javascript">
-  var calcSourceID=37;
+  var calcSourceID=37;  // Указать ID корневого раздела, в котором данные калькулятора
   $(function(){
    var _cp = $(".form.calculator").addClass("loading");
    var m = $(".modal",_cp);   

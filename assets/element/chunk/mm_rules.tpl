@@ -15,7 +15,7 @@ $tpl = $content['template'];
 $pidAr = array_merge(array($pid),$modx->getParentIds($pid)); // роительский путь
 /**/
 
-
+// необходима версия ManagerManager  https://github.com/MrSwed/MODXEvo.plugin.ManagerManager 
 if ($tpl == 8 && $cid) { // Калькулятор
  $calcID = 37;            // Указать ID корневого раздела, в котором данные калькулятора
  $cTVnames = array('i'=>'image','p'=>'photos','t'=>'calculator_type','c'=>'calculator');
