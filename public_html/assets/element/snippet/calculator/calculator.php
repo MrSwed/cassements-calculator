@@ -29,7 +29,6 @@ function calcRecursive($id,$debug=false) {
  $outNames = array(
   "alias"  => $doc['alias'],
   "name"   => $doc['pagetitle'],
-  "parent" => $doc['parent'],
   "url"    => $modx->makeUrl($id)
  );
  if ($debug) $outNames["debug"] = "ID:$id, Deep:$deep";
@@ -85,6 +84,6 @@ function calcRecursive($id,$debug=false) {
  }
  return $outAr;
 }
-$rAr = calcRecursive($id,1);
+$rAr = calcRecursive($id,false);
 $result = json_encode($rAr,true);
 return $result;
