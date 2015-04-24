@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <title>Расчет стоимости пластиковых окон</title>
+ <script src="js/jquery-1.9.0-min.js" type="text/javascript" charset="utf-8"></script>
+
+ <link rel="stylesheet" href="design/jquery-ui.min.css" property="all"/>
+ <script src="js/jquery-ui.min.js"></script>
+ <script type="text/javascript" src="js/jquery.serialize-object.js"></script>
+ <script type="text/javascript" src="js/common.js"></script>
+ <script type="text/javascript" src="js/casement-calculator.js"></script>
+ <script type="text/javascript" src="js/jquery.unparam.min.js"></script>
+ <link href="design/style.css" rel="stylesheet" type="text/css" property="all"/>
+ <link href="design/casement-calculator.css" rel="stylesheet" type="text/css" property="all"/>
+
+  
+</head>
+
+<body>
+<div class="main">
+ <div class="header"></div>
+
+<div class="content">
+<div class="content-sb">
+ <div class="inner">
+ 
+   <h1>Расчет стоимости пластиковых окон</h1>
+  <h2>Внимание! Данная страница является демонстрационной. Все цены вымышленные, отправка заказа не работает.</h2>
+  
+ <div class="form calculator loading">
+ 
+ <script type="text/javascript">
+  $(function(){
+   var _cp = $(".form.calculator").addClass("loading");
+   var m = $(".modal",_cp);   
+   var _c = $(".workarea",_cp);
+   _c.calculator({
+    "dataUrl": "data-example.json",
+    "price": $(".price span",_c),
+    "report":{"tpl":"\
+Конструкция:        <%name%>\n\
+Оконная система:    <%system%>\n\
+Комплектующие:      <%kit%>\n\
+Монтаж:             <%montage%>\n\
+Ширина:             <%width%>\n\
+Высота:             <%height%>\n\
+ID Секций:          <%id%>\n\
+\n\
+Рассчитанная цена:  <%price%> руб.\n\
+\n\
+Ссылка на расчет:   \n\
+<%url%>"
+      //,"out":$("[name='data']",m)
+     }
+//    ,"showUrl":false
+//    ,"debug": 12
+    }).on("inited",function(){
+     $(this).css({"height":"auto"}).animate({"opacity":1},500);
+     $(this).closest(".calculator").removeClass("loading");
+    });
+   $(".parameters #order",_c).click(function(){
+     m.modal("open",{
+      "afterOpen":function(){
+       if (!$("form",m).size()) {
+        $(".innerm",m).html("").append(_c.modalform);
+       }
+       $("input:first",this).focus();
+       $("[name='data']").val(_c[0].report());
+      }
+     })
+   });
+   m.on("submit","form",function(e){
+    e.preventDefault();
+    var f = $(this);
+    var fData = {};
+    $.each(f.serializeObject(),function(k,v){
+     if ($.inArray(k,"formid,email,id,notes,phone,price,veridata,name,data".split(","))!=-1) fData[k]=v;
+    });
+    _c.modalform =  f.detach();
+    _c.modalform.find(".invalid").removeClass("invalid");
+    $(".innerm",m).html("Данные не отправлены - это демонстрационная страница :)");
+    //$(".innerm",m).addClass("loading").load(location.href+" .calculator .modal .innerm >*",fData,function(){$(this).removeClass("loading")});
+   });
+   if ($(".modal .message",_cp).text()) $(".parameters #order",_c).click();
+  });
+ </script>
+ <div class="workarea" style="opacity:0">
+  <div class="template" >
+   <div class="type">
+    <div class="caption">Выберите тип окна</div>
+   </div>
+  </div>
+  <div class="preview"><a href="#"><img src="#" alt="" title=""/></a></div>
+  <div class="parameters">
+   <div class="price"><span>00000</span> руб</div>
+   <input type="button" value="Заказать" id="order"/>
+   <div class="warning">
+     <p>Обращаем Ваше внимание, что данный расчет является предварительным. Точный расчет стоимости Вы можете получить по телефону</p><p class="blue2" style="font-size: 24px;">8 (XXX) XXX-XX-XX</p>    
+   </div>
+  </div>
+ </div>
+ <div class="modal">
+  <div class="innerm">
+    <div class="message"></div>
+  <form action="" method="post" >
+   <input type="hidden" name="formid"  value="calculatorForm" />
+   <label style="display:none"><input type="text" name="veridata"  value="" /></label>
+   <input type="hidden" name="id"  value="" />
+   <input type="hidden" name="price"  value="" />
+   <label for="email" >E-mail <span class="required-s">*</span>:<br/><input type="text" id="email" name="email" placeholder="Ваш Email"  value="" /></label>
+   <label for="name" class=" required">Ваше имя <span class="required-s">*</span>:<br/><input type="text" id="name" name="name" placeholder="Ваше имя"  value="" /></label>
+   <label for="phone" >телефон <span class="required-s">*</span>:<br/><input type="text" id="phone" name="phone" placeholder="телефон"  value="" /></label>
+   <label for="notes" >Комментарии<br/><textarea id="notes" name="notes" placeholder="Вопрос" cols="60" rows="5" ></textarea></label>
+   <label for="data" >Выбранная конфигурация<br/><textarea id="data" name="data" placeholder="" cols="60" rows="5" readonly="readonly" ></textarea></label>
+   <input type="submit" value="Отправить">
+  </form>
+
+  </div> 
+ </div>
+</div>
+ </div>
+ </div>
+</div>
+<div class="hFooter"></div>
+</div>
+</body>
+</html>
