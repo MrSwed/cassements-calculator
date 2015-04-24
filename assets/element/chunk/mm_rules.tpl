@@ -16,32 +16,8 @@ $pidAr = array_merge(array($pid),$modx->getParentIds($pid)); // роительс
 /**/
 
 
-mm_ddMultipleFields('shop_models', '', '6', 'text,text', 'Модель,Цена','','||','==');
-mm_ddMultipleFields('shop_parameters', '', '6', 'text,text', 'Название,Значение');
-mm_createTab('Магазин','shop','','6');
-mm_moveFieldsToTab('price,shop_models,shop_parameters','shop');
-
-mm_ddCreateSection('Параметры (наследуемые, пустое значение наследует родителя)', 'parameters','settings');
-mm_ddMoveFieldsToSection('hidePageTitle,hideBreadcrumbs,showParentTitle,showDateInContent,hideRightCol,enableShare,enableComments,bodyclass','parameters');
-
-mm_ddCreateSection('Параметры дочерних (наследуемые, пустое значение наследует родителя)', 'parameters_child','settings');
-mm_ddMoveFieldsToSection('hideChilds,hideFolders,depth,ditto_display,ditto_orderBy,DisplayListStyle,intalias','parameters_child');
-
-mm_ddCreateSection('Дополнительные тексты', 'addTexts','settings');
-mm_ddMoveFieldsToSection('beforeContent,inheritBeforeContent,afterContent,inheritAfterContent','addTexts');
-
-mm_ddCreateSection('Отладка', 'debug','settings');
-mm_ddMoveFieldsToSection('image_maket','debug');
-
-if ($tpl != 8 )  {
- mm_createTab('Изображения','photos');
- mm_moveFieldsToTab('image,photos','photos');
- mm_ddMultipleFields('photos', '', '', 'image,text', 'Изображение,Название');
-}
-
-
 if ($tpl == 8 && $cid) { // Калькулятор
- $calcID = 37;
+ $calcID = 37;            // Указать ID корневого раздела, в котором данные калькулятора
  $cTVnames = array('i'=>'image','p'=>'photos','t'=>'calculator_type','c'=>'calculator');
  mm_createTab('Калькулятор', $cTVnames['c']);
  mm_moveFieldsToTab(implode(",",array_values($cTVnames)), $cTVnames['c']);
@@ -105,11 +81,4 @@ if ($tpl == 8 && $cid) { // Калькулятор
    }
   }  
  }
-}
-
-mm_createTab('SEO: meta','seo_params');
-mm_moveFieldsToTab('meta_title,meta_keywords,meta_description','seo_params');
-
-if (in_array(8,$pidAr)) {
- mm_widget_evogallery(3,"Фотогалерея");
 }
