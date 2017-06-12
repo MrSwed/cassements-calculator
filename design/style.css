@@ -29,7 +29,7 @@ body {
   background: #def0fc;
 }
 a {
-  color: #1845b7;
+  color: #0172a0;
 }
 .block {
   display: block;
@@ -271,5 +271,5 @@ h1 + .date {
   z-index: 1;
 }
 .modal .close:hover {
-  box-shadow: 0 0 3px #808080, -1px -1px 2px -1px #808080 inset;
+  box-shadow: 0 0 3px gray, -1px -1px 2px -1px gray inset;
 }
