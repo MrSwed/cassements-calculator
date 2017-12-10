@@ -2,7 +2,7 @@
 Калькулятор оконных конструкций
 
 ## Клиент
-- [Клиентская часть, демо](sdcollection.com/tests/cassements-calculator)
+- [Клиентская часть, демо](http://sdcollection.com/tests/cassements-calculator)
 - Форма подготовленных данных в [data-example.deployed.json](data-example.deployed.json)
 
 ## Сервер
